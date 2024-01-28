@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class PassengerRequest {
     private String firstName;
-    private String secondName;
+    private String lastName;
     private String email;
     private String phoneNumber;
 }

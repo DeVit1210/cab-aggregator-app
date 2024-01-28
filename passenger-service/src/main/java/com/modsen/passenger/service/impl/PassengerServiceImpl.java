@@ -47,7 +47,7 @@ public class PassengerServiceImpl implements PassengerService {
         Passenger passenger = passengerRepository.findById(passengerId)
                 .orElseThrow(() -> new PassengerNotFoundException(passengerId));
         passenger.setFirstName(request.getFirstName());
-        passenger.setSecondName(request.getSecondName());
+        passenger.setSecondName(request.getLastName());
         passenger.setEmail(request.getEmail());
         passenger.setPhoneNumber(request.getPhoneNumber());
         Passenger updatedPassenger = passengerRepository.save(passenger);
