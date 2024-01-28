@@ -4,6 +4,7 @@ import com.modsen.passenger.dto.request.PassengerRequest;
 import com.modsen.passenger.dto.response.PassengerListResponse;
 import com.modsen.passenger.dto.response.PassengerResponse;
 import com.modsen.passenger.service.PassengerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,12 +35,13 @@ public class PassengerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PassengerResponse createPassenger(@RequestBody PassengerRequest request) {
+    public PassengerResponse createPassenger(@Valid @RequestBody PassengerRequest request) {
         return passengerService.savePassenger(request);
     }
 
     @PutMapping("/{id}")
-    public PassengerResponse updatePassenger(@PathVariable Long id, @RequestBody PassengerRequest request) {
+    public PassengerResponse updatePassenger(@PathVariable Long id,
+                                             @Valid @RequestBody PassengerRequest request) {
         return passengerService.updatePassenger(id, request);
     }
 
