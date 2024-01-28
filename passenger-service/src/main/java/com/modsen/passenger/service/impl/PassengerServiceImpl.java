@@ -1,6 +1,7 @@
 package com.modsen.passenger.service.impl;
 
 import com.modsen.passenger.dto.request.PassengerRequest;
+import com.modsen.passenger.dto.response.PagedPassengerResponse;
 import com.modsen.passenger.dto.response.PassengerListResponse;
 import com.modsen.passenger.dto.response.PassengerResponse;
 import com.modsen.passenger.exception.PassengerNotFoundException;
@@ -8,12 +9,14 @@ import com.modsen.passenger.mapper.PassengerMapper;
 import com.modsen.passenger.model.Passenger;
 import com.modsen.passenger.repository.PassengerRepository;
 import com.modsen.passenger.service.PassengerService;
+import com.modsen.passenger.utils.PageRequestUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor
@@ -61,5 +64,14 @@ public class PassengerServiceImpl implements PassengerService {
         List<PassengerResponse> passengerResponses = passengerMapper.toPassengerListResponse(passengers);
 
         return new PassengerListResponse(passengerResponses);
+    }
+
+    @Override
+    public PagedPassengerResponse findPassengers(int pageNumber, int pageSize, String sortField) {
+        PageRequest pageRequest = PageRequestUtils.makePageRequest(pageNumber, pageSize, sortField);
+        Page<Passenger> passengerPage = passengerRepository.findAll(pageRequest);
+        PageRequestUtils.validatePageResponse(pageRequest, passengerPage);
+
+        return passengerMapper.toPagedPassengerResponse(passengerPage);
     }
 }

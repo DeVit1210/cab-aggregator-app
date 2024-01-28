@@ -1,6 +1,8 @@
 package com.modsen.passenger.controller;
 
+import com.modsen.passenger.constants.PageConstants;
 import com.modsen.passenger.dto.request.PassengerRequest;
+import com.modsen.passenger.dto.response.PagedPassengerResponse;
 import com.modsen.passenger.dto.response.PassengerListResponse;
 import com.modsen.passenger.dto.response.PassengerResponse;
 import com.modsen.passenger.service.PassengerService;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +31,14 @@ public class PassengerController {
         return passengerService.findAllPassengers();
     }
 
+    @GetMapping("/page")
+    public PagedPassengerResponse findPassengers(@RequestParam(defaultValue = PageConstants.NUMBER) int number,
+                                                 @RequestParam(defaultValue = PageConstants.SIZE) int size,
+                                                 @RequestParam(defaultValue = PageConstants.SORT_FIELD) String sortField) {
+        return passengerService.findPassengers(number, size, sortField);
+    }
+
+
     @GetMapping("/{id}")
     public PassengerResponse findPassengerById(@PathVariable Long id) {
         return passengerService.findPassengerById(id);
@@ -40,8 +51,7 @@ public class PassengerController {
     }
 
     @PutMapping("/{id}")
-    public PassengerResponse updatePassenger(@PathVariable Long id,
-                                             @Valid @RequestBody PassengerRequest request) {
+    public PassengerResponse updatePassenger(@PathVariable Long id, @Valid @RequestBody PassengerRequest request) {
         return passengerService.updatePassenger(id, request);
     }
 

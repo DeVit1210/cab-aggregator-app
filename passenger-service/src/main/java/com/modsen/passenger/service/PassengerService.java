@@ -1,6 +1,7 @@
 package com.modsen.passenger.service;
 
 import com.modsen.passenger.dto.request.PassengerRequest;
+import com.modsen.passenger.dto.response.PagedPassengerResponse;
 import com.modsen.passenger.dto.response.PassengerListResponse;
 import com.modsen.passenger.dto.response.PassengerResponse;
 
@@ -15,4 +16,5 @@ public interface PassengerService {
 
     PassengerListResponse findAllPassengers();
 
+    PagedPassengerResponse findPassengers(int pageNumber, int pageSize, String sortField);
 }
