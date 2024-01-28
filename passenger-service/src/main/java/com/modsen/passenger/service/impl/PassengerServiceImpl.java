@@ -49,13 +49,16 @@ public class PassengerServiceImpl implements PassengerService {
     public PassengerResponse updatePassenger(Long passengerId, PassengerRequest request) {
         Passenger passenger = passengerRepository.findById(passengerId)
                 .orElseThrow(() -> new PassengerNotFoundException(passengerId));
-        passenger.setFirstName(request.getFirstName());
-        passenger.setLastName(request.getLastName());
-        passenger.setEmail(request.getEmail());
-        passenger.setPhoneNumber(request.getPhoneNumber());
-        Passenger updatedPassenger = passengerRepository.save(passenger);
 
-        return passengerMapper.toPassengerResponse(updatedPassenger);
+        return doUpdatePassenger(passenger, request);
+    }
+
+    @Override
+    public PassengerResponse updatePassengerByEmail(String email, PassengerRequest request) {
+        Passenger passenger = passengerRepository.findByEmail(email)
+                .orElseThrow(() -> new PassengerNotFoundException(email));
+
+        return doUpdatePassenger(passenger, request);
     }
 
     @Override
@@ -73,5 +76,15 @@ public class PassengerServiceImpl implements PassengerService {
         PageRequestUtils.validatePageResponse(pageRequest, passengerPage);
 
         return passengerMapper.toPagedPassengerResponse(passengerPage);
+    }
+
+    private PassengerResponse doUpdatePassenger(Passenger passenger, PassengerRequest request) {
+        passenger.setFirstName(request.getFirstName());
+        passenger.setLastName(request.getLastName());
+        passenger.setEmail(request.getEmail());
+        passenger.setPhoneNumber(request.getPhoneNumber());
+        Passenger updatedPassenger = passengerRepository.save(passenger);
+
+        return passengerMapper.toPassengerResponse(updatedPassenger);
     }
 }

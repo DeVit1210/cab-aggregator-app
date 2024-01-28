@@ -38,7 +38,6 @@ public class PassengerController {
         return passengerService.findPassengers(number, size, sortField);
     }
 
-
     @GetMapping("/{id}")
     public PassengerResponse findPassengerById(@PathVariable Long id) {
         return passengerService.findPassengerById(id);
@@ -53,6 +52,12 @@ public class PassengerController {
     @PutMapping("/{id}")
     public PassengerResponse updatePassenger(@PathVariable Long id, @Valid @RequestBody PassengerRequest request) {
         return passengerService.updatePassenger(id, request);
+    }
+
+    @PutMapping("/email/{email}")
+    public PassengerResponse updatePassengerByEmail(@PathVariable String email,
+                                                    @Valid @RequestBody PassengerRequest request) {
+        return passengerService.updatePassengerByEmail(email, request);
     }
 
     @DeleteMapping("/{id}")

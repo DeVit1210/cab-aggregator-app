@@ -1,6 +1,7 @@
 package com.modsen.passenger.exception.handler;
 
 import com.modsen.passenger.exception.ApiException;
+import com.modsen.passenger.exception.MultipleApiException;
 import com.modsen.passenger.exception.PageException;
 import com.modsen.passenger.exception.PassengerNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestControllerAdvice
@@ -23,7 +23,8 @@ public class PassengerControllerAdvice {
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList();
-        return new ResponseEntity<>(exceptionMessageList, HttpStatus.BAD_REQUEST);
+        MultipleApiException exception = MultipleApiException.of(exceptionMessageList, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
@@ -42,11 +43,7 @@ public class PassengerControllerAdvice {
     }
 
     private ResponseEntity<ApiException> generateApiExceptionResponse(Throwable e, HttpStatus status) {
-        ApiException apiException = ApiException.builder()
-                .message(e.getMessage())
-                .timestamp(LocalDateTime.now())
-                .httpStatus(status)
-                .build();
+        ApiException apiException = ApiException.of(e.getMessage(), status);
         return new ResponseEntity<>(apiException, status);
     }
 }

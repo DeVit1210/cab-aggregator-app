@@ -8,3 +8,9 @@ databaseChangeLog:
             oldColumnName: second_name
             newColumnName: last_name
             columnDataType: varchar(255)
+      rollback:
+        - renameColumn:
+            tableName: passengers
+            oldColumnName: last_name
+            newColumnName: second_name
+            columnDataType: varchar(255)

@@ -33,3 +33,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     unique: true
+      rollback:
+        - dropTable:
+            tableName: passengers
