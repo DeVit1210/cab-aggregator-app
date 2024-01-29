@@ -3,6 +3,7 @@ package com.modsen.driver.mapper;
 import com.modsen.driver.dto.request.DriverRequest;
 import com.modsen.driver.dto.response.DriverResponse;
 import com.modsen.driver.dto.response.PagedDriverResponse;
+import com.modsen.driver.enums.DriverStatus;
 import com.modsen.driver.model.Driver;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
@@ -13,7 +14,7 @@ import java.util.List;
 public interface DriverMapper {
     DriverResponse toDriverResponse(Driver driver);
 
-    Driver toDriver(DriverRequest request);
+    Driver toDriver(DriverRequest request, DriverStatus status);
 
     List<DriverResponse> toDriverListResponse(List<Driver> driverList);
 
