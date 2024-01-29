@@ -8,11 +8,11 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class DriverResponseList {
+public class DriverListResponse {
     private List<DriverResponse> drivers;
     private int quantity;
 
-    public static DriverResponseList of(List<DriverResponse> drivers) {
-        return new DriverResponseList(drivers, drivers.size());
+    public static DriverListResponse of(List<DriverResponse> drivers) {
+        return new DriverListResponse(drivers, drivers.size());
     }
 }

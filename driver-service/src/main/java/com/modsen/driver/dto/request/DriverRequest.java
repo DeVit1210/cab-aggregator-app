@@ -13,8 +13,8 @@ import lombok.Data;
 public class DriverRequest {
     @NotEmpty(message = ValidationConstants.FIRST_NAME_NOT_EMPTY)
     private String firstName;
-    @NotEmpty(message = ValidationConstants.SECOND_NAME_NOT_EMPTY)
-    private String secondName;
+    @NotEmpty(message = ValidationConstants.LAST_NAME_NOT_EMPTY)
+    private String lastName;
     @Email(message = ValidationConstants.EMAIL_INVALID)
     private String email;
     @NotEmpty(message = ValidationConstants.PHONE_NUMBER_NOT_EMPTY)

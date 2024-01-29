@@ -1,12 +1,17 @@
 package com.modsen.driver.service;
 
+import com.modsen.driver.dto.request.ChangeDriverStatusRequest;
 import com.modsen.driver.dto.request.DriverRequest;
 import com.modsen.driver.dto.response.DriverResponse;
-import com.modsen.driver.dto.response.DriverResponseList;
+import com.modsen.driver.dto.response.DriverListResponse;
 import com.modsen.driver.dto.response.PagedDriverResponse;
+import com.modsen.driver.enums.DriverStatus;
+import com.modsen.driver.model.Driver;
+
+import java.util.List;
 
 public interface DriverService {
-    DriverResponseList findAllDrivers();
+    DriverListResponse findAllDrivers();
 
     PagedDriverResponse findDrivers(int pageNumber, int pageSize, String sortField);
 
@@ -17,4 +22,10 @@ public interface DriverService {
     DriverResponse updateDriver(Long driverId, DriverRequest driverRequest);
 
     void deleteDriver(Long driverId);
+
+    Driver findDriverByStatus(DriverStatus status);
+
+    Driver findDriverByStatus(DriverStatus status, List<Long> driverToExcludeIdList);
+
+    DriverResponse updateDriverStatus(ChangeDriverStatusRequest request);
 }
