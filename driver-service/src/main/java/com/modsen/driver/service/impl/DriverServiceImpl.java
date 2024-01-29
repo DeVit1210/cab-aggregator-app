@@ -78,7 +78,9 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public void deleteDriver(Long driverId) {
         Optional<Driver> driver = driverRepository.findById(driverId);
-        driver.ifPresent(driverRepository::delete);
+        driver.ifPresentOrElse(driverRepository::delete, () -> {
+            throw new DriverNotFoundException(driverId);
+        });
     }
 
     @Override
@@ -94,13 +96,11 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public DriverResponse updateDriverStatus(ChangeDriverStatusRequest request) {
+    public void updateDriverStatus(ChangeDriverStatusRequest request) {
         long driverId = request.getDriverId();
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new DriverNotFoundException(driverId));
         driver.setStatus(request.getNewStatus());
-        Driver driverWithUpdatedStatus = driverRepository.save(driver);
-
-        return driverMapper.toDriverResponse(driverWithUpdatedStatus);
+        driverRepository.save(driver);
     }
 }

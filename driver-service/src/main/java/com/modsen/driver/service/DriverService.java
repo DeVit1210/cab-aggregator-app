@@ -27,5 +27,5 @@ public interface DriverService {
 
     Driver findDriverByStatus(DriverStatus status, List<Long> driverToExcludeIdList);
 
-    DriverResponse updateDriverStatus(ChangeDriverStatusRequest request);
+    void updateDriverStatus(ChangeDriverStatusRequest request);
 }

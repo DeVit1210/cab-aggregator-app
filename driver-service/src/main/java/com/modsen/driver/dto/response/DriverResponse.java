@@ -9,7 +9,7 @@ import lombok.Data;
 public class DriverResponse {
     private Long id;
     private String firstName;
-    private String secondName;
+    private String lastName;
     private String email;
     private String phoneNumber;
     private DriverStatus status;
