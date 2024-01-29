@@ -34,7 +34,9 @@ public class PassengerServiceImpl implements PassengerService {
     @Override
     public void deletePassenger(Long passengerId) {
         Optional<Passenger> passenger = passengerRepository.findById(passengerId);
-        passenger.ifPresent(passengerRepository::delete);
+        passenger.ifPresentOrElse(passengerRepository::delete, () -> {
+            throw new PassengerNotFoundException(passengerId);
+        });
     }
 
     @Override
