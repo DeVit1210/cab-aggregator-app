@@ -2,16 +2,17 @@ package com.modsen.driver.service.impl;
 
 import com.modsen.driver.dto.request.ChangeDriverStatusRequest;
 import com.modsen.driver.dto.request.DriverRequest;
+import com.modsen.driver.dto.request.RideRequest;
 import com.modsen.driver.dto.response.DriverListResponse;
 import com.modsen.driver.dto.response.DriverResponse;
 import com.modsen.driver.dto.response.PagedDriverResponse;
 import com.modsen.driver.enums.DriverStatus;
 import com.modsen.driver.exception.DriverNotFoundException;
-import com.modsen.driver.exception.NoDriverWithStatusException;
 import com.modsen.driver.mapper.DriverMapper;
 import com.modsen.driver.model.Driver;
 import com.modsen.driver.repository.DriverRepository;
 import com.modsen.driver.service.DriverService;
+import com.modsen.driver.service.DriverWithSuggestedRideService;
 import com.modsen.driver.utils.PageRequestUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ import java.util.Optional;
 public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
+    private final DriverWithSuggestedRideService suggestedRideService;
 
     @Override
     public DriverListResponse findAllDrivers() {
@@ -84,16 +86,15 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public Driver findDriverByStatus(DriverStatus status) {
-        return driverRepository.findFirstByStatus(status)
-                .orElseThrow(() -> new NoDriverWithStatusException(status));
+    public Optional<Driver> findAvailableDriverForRide(RideRequest request) {
+        List<Long> alreadySuggestedDriverList = suggestedRideService.getDriverIdList(request);
+        if (alreadySuggestedDriverList.isEmpty()) {
+            return driverRepository.findFirstByStatus(DriverStatus.AVAILABLE);
+        } else {
+            return driverRepository.findFirstByStatusAndIdIsNotIn(DriverStatus.AVAILABLE, alreadySuggestedDriverList);
+        }
     }
 
-    @Override
-    public Driver findDriverByStatus(DriverStatus status, List<Long> driverToExcludeIdList) {
-        return driverRepository.findFirstByStatusAndIdIsNotIn(status, driverToExcludeIdList)
-                .orElseThrow(() -> new NoDriverWithStatusException(status));
-    }
 
     @Override
     public void updateDriverStatus(ChangeDriverStatusRequest request) {

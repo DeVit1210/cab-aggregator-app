@@ -4,30 +4,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="1" author="admin">
-        <createTable tableName="drivers">
-            <column name="id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="first_name" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="last_name" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="email" type="varchar(255)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="phone_number" type="varchar(255)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="licence_number" type="varchar(255)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="status"
-                    type="enum('AVAILABLE', 'OFFLINE', 'ON_TRIP', 'WAITING_FOR_PASSENGER', 'DRIVING_FOR_PASSENGER')">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
+    <include file="01-create-driver-table.xml" relativeToChangelogFile="true"/>
+    <include file="10-create-driver-with-suggested-ride-table.xml" relativeToChangelogFile="true"/>
+    <include file="01-add-driver-with-suggested-ride-foreign-key.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>
