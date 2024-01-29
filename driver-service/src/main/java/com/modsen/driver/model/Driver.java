@@ -1,6 +1,6 @@
-package com.example.driver.model;
+package com.modsen.driver.model;
 
-import com.example.driver.enums.DriverStatus;
+import com.modsen.driver.enums.DriverStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

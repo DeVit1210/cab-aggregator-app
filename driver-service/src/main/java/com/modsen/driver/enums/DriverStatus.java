@@ -1,4 +1,4 @@
-package com.example.driver.enums;
+package com.modsen.driver.enums;
 
 public enum DriverStatus {
     OFFLINE,
