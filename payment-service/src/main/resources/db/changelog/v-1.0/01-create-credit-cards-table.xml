@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-credit-cards-table" author="Mozol Denis">
+        <createTable tableName="credit_cards">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="number" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="role" type="ENUM('PASSENGER', 'DRIVER')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="holder_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stripe_card_id" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="credit-cards"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

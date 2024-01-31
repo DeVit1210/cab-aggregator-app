@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create_payments_table" author="Mozol Denis">
+        <createTable tableName="payments">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="passenger_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="decimal(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="ENUM('BY_CARD', 'BY_CASH')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="ride_id" type="bigint">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="payments"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
