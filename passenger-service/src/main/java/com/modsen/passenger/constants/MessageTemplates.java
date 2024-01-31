@@ -1,10 +1,24 @@
 package com.modsen.passenger.constants;
 
-public interface MessageTemplates {
-    String PASSENGER_NOT_FOUND_BY_ID = "Passenger with id %s was not found!";
-    String PASSENGER_NOT_FOUND_BY_EMAIL = "Passenger with email %s was not found!";
-    String INCORRECT_PAGE_SIZE = "Page size should be at least 1, but requested %s!";
-    String INCORRECT_PAGE_NUMBER = "Page number should be at least 1, but requested %s!";
-    String INCORRECT_PAGE_NUMBER_WITH_LIMIT = "For the size page %s there are only %s pages, but requested %s";
-    String INCORRECT_SORT_FIELD_NAME = "Field with name %s was not found in Passenger entity!";
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.util.ResourceBundle;
+
+@AllArgsConstructor
+@Getter
+public enum MessageTemplates {
+    PASSENGER_NOT_FOUND_BY_ID("passenger.not-found.id"),
+    PASSENGER_NOT_FOUND_BY_EMAIL("passenger.not-found.email"),
+    INCORRECT_PAGE_SIZE("page.invalid.size"),
+    INCORRECT_PAGE_NUMBER("page.invalid.number"),
+    INCORRECT_PAGE_NUMBER_WITH_LIMIT("page.invalid.number.with-limit"),
+    INCORRECT_SORT_FIELD_NAME("page.invalid.sortField");
+
+    private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("exception-messages");
+    private final String key;
+
+    public String getValue() {
+        return resourceBundle.getString(this.key);
+    }
 }

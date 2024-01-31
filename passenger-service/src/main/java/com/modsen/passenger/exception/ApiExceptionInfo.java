@@ -6,16 +6,15 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class MultipleApiException {
-    private List<String> messageList;
+public class ApiExceptionInfo {
+    private String message;
     private HttpStatus httpStatus;
     private LocalDateTime timestamp;
 
-    public static MultipleApiException of(List<String> messageList, HttpStatus status) {
-        return new MultipleApiException(messageList, status, LocalDateTime.now());
+    public static ApiExceptionInfo of(String message, HttpStatus status) {
+        return new ApiExceptionInfo(message, status, LocalDateTime.now());
     }
 }

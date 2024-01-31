@@ -1,7 +1,7 @@
 package com.modsen.passenger.exception.handler;
 
-import com.modsen.passenger.exception.ApiException;
-import com.modsen.passenger.exception.MultipleApiException;
+import com.modsen.passenger.exception.ApiExceptionInfo;
+import com.modsen.passenger.exception.MultipleApiExceptionInfo;
 import com.modsen.passenger.exception.PageException;
 import com.modsen.passenger.exception.PassengerNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -23,27 +23,27 @@ public class PassengerControllerAdvice {
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList();
-        MultipleApiException exception = MultipleApiException.of(exceptionMessageList, HttpStatus.BAD_REQUEST);
+        MultipleApiExceptionInfo exception = MultipleApiExceptionInfo.of(exceptionMessageList, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<ApiException> handleSqlIntegrityException(SQLIntegrityConstraintViolationException e) {
+    public ResponseEntity<ApiExceptionInfo> handleSqlIntegrityException(SQLIntegrityConstraintViolationException e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PassengerNotFoundException.class)
-    public ResponseEntity<ApiException> handlePassengerNotFoundException(PassengerNotFoundException e) {
+    public ResponseEntity<ApiExceptionInfo> handlePassengerNotFoundException(PassengerNotFoundException e) {
         return generateApiExceptionResponse(e, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(PageException.class)
-    public ResponseEntity<ApiException> handlePageException(PageException e) {
+    public ResponseEntity<ApiExceptionInfo> handlePageException(PageException e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<ApiException> generateApiExceptionResponse(Throwable e, HttpStatus status) {
-        ApiException apiException = ApiException.of(e.getMessage(), status);
+    private ResponseEntity<ApiExceptionInfo> generateApiExceptionResponse(Throwable e, HttpStatus status) {
+        ApiExceptionInfo apiException = ApiExceptionInfo.of(e.getMessage(), status);
         return new ResponseEntity<>(apiException, status);
     }
 }
