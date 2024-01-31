@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <include file="01-create-credit-cards-table.xml" relativeToChangelogFile="true"/>
+    <include file="03-create-driver-accounts-table.xml" relativeToChangelogFile="true"/>
+    <include file="05-create-driver-payouts-table.xml" relativeToChangelogFile="true"/>
+    <include file="07-create-payments-table.xml" relativeToChangelogFile="true"/>
+    <include file="09-create-stripe-customers-table.xml" relativeToChangelogFile="true"/>
+    <include file="01-add-driver-payout-foreign-key.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

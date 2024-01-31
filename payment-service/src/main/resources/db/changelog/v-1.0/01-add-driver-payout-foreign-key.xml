@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="add-driver-payout-foreign-key" author="Mozol Denis">
+        <addForeignKeyConstraint baseTableName="driver_payouts"
+                                 baseColumnNames="driver_account_id"
+                                 constraintName="fk_driver_payouts_driver_accounts"
+                                 referencedTableName="driver_accounts"
+                                 referencedColumnNames="id"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="driver_payouts"
+                                      constraintName="fk_driver_payouts_driver_accounts"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
