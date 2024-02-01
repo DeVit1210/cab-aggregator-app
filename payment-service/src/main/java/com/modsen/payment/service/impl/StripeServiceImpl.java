@@ -1,5 +1,6 @@
 package com.modsen.payment.service.impl;
 
+import com.modsen.payment.advice.PublishableKey;
 import com.modsen.payment.dto.request.CreditCardRequest;
 import com.modsen.payment.dto.request.CustomerRequest;
 import com.modsen.payment.service.StripeService;
@@ -8,7 +9,13 @@ import com.stripe.model.Customer;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.PaymentMethod;
 import com.stripe.model.Token;
-import com.stripe.param.*;
+import com.stripe.param.CustomerCreateParams;
+import com.stripe.param.CustomerUpdateParams;
+import com.stripe.param.PaymentIntentCreateParams;
+import com.stripe.param.PaymentMethodAttachParams;
+import com.stripe.param.PaymentMethodCreateParams;
+import com.stripe.param.TokenCreateParams;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,20 +23,21 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
-
 @Service
 @RequiredArgsConstructor
 public class StripeServiceImpl implements StripeService {
-    @Value("${stripe.key.publishable}")
-    private String PK_KEY;
     @Value("${stripe.key.secret}")
     private String SK_KEY;
 
+    @PostConstruct
+    public void setUp() {
+        Stripe.apiKey = SK_KEY;
+    }
+
     @Override
     @SneakyThrows
+    @PublishableKey
     public String createTokenForCreditCard(CreditCardRequest request) {
-        Stripe.apiKey = PK_KEY;
-
         TokenCreateParams params = TokenCreateParams.builder()
                 .setCard(TokenCreateParams.Card.builder()
                         .setNumber(request.getNumber())
@@ -47,7 +55,6 @@ public class StripeServiceImpl implements StripeService {
     @Override
     @SneakyThrows
     public String createStripeCustomer(CustomerRequest request) {
-        Stripe.apiKey = SK_KEY;
         CustomerCreateParams params = CustomerCreateParams.builder()
                 .setName(request.getName())
                 .setEmail(request.getEmail())
@@ -60,7 +67,6 @@ public class StripeServiceImpl implements StripeService {
     @Override
     @SneakyThrows
     public void setDefaultCreditCard(String stripeCustomerId, String creditCardToken) {
-        Stripe.apiKey = SK_KEY;
         PaymentMethod paymentMethod = createPaymentMethod(creditCardToken);
         PaymentMethod attachedPaymentMethod = attachPaymentMethodToCustomer(paymentMethod, stripeCustomerId);
         CustomerUpdateParams params = CustomerUpdateParams.builder()
@@ -76,7 +82,6 @@ public class StripeServiceImpl implements StripeService {
     @Override
     @SneakyThrows
     public String createPayment(String stripeCustomerId, BigDecimal amount) {
-        Stripe.apiKey = SK_KEY;
         Customer customer = Customer.retrieve(stripeCustomerId);
         PaymentIntentCreateParams params =
                 PaymentIntentCreateParams.builder()
