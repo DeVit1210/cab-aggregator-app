@@ -16,7 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2023.0.0</spring-cloud.version>
-		<stripe.version>20.59.0</stripe.version>
+		<stripe.version>22.11.0</stripe.version>
 	</properties>
 	<dependencies>
 		<dependency>
