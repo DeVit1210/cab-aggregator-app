@@ -1,6 +1,7 @@
 package com.modsen.payment.exception.handler;
 
 import com.modsen.payment.exception.ApiExceptionInfo;
+import com.modsen.payment.exception.CustomStripeException;
 import com.modsen.payment.exception.MultipleApiExceptionInfo;
 import com.modsen.payment.exception.PageException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -33,6 +34,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PageException.class)
     public ResponseEntity<ApiExceptionInfo> handlePageException(PageException e) {
+        return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CustomStripeException.class)
+    public ResponseEntity<ApiExceptionInfo> handleCustomStripeException(CustomStripeException e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
