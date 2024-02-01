@@ -5,6 +5,6 @@ import com.modsen.driver.enums.DriverStatus;
 
 public class NoDriverWithStatusException extends RuntimeException {
     public NoDriverWithStatusException(DriverStatus status) {
-        super(String.format(MessageTemplates.DRIVER_NOT_FOUND_BY_STATUS, status));
+        super(String.format(MessageTemplates.DRIVER_NOT_FOUND_BY_STATUS.getValue(), status));
     }
 }

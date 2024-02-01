@@ -35,6 +35,4 @@ public class Driver {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private DriverStatus status;
-//    @OneToOne(mappedBy = "driver")
-//    private Car car;
 }

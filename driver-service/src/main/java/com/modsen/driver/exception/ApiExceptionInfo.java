@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ApiException {
+public class ApiExceptionInfo {
     private String message;
     private HttpStatus httpStatus;
     private LocalDateTime timestamp;
 
-    public static ApiException of(String message, HttpStatus status) {
-        return new ApiException(message, status, LocalDateTime.now());
+    public static ApiExceptionInfo of(String message, HttpStatus status) {
+        return new ApiExceptionInfo(message, status, LocalDateTime.now());
     }
 }

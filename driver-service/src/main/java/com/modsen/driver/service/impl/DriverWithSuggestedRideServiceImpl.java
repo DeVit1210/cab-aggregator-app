@@ -8,20 +8,25 @@ import com.modsen.driver.service.DriverWithSuggestedRideService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
 public class DriverWithSuggestedRideServiceImpl implements DriverWithSuggestedRideService {
     private final DriverWithSuggestedRideRepository suggestedRideRepository;
+
     @Override
     public List<Long> getDriverIdList(RideRequest request) {
-        Long rideId = request.getId();
-
-        return suggestedRideRepository.findAllBySuggestedRideId(rideId)
-                .stream()
-                .map(DriverWithSuggestedRide::getDriver)
-                .map(Driver::getId)
-                .toList();
+        return Optional.of(request.getRideId())
+                .map(rideId -> suggestedRideRepository.findAllBySuggestedRideId(rideId)
+                        .stream()
+                        .map(DriverWithSuggestedRide::getDriver)
+                        .map(Driver::getId)
+                        .toList()
+                )
+                .orElse(Collections.emptyList());
     }
 }

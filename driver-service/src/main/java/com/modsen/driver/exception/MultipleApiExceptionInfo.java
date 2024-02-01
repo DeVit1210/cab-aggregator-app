@@ -10,12 +10,12 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class MultipleApiException {
+public class MultipleApiExceptionInfo {
     private List<String> messageList;
     private HttpStatus httpStatus;
     private LocalDateTime timestamp;
 
-    public static MultipleApiException of(List<String> messageList, HttpStatus status) {
-        return new MultipleApiException(messageList, status, LocalDateTime.now());
+    public static MultipleApiExceptionInfo of(List<String> messageList, HttpStatus status) {
+        return new MultipleApiExceptionInfo(messageList, status, LocalDateTime.now());
     }
 }
