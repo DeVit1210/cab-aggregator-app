@@ -37,4 +37,6 @@ public class Payment {
     private LocalDateTime createdAt;
     @Column(name = "ride_id")
     private Long rideId;
+    @Column(name = "credit_card_id")
+    private Long creditCardId;
 }

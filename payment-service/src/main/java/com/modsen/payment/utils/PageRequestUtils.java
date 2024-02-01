@@ -1,5 +1,6 @@
 package com.modsen.payment.utils;
 
+import com.modsen.payment.dto.request.PageSettingsRequest;
 import com.modsen.payment.exception.IncorrectPageNumberException;
 import com.modsen.payment.exception.IncorrectPageSizeException;
 import com.modsen.payment.exception.IncorrectSortFieldNameException;
@@ -32,6 +33,10 @@ public class PageRequestUtils {
         return Optional.of(sortField)
                 .map(field -> PageRequest.of(pageNumber - 1, pageSize, Sort.Direction.ASC, sortField))
                 .orElse(PageRequest.of(pageNumber - 1, pageSize));
+    }
+
+    public static PageRequest pageRequestForEntity(PageSettingsRequest request, Class<?> entityClass) {
+        return pageRequestForEntity(request.getNumber(), request.getSize(), request.getSortField(), entityClass);
     }
 
     public static <T> void validatePageResponse(PageRequest pageRequest, Page<T> passengerPage) {
