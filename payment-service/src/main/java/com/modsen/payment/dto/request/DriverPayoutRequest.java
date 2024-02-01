@@ -11,11 +11,11 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class DriverPayoutRequest {
-    @NotEmpty
+    @NotEmpty(message = ValidationConstants.ID_NOT_EMPTY)
     private Long driverId;
     @NotEmpty(message = ValidationConstants.AMOUNT_NOT_EMPTY)
     @Min(value = 0, message = ValidationConstants.AMOUNT_INVALID)
     private BigDecimal amount;
-    @NotEmpty
+    @NotEmpty(message = ValidationConstants.ID_NOT_EMPTY)
     private Long creditCardId;
 }

@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @Builder
 public class CustomerRequest {
-    @NotEmpty(message = ValidationConstants.PASSENGER_ID_NOT_EMPTY)
+    @NotEmpty(message = ValidationConstants.ID_NOT_EMPTY)
     private Long passengerId;
     @Email
     private String email;
