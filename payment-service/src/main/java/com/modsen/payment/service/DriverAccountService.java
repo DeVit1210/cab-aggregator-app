@@ -15,5 +15,5 @@ public interface DriverAccountService {
 
     DriverPayoutListResponse getAllPayoutsForDriver(Long driverId);
 
-    Paged<DriverPayoutResponse> getAllPayoutsForDriver(Long driverId, PageSettingsRequest request);
+    Paged<DriverPayoutResponse> getAllPayouts(PageSettingsRequest request);
 }

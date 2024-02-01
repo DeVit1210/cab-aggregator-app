@@ -13,5 +13,5 @@ public interface PaymentService {
 
     PaymentListResponse findAllPaymentsByPassenger(Long passengerId);
 
-    Paged<PaymentResponse> findAlPaymentsByPassenger(Long passengerId, PageSettingsRequest request);
+    Paged<PaymentResponse> findAllPayments(PageSettingsRequest request);
 }

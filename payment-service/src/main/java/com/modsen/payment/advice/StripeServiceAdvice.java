@@ -40,12 +40,12 @@ public class StripeServiceAdvice {
     public void callAtPublishableKeyAnnotatedMethod() { }
 
     @Before("callAtPublishableKeyAnnotatedMethod()")
-    public void beforeCallingPublishableKeyAnnotatedMethod(JoinPoint joinPoint) {
+    public void beforeCallingPublishableKeyAnnotatedMethod() {
         Stripe.apiKey = PK_KEY;
     }
 
     @After("callAtPublishableKeyAnnotatedMethod()")
-    public void afterCallingPublishableKeyAnnotatedMethod(JoinPoint joinPoint) {
+    public void afterCallingPublishableKeyAnnotatedMethod() {
         Stripe.apiKey = SK_KEY;
     }
 }

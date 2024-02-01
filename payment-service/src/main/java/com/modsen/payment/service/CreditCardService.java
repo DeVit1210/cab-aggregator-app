@@ -13,4 +13,6 @@ public interface CreditCardService {
     CreditCardResponse findCardById(Long cardId);
 
     CreditCardResponse setDefaultCreditCard(Long cardId);
+
+    Long getCreditCardId(String cardStripeId);
 }

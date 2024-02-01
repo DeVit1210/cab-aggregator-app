@@ -19,9 +19,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CreditCardServiceImpl implements CreditCardService {
-    private final StripeService stripeService;
     private final CreditCardRepository creditCardRepository;
     private final CreditCardMapper creditCardMapper;
+    private final StripeService stripeService;
     private final StripeCustomerService stripeCustomerService;
 
     @Override
@@ -61,5 +61,12 @@ public class CreditCardServiceImpl implements CreditCardService {
         stripeService.setDefaultCreditCard(stripeCustomerId, creditCard.getStripeId());
 
         return creditCardMapper.toCreditCardResponse(creditCard);
+    }
+
+    @Override
+    public Long getCreditCardId(String cardStripeId) {
+        return creditCardRepository.findByStripeId(cardStripeId)
+                .map(CreditCard::getId)
+                .orElseThrow(() -> new PaymentEntityNotFoundException(cardStripeId, CreditCard.class));
     }
 }
