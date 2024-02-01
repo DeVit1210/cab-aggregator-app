@@ -48,8 +48,9 @@ public class StripeServiceImpl implements StripeService {
                 )
                 .build();
         Token token = Token.create(params);
+        PaymentMethod paymentMethod = createPaymentMethod(token.getId());
 
-        return token.getId();
+        return paymentMethod.getId();
     }
 
     @Override
@@ -67,7 +68,8 @@ public class StripeServiceImpl implements StripeService {
     @Override
     @SneakyThrows
     public void setDefaultCreditCard(String stripeCustomerId, String creditCardToken) {
-        PaymentMethod paymentMethod = createPaymentMethod(creditCardToken);
+//        PaymentMethod paymentMethod = createPaymentMethod(creditCardToken);
+        PaymentMethod paymentMethod = PaymentMethod.retrieve(creditCardToken);
         PaymentMethod attachedPaymentMethod = attachPaymentMethodToCustomer(paymentMethod, stripeCustomerId);
         CustomerUpdateParams params = CustomerUpdateParams.builder()
                 .setInvoiceSettings(CustomerUpdateParams.InvoiceSettings.builder()
