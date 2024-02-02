@@ -20,4 +20,6 @@ public class PaymentRequest {
     private PaymentType type;
     @NotEmpty(message = ValidationConstants.ID_NOT_EMPTY)
     private Long rideId;
+    @NotEmpty(message = ValidationConstants.ID_NOT_EMPTY)
+    private Long driverId;
 }

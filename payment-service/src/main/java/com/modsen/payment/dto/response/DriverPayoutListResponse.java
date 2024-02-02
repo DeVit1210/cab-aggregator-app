@@ -10,10 +10,10 @@ import java.util.List;
 @Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class DriverPayoutListResponse {
-    private List<DriverPayout> payouts;
+    private List<DriverPayoutResponse> payouts;
     private int size;
 
-    public static DriverPayoutListResponse of(List<DriverPayout> payouts) {
+    public static DriverPayoutListResponse of(List<DriverPayoutResponse> payouts) {
         return new DriverPayoutListResponse(payouts, payouts.size());
     }
 }
