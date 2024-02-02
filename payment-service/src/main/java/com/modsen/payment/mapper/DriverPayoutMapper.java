@@ -1,6 +1,5 @@
 package com.modsen.payment.mapper;
 
-import com.modsen.payment.dto.request.DriverPayoutRequest;
 import com.modsen.payment.dto.response.DriverPayoutResponse;
 import com.modsen.payment.dto.response.Paged;
 import com.modsen.payment.model.DriverPayout;

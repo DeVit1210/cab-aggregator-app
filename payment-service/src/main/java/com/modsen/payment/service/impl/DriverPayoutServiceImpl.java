@@ -5,7 +5,6 @@ import com.modsen.payment.dto.request.PageSettingsRequest;
 import com.modsen.payment.dto.response.DriverPayoutListResponse;
 import com.modsen.payment.dto.response.DriverPayoutResponse;
 import com.modsen.payment.dto.response.Paged;
-import com.modsen.payment.exception.AccountNotFoundForDriverIdException;
 import com.modsen.payment.exception.IncufficientAccountBalanceException;
 import com.modsen.payment.mapper.DriverPayoutMapper;
 import com.modsen.payment.model.DriverAccount;
