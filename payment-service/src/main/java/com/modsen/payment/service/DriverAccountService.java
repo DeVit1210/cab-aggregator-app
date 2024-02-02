@@ -1,19 +1,17 @@
 package com.modsen.payment.service;
 
 
-import com.modsen.payment.dto.request.DriverPayoutRequest;
-import com.modsen.payment.dto.request.PageSettingsRequest;
 import com.modsen.payment.dto.response.DriverAccountResponse;
-import com.modsen.payment.dto.response.DriverPayoutListResponse;
-import com.modsen.payment.dto.response.DriverPayoutResponse;
-import com.modsen.payment.dto.response.Paged;
+import com.modsen.payment.model.DriverAccount;
+
+import java.math.BigDecimal;
 
 public interface DriverAccountService {
     DriverAccountResponse createDriverAccount(Long driverId);
 
-    DriverPayoutResponse createPayout(DriverPayoutRequest request);
+    DriverAccount findAccountById(Long driverAccountId);
 
-    DriverPayoutListResponse getAllPayoutsForDriver(Long driverId);
+    DriverAccount findAccountByDriverId(Long driverId);
 
-    Paged<DriverPayoutResponse> getAllPayouts(PageSettingsRequest request);
+    void replenishAccount(Long driverId, BigDecimal amount);
 }

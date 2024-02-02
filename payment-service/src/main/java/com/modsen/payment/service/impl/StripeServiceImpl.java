@@ -3,7 +3,6 @@ package com.modsen.payment.service.impl;
 import com.modsen.payment.advice.PublishableKey;
 import com.modsen.payment.dto.request.CreditCardRequest;
 import com.modsen.payment.dto.request.CustomerRequest;
-import com.modsen.payment.model.Payment;
 import com.modsen.payment.service.StripeService;
 import com.stripe.Stripe;
 import com.stripe.model.Customer;

@@ -14,6 +14,7 @@ import org.hibernate.validator.constraints.Range;
 public class CreditCardRequest {
     @NotEmpty(message = ValidationConstants.ID_NOT_EMPTY)
     private Long cardHolderId;
+    @NotEmpty(message = ValidationConstants.USER_ROLE_CANNOT_BE_EMPTY)
     private Role role;
     @NotEmpty(message = ValidationConstants.CARD_NUMBER_NOT_EMPTY)
     @Pattern(regexp = RegexConstants.CARD_NUMBER_PATTERN, message = ValidationConstants.CARD_NUMBER_INVALID)

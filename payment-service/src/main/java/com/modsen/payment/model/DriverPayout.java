@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "driver_payouts")
 public class DriverPayout {
@@ -28,7 +30,7 @@ public class DriverPayout {
     @JoinColumn(name = "driver_account_id")
     private DriverAccount account;
     @Column(name = "amount")
-    private BigDecimal amount;
+    private BigDecimal withdrawAmount;
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
     @Column(name = "credit_card_id")

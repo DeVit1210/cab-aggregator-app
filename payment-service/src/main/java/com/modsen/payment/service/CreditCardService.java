@@ -4,6 +4,7 @@ import com.modsen.payment.dto.request.CreditCardRequest;
 import com.modsen.payment.dto.response.CreditCardListResponse;
 import com.modsen.payment.dto.response.CreditCardResponse;
 import com.modsen.payment.enums.Role;
+import com.modsen.payment.model.CreditCard;
 
 public interface CreditCardService {
     CreditCardResponse createCreditCard(CreditCardRequest request);
@@ -14,5 +15,7 @@ public interface CreditCardService {
 
     CreditCardResponse setDefaultCreditCard(Long cardId);
 
-    Long getCreditCardId(String cardStripeId);
+    CreditCard findCreditCardByStripeId(String cardStripeId);
+
+    CreditCard findCreditCardById(Long creditCardId);
 }

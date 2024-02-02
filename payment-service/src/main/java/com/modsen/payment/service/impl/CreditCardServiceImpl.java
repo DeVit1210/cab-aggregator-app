@@ -64,9 +64,14 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 
     @Override
-    public Long getCreditCardId(String cardStripeId) {
+    public CreditCard findCreditCardByStripeId(String cardStripeId) {
         return creditCardRepository.findByStripeId(cardStripeId)
-                .map(CreditCard::getId)
                 .orElseThrow(() -> new PaymentEntityNotFoundException(cardStripeId, CreditCard.class));
+    }
+
+    @Override
+    public CreditCard findCreditCardById(Long creditCardId) {
+        return creditCardRepository.findById(creditCardId)
+                .orElseThrow(() -> new PaymentEntityNotFoundException(creditCardId, CreditCard.class));
     }
 }
