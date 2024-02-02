@@ -1,6 +1,5 @@
 package com.modsen.payment.dto.response;
 
-import com.modsen.payment.model.DriverPayout;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

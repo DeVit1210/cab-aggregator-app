@@ -1,6 +1,5 @@
 package com.modsen.payment.service.impl;
 
-import com.modsen.payment.dto.request.DriverPayoutRequest;
 import com.modsen.payment.dto.request.PageSettingsRequest;
 import com.modsen.payment.dto.request.PaymentRequest;
 import com.modsen.payment.dto.response.Paged;

@@ -17,6 +17,7 @@ public class PaymentRequest {
     @NotEmpty(message = ValidationConstants.AMOUNT_NOT_EMPTY)
     @Min(value = 0, message = ValidationConstants.AMOUNT_INVALID)
     private BigDecimal amount;
+    @NotEmpty(message = ValidationConstants.PAYMENT_TYPE_CANNOT_BE_EMPTY)
     private PaymentType type;
     @NotEmpty(message = ValidationConstants.ID_NOT_EMPTY)
     private Long rideId;
