@@ -16,11 +16,13 @@ import com.modsen.rating.repository.RatingRepository;
 import com.modsen.rating.service.RatingService;
 import com.modsen.rating.utils.PageRequestUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +31,8 @@ import java.util.stream.Collectors;
 public class RatingServiceImpl implements RatingService {
     private final RatingRepository ratingRepository;
     private final RatingMapper ratingMapper;
+    @Value("${rating.average.default}")
+    private double defaultAverageRating;
 
     @Override
     public RatingResponse createRating(RatingRequest request) {
@@ -42,17 +46,21 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public RatingListResponse getAllRatings(Long ratedPersonId, Role role) {
         List<Rating> ratingList = ratingRepository.findAllByRoleAndRatedPersonId(role, ratedPersonId);
+        if (ratingList.isEmpty()) {
+            return new RatingListResponse(Collections.emptyList(), defaultAverageRating);
+        }
+        double averageRating = calculateAverageRating(ratingList);
         List<RatingResponse> ratingResponseList = ratingMapper.toRatingListResponse(ratingList);
 
-        return RatingListResponse.of(ratingResponseList);
+        return new RatingListResponse(ratingResponseList, averageRating);
     }
 
     @Override
     public AverageRatingResponse getAverageRating(Long ratedPersonId, Role role) {
         List<Rating> ratingList = ratingRepository.findAllByRoleAndRatedPersonId(role, ratedPersonId);
-        Double averageRating = ratingList.stream()
-                .map(Rating::getRatingValue)
-                .collect(Collectors.averagingDouble(RatingValue::getValue));
+        double averageRating = ratingList.isEmpty()
+                ? defaultAverageRating
+                : calculateAverageRating(ratingList);
 
         return AverageRatingResponse.builder()
                 .ratedPersonId(ratedPersonId)
@@ -99,5 +107,10 @@ public class RatingServiceImpl implements RatingService {
             throw new RatingAlreadyExistsException(role, rideId);
         }
     }
-}
 
+    private double calculateAverageRating(List<Rating> ratingList) {
+        return ratingList.stream()
+                .map(Rating::getRatingValue)
+                .collect(Collectors.averagingDouble(RatingValue::getValue));
+    }
+}
