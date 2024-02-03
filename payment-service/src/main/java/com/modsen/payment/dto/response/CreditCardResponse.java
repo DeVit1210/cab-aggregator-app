@@ -1,5 +1,6 @@
 package com.modsen.payment.dto.response;
 
+import com.modsen.payment.enums.Role;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,5 +9,6 @@ import lombok.Data;
 public class CreditCardResponse {
     private Long id;
     private Long cardHolderId;
-    private String cardNumber;
+    private String number;
+    private Role role;
 }

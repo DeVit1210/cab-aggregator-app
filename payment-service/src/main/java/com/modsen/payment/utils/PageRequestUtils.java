@@ -19,6 +19,10 @@ public class PageRequestUtils {
                     .map(Field::getName)
                     .anyMatch(fieldName -> fieldName.equals(sortField));
 
+    public static PageRequest pageRequestForEntity(PageSettingsRequest request, Class<?> entityClass) {
+        return pageRequestForEntity(request.getNumber(), request.getSize(), request.getSortField(), entityClass);
+    }
+
     public static PageRequest pageRequestForEntity(int pageNumber, int pageSize, String sortField, Class<?> entityClass) {
         if (pageSize < 1) {
             throw new IncorrectPageSizeException(pageSize);
@@ -26,17 +30,13 @@ public class PageRequestUtils {
         if (pageNumber < 1) {
             throw new IncorrectPageNumberException(pageNumber);
         }
-        if(!IS_SORT_FIELD_EXIST_PREDICATE.test(sortField, entityClass)) {
+        if (!IS_SORT_FIELD_EXIST_PREDICATE.test(sortField, entityClass)) {
             throw new IncorrectSortFieldNameException(sortField, entityClass);
         }
 
         return Optional.of(sortField)
                 .map(field -> PageRequest.of(pageNumber - 1, pageSize, Sort.Direction.ASC, sortField))
                 .orElse(PageRequest.of(pageNumber - 1, pageSize));
-    }
-
-    public static PageRequest pageRequestForEntity(PageSettingsRequest request, Class<?> entityClass) {
-        return pageRequestForEntity(request.getNumber(), request.getSize(), request.getSortField(), entityClass);
     }
 
     public static <T> void validatePageResponse(PageRequest pageRequest, Page<T> passengerPage) {

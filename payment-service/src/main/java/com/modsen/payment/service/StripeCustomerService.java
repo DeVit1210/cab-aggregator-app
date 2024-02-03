@@ -6,5 +6,8 @@ import com.modsen.payment.dto.response.StripeCustomerResponse;
 
 public interface StripeCustomerService {
     String getCustomerId(Long passengerId);
+
     StripeCustomerResponse createStripeCustomer(CustomerRequest request);
+
+    StripeCustomerResponse findStripeCustomerById(Long stripeCustomerId);
 }

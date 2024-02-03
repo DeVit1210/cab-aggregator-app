@@ -16,4 +16,5 @@
             </dropColumn>
         </rollback>
     </changeSet>
+
 </databaseChangeLog>

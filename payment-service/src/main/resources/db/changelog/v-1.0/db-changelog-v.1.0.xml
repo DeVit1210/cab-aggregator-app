@@ -11,4 +11,5 @@
     <include file="09-create-stripe-customers-table.xml" relativeToChangelogFile="true"/>
     <include file="01-add-driver-payout-foreign-key.xml" relativeToChangelogFile="true"/>
     <include file="03-add-credit-card-id-field.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>

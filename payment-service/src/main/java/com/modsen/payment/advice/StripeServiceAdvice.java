@@ -5,8 +5,11 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.*;
-import org.springframework.beans.factory.annotation.Value;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.UndeclaredThrowableException;
@@ -15,18 +18,18 @@ import java.lang.reflect.UndeclaredThrowableException;
 @Slf4j
 @Component
 public class StripeServiceAdvice {
-    @Value("${stripe.key.publishable}")
-    private String PK_KEY;
-    @Value("${stripe.key.secret}")
-    private String SK_KEY;
+    private static final String PK_KEY = "PK_KEY";
+    private static final String SK_KEY = "SK_KEY";
+
     @Pointcut("execution(public * com.modsen.payment.service.StripeService.*(..))")
-    public void callAtStripeServiceMethod() { }
+    public void callAtStripeServiceMethod() {
+    }
 
     @AfterThrowing(pointcut = "callAtStripeServiceMethod()", throwing = "e")
     public void afterReturningFromAnyStripeServiceMethod(JoinPoint joinPoint, Throwable e) {
-        if(e.getClass().equals(UndeclaredThrowableException.class)) {
+        if (e.getClass().equals(UndeclaredThrowableException.class)) {
             Throwable target = e.getCause();
-            if(StripeException.class.isAssignableFrom(target.getClass())) {
+            if (StripeException.class.isAssignableFrom(target.getClass())) {
                 StripeException stripeException = (StripeException) target;
                 log.info("Method {} threw {} exception", joinPoint.getSignature().getName(), stripeException.getMessage());
                 throw new CustomStripeException(stripeException.getCode());
@@ -37,15 +40,16 @@ public class StripeServiceAdvice {
     }
 
     @Pointcut("execution(public * com.modsen.payment.service.StripeService.*(..)) && @annotation(PublishableKey)")
-    public void callAtPublishableKeyAnnotatedMethod() { }
+    public void callAtPublishableKeyAnnotatedMethod() {
+    }
 
     @Before("callAtPublishableKeyAnnotatedMethod()")
     public void beforeCallingPublishableKeyAnnotatedMethod() {
-        Stripe.apiKey = PK_KEY;
+        Stripe.apiKey = System.getenv(PK_KEY);
     }
 
     @After("callAtPublishableKeyAnnotatedMethod()")
     public void afterCallingPublishableKeyAnnotatedMethod() {
-        Stripe.apiKey = SK_KEY;
+        Stripe.apiKey = System.getenv(SK_KEY);
     }
 }

@@ -5,4 +5,5 @@ public interface ControllerMappings {
     String CREDIT_CARD_CONTROLLER = "/creditCards";
     String DRIVER_ACCOUNT_CONTROLLER = "/driver/accounts";
     String DRIVER_PAYOUT_CONTROLLER = "/driver/payouts";
+    String STRIPE_CUSTOMER_CONTROLLER = "/customers";
 }

@@ -8,6 +8,7 @@ import com.modsen.payment.dto.response.DriverPayoutListResponse;
 import com.modsen.payment.dto.response.DriverPayoutResponse;
 import com.modsen.payment.dto.response.Paged;
 import com.modsen.payment.service.DriverPayoutService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public class DriverPayoutController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public DriverPayoutResponse createPayout(@RequestBody DriverPayoutRequest request) {
+    public DriverPayoutResponse createPayout(@Valid @RequestBody DriverPayoutRequest request) {
         return driverPayoutService.createPayout(request);
     }
 

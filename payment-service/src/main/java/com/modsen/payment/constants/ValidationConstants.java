@@ -6,9 +6,7 @@ public interface ValidationConstants {
     String EXPIRE_MONTH_INVALID = "invalid card expiration month format!";
     String EXPIRE_YEAR_INVALID = "invalid card expiration year format!";
     String CVC_INVALID = "invalid cvc format!";
-    String AMOUNT_NOT_EMPTY = "amount cannot be empty!";
     String AMOUNT_INVALID = "amount has to be higher than zero!";
-    String ID_NOT_EMPTY = "id cannot be empty!";
-    String PAYMENT_TYPE_CANNOT_BE_EMPTY = "payment type cannot be empty!";
-    String USER_ROLE_CANNOT_BE_EMPTY = "user role cannot be empty!";
+    String ID_NOT_NULL = "id cannot be empty!";
+    String ENUM_INVALID = "invalid enum value!";
 }

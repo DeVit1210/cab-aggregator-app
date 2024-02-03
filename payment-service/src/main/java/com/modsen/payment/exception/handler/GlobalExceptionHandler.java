@@ -1,7 +1,12 @@
 package com.modsen.payment.exception.handler;
 
+import com.modsen.payment.exception.AlreadyExistsException;
 import com.modsen.payment.exception.ApiExceptionInfo;
+import com.modsen.payment.exception.CardIsNotDefaultException;
 import com.modsen.payment.exception.CustomStripeException;
+import com.modsen.payment.exception.EntityNotFoundException;
+import com.modsen.payment.exception.IncufficientAccountBalanceException;
+import com.modsen.payment.exception.InvalidCreditCardHolderException;
 import com.modsen.payment.exception.MultipleApiExceptionInfo;
 import com.modsen.payment.exception.PageException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -37,9 +42,34 @@ public class GlobalExceptionHandler {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IncufficientAccountBalanceException.class)
+    public ResponseEntity<ApiExceptionInfo> handleIncufficientBalanceException(IncufficientAccountBalanceException e) {
+        return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidCreditCardHolderException.class)
+    public ResponseEntity<ApiExceptionInfo> handleInvalidCreditCardHolderException(InvalidCreditCardHolderException e) {
+        return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(CustomStripeException.class)
     public ResponseEntity<ApiExceptionInfo> handleCustomStripeException(CustomStripeException e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CardIsNotDefaultException.class)
+    public ResponseEntity<ApiExceptionInfo> handleCardIsNotDefaultException(CardIsNotDefaultException e) {
+        return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<ApiExceptionInfo> handleAlreadyExistsException(AlreadyExistsException e) {
+        return generateApiExceptionResponse(e, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ApiExceptionInfo> handleEntityNotFoundException(EntityNotFoundException e) {
+        return generateApiExceptionResponse(e, HttpStatus.NOT_FOUND);
     }
 
     private ResponseEntity<ApiExceptionInfo> generateApiExceptionResponse(Throwable e, HttpStatus status) {
@@ -47,4 +77,3 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiException, status);
     }
 }
-
