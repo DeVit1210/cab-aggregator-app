@@ -2,8 +2,9 @@ package com.modsen.payment.dto.request;
 
 import com.modsen.payment.constants.ValidationConstants;
 import com.modsen.payment.enums.PaymentType;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
+import com.modsen.payment.validation.EnumValue;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,15 +13,15 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class PaymentRequest {
-    @NotEmpty(message = ValidationConstants.ID_NOT_EMPTY)
+    @NotNull(message = ValidationConstants.ID_NOT_NULL)
     private Long passengerId;
-    @NotEmpty(message = ValidationConstants.AMOUNT_NOT_EMPTY)
-    @Min(value = 0, message = ValidationConstants.AMOUNT_INVALID)
+    @NotNull
+    @Positive(message = ValidationConstants.AMOUNT_INVALID)
     private BigDecimal amount;
-    @NotEmpty(message = ValidationConstants.PAYMENT_TYPE_CANNOT_BE_EMPTY)
-    private PaymentType type;
-    @NotEmpty(message = ValidationConstants.ID_NOT_EMPTY)
+    @EnumValue(enumClass = PaymentType.class)
+    private String type;
+    @NotNull(message = ValidationConstants.ID_NOT_NULL)
     private Long rideId;
-    @NotEmpty(message = ValidationConstants.ID_NOT_EMPTY)
+    @NotNull(message = ValidationConstants.ID_NOT_NULL)
     private Long driverId;
 }

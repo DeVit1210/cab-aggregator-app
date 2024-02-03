@@ -6,16 +6,16 @@
 
     <changeSet id="create-driver-accounts-table" author="Mozol Denis">
         <createTable tableName="driver_accounts">
-            <column name="id" type="bigint" autoIncrement="true">
+            <column name="id" type="bigint">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="driver_id" type="bigint">
-                <constraints nullable="false" unique="true"/>
+            <column name="amount" type="decimal(10,2)">
+                <constraints nullable="false"/>
             </column>
-            <column name="amount" type="decimal(10,2)" defaultValue="0.00"/>
         </createTable>
         <rollback>
             <dropTable tableName="driver-accounts"/>
         </rollback>
     </changeSet>
+
 </databaseChangeLog>

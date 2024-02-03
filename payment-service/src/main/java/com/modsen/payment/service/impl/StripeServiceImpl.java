@@ -26,12 +26,13 @@ import java.math.BigDecimal;
 @Service
 @RequiredArgsConstructor
 public class StripeServiceImpl implements StripeService {
-    @Value("${stripe.key.secret}")
-    private String SK_KEY;
+    private static final String SK_KEY = "SK_KEY";
+    @Value("${stripe.currency.code}")
+    private String currencyCode;
 
     @PostConstruct
     public void setUp() {
-        Stripe.apiKey = SK_KEY;
+        Stripe.apiKey = System.getenv(SK_KEY);
     }
 
     @Override
@@ -39,12 +40,13 @@ public class StripeServiceImpl implements StripeService {
     @PublishableKey
     public String createTokenForCreditCard(CreditCardRequest request) {
         TokenCreateParams params = TokenCreateParams.builder()
-                .setCard(TokenCreateParams.Card.builder()
-                        .setNumber(request.getNumber())
-                        .setExpMonth(String.valueOf(request.getExpireMonth()))
-                        .setExpYear(String.valueOf(request.getExpireYear()))
-                        .setCvc(String.valueOf(request.getCvc()))
-                        .build()
+                .setCard(
+                        TokenCreateParams.Card.builder()
+                                .setNumber(request.getNumber())
+                                .setExpMonth(String.valueOf(request.getExpireMonth()))
+                                .setExpYear(String.valueOf(request.getExpireYear()))
+                                .setCvc(request.getCvc())
+                                .build()
                 )
                 .build();
         Token token = Token.create(params);
@@ -68,13 +70,13 @@ public class StripeServiceImpl implements StripeService {
     @Override
     @SneakyThrows
     public void setDefaultCreditCard(String stripeCustomerId, String creditCardToken) {
-//        PaymentMethod paymentMethod = createPaymentMethod(creditCardToken);
         PaymentMethod paymentMethod = PaymentMethod.retrieve(creditCardToken);
         PaymentMethod attachedPaymentMethod = attachPaymentMethodToCustomer(paymentMethod, stripeCustomerId);
         CustomerUpdateParams params = CustomerUpdateParams.builder()
-                .setInvoiceSettings(CustomerUpdateParams.InvoiceSettings.builder()
-                        .setDefaultPaymentMethod(attachedPaymentMethod.getId())
-                        .build()
+                .setInvoiceSettings(
+                        CustomerUpdateParams.InvoiceSettings.builder()
+                                .setDefaultPaymentMethod(attachedPaymentMethod.getId())
+                                .build()
                 )
                 .build();
         Customer customer = Customer.retrieve(stripeCustomerId);
@@ -87,8 +89,8 @@ public class StripeServiceImpl implements StripeService {
         Customer customer = Customer.retrieve(stripeCustomerId);
         PaymentIntentCreateParams params =
                 PaymentIntentCreateParams.builder()
-                        .setAmount(amount.longValue())
-                        .setCurrency("usd")
+                        .setAmount(amount.longValue() * 100)
+                        .setCurrency(currencyCode)
                         .setCustomer(customer.getId())
                         .setPaymentMethod(customer.getInvoiceSettings().getDefaultPaymentMethod())
                         .setConfirm(true)
@@ -107,7 +109,11 @@ public class StripeServiceImpl implements StripeService {
     private PaymentMethod createPaymentMethod(String creditCardToken) {
         PaymentMethodCreateParams paymentMethodCreateParams = PaymentMethodCreateParams.builder()
                 .setType(PaymentMethodCreateParams.Type.CARD)
-                .setCard(PaymentMethodCreateParams.Token.builder().setToken(creditCardToken).build())
+                .setCard(
+                        PaymentMethodCreateParams.Token.builder()
+                                .setToken(creditCardToken)
+                                .build()
+                )
                 .build();
 
         return PaymentMethod.create(paymentMethodCreateParams);

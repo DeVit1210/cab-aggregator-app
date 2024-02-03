@@ -6,11 +6,8 @@
 
     <changeSet id="create-stripe-customers-table" author="Mozol Denis">
         <createTable tableName="stripe_customers">
-            <column name="id" type="bigint" autoIncrement="true">
+            <column name="id" type="bigint">
                 <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="passenger_id" type="bigint">
-                <constraints nullable="false" unique="true"/>
             </column>
             <column name="stripe_customer_id" type="varchar(255)">
                 <constraints nullable="false" unique="true"/>
@@ -20,4 +17,5 @@
             <dropTable tableName="stripe-customers"/>
         </rollback>
     </changeSet>
+
 </databaseChangeLog>

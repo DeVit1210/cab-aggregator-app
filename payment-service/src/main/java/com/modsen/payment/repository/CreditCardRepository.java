@@ -9,5 +9,6 @@ import java.util.Optional;
 
 public interface CreditCardRepository extends JpaRepository<CreditCard, Long> {
     List<CreditCard> findAllByCardHolderIdAndRole(Long cardHolderId, Role role);
+
     Optional<CreditCard> findByStripeId(String stripeCardId);
 }

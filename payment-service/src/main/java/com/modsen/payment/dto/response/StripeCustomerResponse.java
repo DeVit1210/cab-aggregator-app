@@ -7,6 +7,5 @@ import lombok.Data;
 @Builder
 public class StripeCustomerResponse {
     private Long id;
-    private Long passengerId;
     private String stripeCustomerId;
 }

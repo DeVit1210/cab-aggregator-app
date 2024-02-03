@@ -7,6 +7,8 @@ import com.modsen.payment.dto.response.CreditCardListResponse;
 import com.modsen.payment.dto.response.CreditCardResponse;
 import com.modsen.payment.enums.Role;
 import com.modsen.payment.service.CreditCardService;
+import com.modsen.payment.validation.EnumValue;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,12 +29,13 @@ public class CreditCardController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CreditCardResponse createCreditCard(@RequestBody CreditCardRequest request) {
+    public CreditCardResponse createCreditCard(@Valid @RequestBody CreditCardRequest request) {
         return creditCardService.createCreditCard(request);
     }
 
     @GetMapping
-    public CreditCardListResponse findAllByIdAndRole(@RequestParam Role role, @RequestParam Long cardHolderId) {
+    public CreditCardListResponse findAllByIdAndRole(@RequestParam @EnumValue(enumClass = Role.class) String role,
+                                                     @RequestParam Long cardHolderId) {
         return creditCardService.findAllCreditCards(cardHolderId, role);
     }
 

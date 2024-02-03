@@ -6,6 +6,7 @@ import com.modsen.payment.dto.response.Paged;
 import com.modsen.payment.dto.response.PaymentListResponse;
 import com.modsen.payment.dto.response.PaymentResponse;
 import com.modsen.payment.exception.PaymentEntityNotFoundException;
+import com.modsen.payment.exception.RideAlreadyPaidException;
 import com.modsen.payment.mapper.PaymentMapper;
 import com.modsen.payment.model.CreditCard;
 import com.modsen.payment.model.Payment;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +41,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public PaymentResponse createPayment(PaymentRequest request) {
-        Payment payment = paymentMapper.toPayment(request);
+        validatePaymentRequest(request);
 
+        Payment payment = paymentMapper.toPayment(request);
         String stripeCustomerId = stripeCustomerService.getCustomerId(request.getPassengerId());
         String paymentCreditCardStripeId = stripeService.createPayment(stripeCustomerId, request.getAmount());
         CreditCard creditCard = creditCardService.findCreditCardByStripeId(paymentCreditCardStripeId);
@@ -80,5 +83,12 @@ public class PaymentServiceImpl implements PaymentService {
     private BigDecimal getDriverAmount(BigDecimal totalRideCost) {
         return totalRideCost.multiply(BigDecimal.valueOf(0.2))
                 .setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private void validatePaymentRequest(PaymentRequest request) {
+        Optional<Payment> payment = paymentRepository.findByRideId(request.getRideId());
+        payment.ifPresent(existingPayment -> {
+            throw new RideAlreadyPaidException(existingPayment.getRideId(), existingPayment.getCreatedAt());
+        });
     }
 }

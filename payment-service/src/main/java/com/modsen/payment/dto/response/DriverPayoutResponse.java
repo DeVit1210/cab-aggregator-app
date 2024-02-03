@@ -12,5 +12,5 @@ public class DriverPayoutResponse {
     private Long driverId;
     private BigDecimal withdrawAmount;
     private BigDecimal leftoverAmount;
-    private String creditCardNumber;
+    private Long creditCardId;
 }

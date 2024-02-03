@@ -15,4 +15,5 @@
                                       constraintName="fk_driver_payouts_driver_accounts"/>
         </rollback>
     </changeSet>
+
 </databaseChangeLog>
