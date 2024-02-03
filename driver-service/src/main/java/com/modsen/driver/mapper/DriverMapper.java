@@ -20,7 +20,7 @@ public interface DriverMapper {
 
     default PagedDriverResponse toPagedDriverResponse(Page<Driver> driverPage) {
         return PagedDriverResponse.builder()
-                .content(driverPage.getContent())
+                .content(this.toDriverListResponse(driverPage.getContent()))
                 .pageSize(driverPage.getSize())
                 .pageNumber(driverPage.getNumber() + 1)
                 .totalPageCount(driverPage.getTotalPages())
