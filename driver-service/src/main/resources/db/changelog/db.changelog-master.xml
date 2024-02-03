@@ -4,13 +4,13 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="0" author="Mozol Denis">
+    <changeSet id="init-db" author="Mozol Denis">
         <tagDatabase tag="init-db"/>
     </changeSet>
 
     <include file="v-1.0/db.changelog-v.1.0.xml" relativeToChangelogFile="true"/>
 
-    <changeSet id="4" author="Mozol Denis">
+    <changeSet id="v-1.0" author="Mozol Denis">
         <tagDatabase tag="v-1.0"/>
     </changeSet>
 

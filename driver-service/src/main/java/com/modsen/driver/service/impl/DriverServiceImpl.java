@@ -95,7 +95,6 @@ public class DriverServiceImpl implements DriverService {
         }
     }
 
-
     @Override
     public void updateDriverStatus(ChangeDriverStatusRequest request) {
         long driverId = request.getDriverId();

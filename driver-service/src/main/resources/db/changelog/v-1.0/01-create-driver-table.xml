@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="1" author="admin">
+    <changeSet id="create-drivers-table" author="Mozol Denis">
         <createTable tableName="drivers">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true"/>

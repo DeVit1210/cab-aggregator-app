@@ -5,4 +5,3 @@ public class PageException extends RuntimeException {
         super(message);
     }
 }
-
