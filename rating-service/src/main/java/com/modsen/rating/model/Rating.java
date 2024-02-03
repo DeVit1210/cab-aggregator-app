@@ -37,4 +37,6 @@ public class Rating {
     private LocalDateTime createdAt;
     @Column(name = "comment")
     private String comment;
+    @Column(name = "ride_id")
+    private Long rideId;
 }

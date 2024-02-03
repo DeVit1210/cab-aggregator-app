@@ -1,14 +1,14 @@
 package com.modsen.rating.enums;
 
 public enum RatingValue {
-    ZERO,
+    ZERO(),
     ONE,
     TWO,
     THREE,
     FOUR,
     FIVE;
 
-    public int getValue(RatingValue ratingValue) {
+    public static int getValue(RatingValue ratingValue) {
         return ratingValue.ordinal();
     }
 }
