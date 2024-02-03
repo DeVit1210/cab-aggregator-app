@@ -18,7 +18,7 @@ public interface RatingService {
 
     PagedRatingResponse getRatings(Long ratedPersonId, Role role, PageSettingRequest request);
 
-    RatingResponse findRatingById(Long ratingId);
+    RatingResponse getRatingById(Long ratingId);
 
     RatingResponse updateRating(Long ratingId, RatingValue ratingValue);
 }

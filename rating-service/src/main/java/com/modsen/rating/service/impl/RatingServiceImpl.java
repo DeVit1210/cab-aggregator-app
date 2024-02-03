@@ -76,7 +76,7 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public RatingResponse findRatingById(Long ratingId) {
+    public RatingResponse getRatingById(Long ratingId) {
         return ratingRepository.findById(ratingId)
                 .map(ratingMapper::toRatingResponse)
                 .orElseThrow(() -> new RatingNotFoundException(ratingId));
