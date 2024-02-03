@@ -8,6 +8,10 @@ public class RatingNotFoundException extends RuntimeException {
         super(String.format(resolveMessageTemplate(role), id));
     }
 
+    public RatingNotFoundException(Long ratingId) {
+        super(String.format(MessageTemplates.RATING_NOT_FOUND.getValue(), ratingId));
+    }
+
     private static String resolveMessageTemplate(Role role) {
         return role.equals(Role.DRIVER)
                 ? MessageTemplates.RATING_NOT_FOUND_FOR_DRIVER.getValue()

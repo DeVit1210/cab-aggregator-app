@@ -1,5 +1,6 @@
 package com.modsen.rating.utils;
 
+import com.modsen.rating.dto.request.PageSettingRequest;
 import com.modsen.rating.exception.IncorrectPageNumberException;
 import com.modsen.rating.exception.IncorrectPageSizeException;
 import com.modsen.rating.exception.IncorrectSortFieldNameException;
@@ -18,6 +19,10 @@ public class PageRequestUtils {
             Arrays.stream(Rating.class.getDeclaredFields())
                     .map(Field::getName)
                     .anyMatch(fieldName -> fieldName.equals(sortField));
+
+    public static PageRequest makePageRequest(PageSettingRequest request) {
+        return makePageRequest(request.getNumber(), request.getSize(), request.getSortField());
+    }
 
     public static PageRequest makePageRequest(int pageNumber, int pageSize, String sortField) {
         if (pageSize < 1) {

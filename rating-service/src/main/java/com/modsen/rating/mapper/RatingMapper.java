@@ -1,9 +1,7 @@
 package com.modsen.rating.mapper;
 
 import com.modsen.rating.dto.request.RatingRequest;
-import com.modsen.rating.dto.response.AverageRatingResponse;
 import com.modsen.rating.dto.response.PagedRatingResponse;
-import com.modsen.rating.dto.response.RatingListResponse;
 import com.modsen.rating.dto.response.RatingResponse;
 import com.modsen.rating.model.Rating;
 import org.mapstruct.Mapper;
@@ -18,8 +16,6 @@ public interface RatingMapper {
 
     @Mapping(target = "ratingValue", expression = "java(RatingValue.getValue(rating.getRatingValue()))")
     RatingResponse toRatingResponse(Rating rating);
-
-    AverageRatingResponse toAverageRatingResponse(Rating rating, double averageRating);
 
     List<RatingResponse> toRatingListResponse(List<Rating> ratingList);
 
