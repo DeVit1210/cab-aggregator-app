@@ -9,11 +9,11 @@ import com.modsen.promocode.dto.response.PromocodeResponse;
 public interface PromocodeService {
     PromocodeListResponse findAllPromocodes();
 
-    PromocodeResponse findPromocodeById(PromocodeRequest request);
+    PromocodeResponse findPromocodeById(Long promocodeId);
 
     PromocodeResponse createPromocode(PromocodeRequest request);
 
-    PromocodeResponse updatePromocode(PromocodeRequest request);
+    PromocodeResponse updatePromocode(Long promocodeId, int discountPercent);
 
     AppliedPromocodeResponse applyPromocode(ApplyPromocodeRequest request);
 

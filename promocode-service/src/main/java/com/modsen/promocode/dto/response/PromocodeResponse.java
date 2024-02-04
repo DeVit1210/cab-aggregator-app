@@ -14,5 +14,4 @@ public class PromocodeResponse {
     private int discountPercent;
     private int minRidesQuantity;
     private int maxUsageCount;
-    private int usageCount;
 }

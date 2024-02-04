@@ -6,10 +6,11 @@ import java.util.ResourceBundle;
 
 @AllArgsConstructor
 public enum MessageTemplates {
-    INCORRECT_PAGE_SIZE("page.invalid.size"),
-    INCORRECT_PAGE_NUMBER("page.invalid.number"),
-    INCORRECT_PAGE_NUMBER_WITH_LIMIT("page.invalid.number.with-limit"),
-    INCORRECT_SORT_FIELD_NAME("page.invalid.sortField");
+    PROMOCODE_NOT_FOUND_BY_ID("promocode.not-found.id"),
+    PROMOCODE_NOT_FOUND_BY_NAME("promocode.not-found.name"),
+    PROMOCODE_ALREADY_EXISTS("promocode.already.exists"),
+    PROMOCODE_ALREADY_APPLIED("promocode.already.applied"),
+    EXPIRED_PROMOCODE("promocode.expired");
 
     private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("exception-messages");
     private final String key;
