@@ -2,7 +2,8 @@ package com.modsen.driver.dto.request;
 
 import com.modsen.driver.constants.ValidationConstants;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,14 +12,15 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class RideRequest {
+    @NotNull(message = ValidationConstants.ID_NOT_NULL)
     private Long rideId;
-    @NotEmpty(message = ValidationConstants.ID_NOT_EMPTY)
+    @NotNull(message = ValidationConstants.ID_NOT_NULL)
     private Long passengerId;
-    @NotEmpty(message = ValidationConstants.ADDRESS_NOT_EMPTY)
+    @NotBlank(message = ValidationConstants.ADDRESS_NOT_BLANK)
     private String pickUpAddress;
-    @NotEmpty(message = ValidationConstants.ADDRESS_NOT_EMPTY)
+    @NotBlank(message = ValidationConstants.ADDRESS_NOT_BLANK)
     private String destinationAddress;
-    @NotEmpty
+    @NotNull
     @Min(value = 0, message = ValidationConstants.NEGATIVE_AMOUNT)
     private BigDecimal cost;
 }

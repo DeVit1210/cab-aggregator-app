@@ -1,5 +1,6 @@
 package com.modsen.driver.controller;
 
+import com.modsen.driver.constants.ControllerMappings;
 import com.modsen.driver.constants.PageConstants;
 import com.modsen.driver.dto.request.DriverRequest;
 import com.modsen.driver.dto.response.DriverListResponse;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/drivers")
+@RequestMapping(ControllerMappings.DRIVER_CONTROLLER)
 @RequiredArgsConstructor
 public class DriverController {
     private final DriverService driverService;

@@ -32,7 +32,7 @@ public class Driver {
     private String email;
     @Column(name = "licence_number")
     private String licenceNumber;
-    @Column(name = "status")
+    @Column(name = "driver_status")
     @Enumerated(EnumType.STRING)
-    private DriverStatus status;
+    private DriverStatus driverStatus;
 }

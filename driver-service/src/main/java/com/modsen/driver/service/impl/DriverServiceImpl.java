@@ -65,13 +65,11 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public DriverResponse updateDriver(Long driverId, DriverRequest driverRequest) {
-        Driver driver = driverRepository.findById(driverId)
-                .orElseThrow(() -> new DriverNotFoundException(driverId));
-        driver.setFirstName(driverRequest.getFirstName());
-        driver.setLastName(driverRequest.getLastName());
-        driver.setEmail(driverRequest.getEmail());
-        driver.setPhoneNumber(driverRequest.getPhoneNumber());
-        driver.setLicenceNumber(driverRequest.getLicenceNumber());
+        if (!driverRepository.existsById(driverId)) {
+            throw new DriverNotFoundException(driverId);
+        }
+        Driver driver = driverMapper.toDriver(driverRequest, DriverStatus.OFFLINE);
+        driver.setId(driverId);
         Driver updatedDriver = driverRepository.save(driver);
 
         return driverMapper.toDriverResponse(updatedDriver);
@@ -88,11 +86,10 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public Optional<Driver> findAvailableDriverForRide(RideRequest request) {
         List<Long> alreadySuggestedDriverList = suggestedRideService.getDriverIdList(request);
-        if (alreadySuggestedDriverList.isEmpty()) {
-            return driverRepository.findFirstByStatus(DriverStatus.AVAILABLE);
-        } else {
-            return driverRepository.findFirstByStatusAndIdIsNotIn(DriverStatus.AVAILABLE, alreadySuggestedDriverList);
-        }
+
+        return alreadySuggestedDriverList.isEmpty()
+                ? driverRepository.findFirstByDriverStatus(DriverStatus.AVAILABLE)
+                : driverRepository.findFirstByDriverStatusAndIdIsNotIn(DriverStatus.AVAILABLE, alreadySuggestedDriverList);
     }
 
     @Override
@@ -100,7 +97,7 @@ public class DriverServiceImpl implements DriverService {
         long driverId = request.getDriverId();
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new DriverNotFoundException(driverId));
-        driver.setStatus(request.getNewStatus());
+        driver.setDriverStatus(request.getNewStatus());
         driverRepository.save(driver);
     }
 }

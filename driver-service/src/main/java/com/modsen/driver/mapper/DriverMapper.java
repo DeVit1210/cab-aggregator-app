@@ -1,5 +1,6 @@
 package com.modsen.driver.mapper;
 
+import com.modsen.driver.constants.MappingConstants;
 import com.modsen.driver.dto.request.DriverRequest;
 import com.modsen.driver.dto.response.DriverResponse;
 import com.modsen.driver.dto.response.PagedDriverResponse;
@@ -10,7 +11,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface DriverMapper {
     DriverResponse toDriverResponse(Driver driver);
 

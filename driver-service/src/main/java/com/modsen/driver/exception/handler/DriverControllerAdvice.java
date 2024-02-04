@@ -27,19 +27,14 @@ public class DriverControllerAdvice {
         return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<ApiExceptionInfo> handleSqlIntegrityException(SQLIntegrityConstraintViolationException e) {
+    @ExceptionHandler({SQLIntegrityConstraintViolationException.class, PageException.class})
+    public ResponseEntity<ApiExceptionInfo> handleBadRequestException(RuntimeException e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DriverNotFoundException.class)
-    public ResponseEntity<ApiExceptionInfo> handlePassengerNotFoundException(DriverNotFoundException e) {
+    public ResponseEntity<ApiExceptionInfo> handleDriverNotFoundException(DriverNotFoundException e) {
         return generateApiExceptionResponse(e, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(PageException.class)
-    public ResponseEntity<ApiExceptionInfo> handlePageException(PageException e) {
-        return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<ApiExceptionInfo> generateApiExceptionResponse(Throwable e, HttpStatus status) {

@@ -24,8 +24,7 @@
             <column name="licence_number" type="varchar(255)">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="status"
-                    type="enum('AVAILABLE', 'OFFLINE', 'ON_TRIP', 'WAITING_FOR_PASSENGER', 'DRIVING_FOR_PASSENGER')">
+            <column name="driver_status" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>

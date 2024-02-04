@@ -4,8 +4,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <include file="01-create-driver-table.xml" relativeToChangelogFile="true"/>
-    <include file="10-create-driver-with-suggested-ride-table.xml" relativeToChangelogFile="true"/>
-    <include file="01-add-driver-with-suggested-ride-foreign-key.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/01-create-driver-table.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/10-create-driver-with-suggested-ride-table.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/01-add-driver-with-suggested-ride-foreign-key.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
