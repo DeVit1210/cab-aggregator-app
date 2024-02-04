@@ -2,7 +2,6 @@ package com.modsen.promocode.exception.handler;
 
 import com.modsen.promocode.exception.ApiExceptionInfo;
 import com.modsen.promocode.exception.MultipleApiExceptionInfo;
-import com.modsen.promocode.exception.PageException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +27,6 @@ public class PromocodeControllerAdvice {
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<ApiExceptionInfo> handleSqlIntegrityException(SQLIntegrityConstraintViolationException e) {
-        return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PageException.class)
-    public ResponseEntity<ApiExceptionInfo> handlePageException(PageException e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
