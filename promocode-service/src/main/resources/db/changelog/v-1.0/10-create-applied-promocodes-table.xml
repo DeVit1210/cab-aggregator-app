@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-applied-promocodes-table" author="Mozol Denis">
+        <createTable tableName="applied_promocodes">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="promocode_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="datetime" value="CURRENT"/>
+            <column name="passenger_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="applied_promocodes"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
