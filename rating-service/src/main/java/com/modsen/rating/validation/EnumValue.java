@@ -14,8 +14,11 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 public @interface EnumValue {
     Class<? extends Enum<?>> enumClass();
+
     String message() default ValidationConstants.ENUM_INVALID;
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }
 

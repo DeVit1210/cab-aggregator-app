@@ -1,7 +1,7 @@
 package com.modsen.rating.enums;
 
 public enum RatingValue {
-    ZERO(),
+    ZERO,
     ONE,
     TWO,
     THREE,

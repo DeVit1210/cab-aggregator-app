@@ -25,4 +25,5 @@
             <dropTable tableName="ratings"/>
         </rollback>
     </changeSet>
+
 </databaseChangeLog>

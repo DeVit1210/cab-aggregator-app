@@ -13,4 +13,5 @@
     <changeSet id="v-1.0" author="Mozol Denis">
         <tagDatabase tag="v-1.0"/>
     </changeSet>
+
 </databaseChangeLog>
