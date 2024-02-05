@@ -1,7 +1,6 @@
 package com.modsen.payment.controller;
 
 import com.modsen.payment.constants.ControllerMappings;
-import com.modsen.payment.constants.PageConstants;
 import com.modsen.payment.dto.request.DriverPayoutRequest;
 import com.modsen.payment.dto.request.PageSettingsRequest;
 import com.modsen.payment.dto.response.DriverPayoutListResponse;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,10 +36,7 @@ public class DriverPayoutController {
     }
 
     @GetMapping("/page")
-    public Paged<DriverPayoutResponse> findPayouts(@RequestParam(defaultValue = PageConstants.NUMBER) int number,
-                                                   @RequestParam(defaultValue = PageConstants.SIZE) int size,
-                                                   @RequestParam(defaultValue = PageConstants.SORT_FIELD) String sortField) {
-        PageSettingsRequest request = new PageSettingsRequest(number, size, sortField);
+    public Paged<DriverPayoutResponse> findPayouts(PageSettingsRequest request) {
         return driverPayoutService.getAllPayouts(request);
     }
 }
