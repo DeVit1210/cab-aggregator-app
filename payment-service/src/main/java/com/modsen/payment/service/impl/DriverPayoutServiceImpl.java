@@ -69,10 +69,10 @@ public class DriverPayoutServiceImpl implements DriverPayoutService {
     private void validateDriverPayoutRequest(DriverPayoutRequest request) {
         Long creditCardId = request.getCreditCardId();
         CreditCardResponse creditCard = creditCardService.findCardById(creditCardId);
-        if (!creditCard.getRole().equals(Role.DRIVER)) {
+        if (!creditCard.role().equals(Role.DRIVER)) {
             throw new InvalidCreditCardHolderException(creditCardId, request.getDriverId(), Role.DRIVER);
         }
-        if (!creditCard.getCardHolderId().equals(request.getDriverId())) {
+        if (!creditCard.cardHolderId().equals(request.getDriverId())) {
             throw new InvalidCreditCardHolderException(creditCardId, request.getDriverId(), Role.DRIVER);
         }
     }

@@ -32,33 +32,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<ApiExceptionInfo> handleSqlIntegrityException(SQLIntegrityConstraintViolationException e) {
-        return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PageException.class)
-    public ResponseEntity<ApiExceptionInfo> handlePageException(PageException e) {
-        return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(IncufficientAccountBalanceException.class)
-    public ResponseEntity<ApiExceptionInfo> handleIncufficientBalanceException(IncufficientAccountBalanceException e) {
-        return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(InvalidCreditCardHolderException.class)
-    public ResponseEntity<ApiExceptionInfo> handleInvalidCreditCardHolderException(InvalidCreditCardHolderException e) {
-        return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(CustomStripeException.class)
-    public ResponseEntity<ApiExceptionInfo> handleCustomStripeException(CustomStripeException e) {
-        return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(CardIsNotDefaultException.class)
-    public ResponseEntity<ApiExceptionInfo> handleCardIsNotDefaultException(CardIsNotDefaultException e) {
+    @ExceptionHandler({
+            SQLIntegrityConstraintViolationException.class,
+            PageException.class,
+            IncufficientAccountBalanceException.class,
+            InvalidCreditCardHolderException.class,
+            CustomStripeException.class,
+            CardIsNotDefaultException.class
+    })
+    public ResponseEntity<ApiExceptionInfo> handleBadRequestException(RuntimeException e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
