@@ -32,7 +32,7 @@ public class Rating {
     private Long ratedPersonId;
     @Enumerated(EnumType.STRING)
     private RatingValue ratingValue;
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
     @Column(name = "comment")

@@ -1,7 +1,6 @@
 package com.modsen.rating.controller;
 
 import com.modsen.rating.constants.ControllerMappings;
-import com.modsen.rating.constants.PageConstants;
 import com.modsen.rating.dto.request.PageSettingRequest;
 import com.modsen.rating.dto.request.RatingRequest;
 import com.modsen.rating.dto.response.AverageRatingResponse;
@@ -40,10 +39,7 @@ public class RatingController {
     @GetMapping("/page")
     public PagedRatingResponse getRatingsForPerson(@RequestParam Long ratedPersonId,
                                                    @RequestParam @EnumValue(enumClass = Role.class) String role,
-                                                   @RequestParam(defaultValue = PageConstants.SIZE) int size,
-                                                   @RequestParam(defaultValue = PageConstants.NUMBER) int number,
-                                                   @RequestParam(defaultValue = PageConstants.SORT_FIELD) String sortField) {
-        PageSettingRequest request = new PageSettingRequest(number, size, sortField);
+                                                   PageSettingRequest request) {
         return ratingService.getRatings(ratedPersonId, Role.valueOf(role), request);
     }
 

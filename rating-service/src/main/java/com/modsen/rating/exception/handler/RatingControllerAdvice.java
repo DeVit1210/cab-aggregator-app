@@ -28,19 +28,14 @@ public class RatingControllerAdvice {
         return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<ApiExceptionInfo> handleSqlIntegrityException(SQLIntegrityConstraintViolationException e) {
+    @ExceptionHandler({SQLIntegrityConstraintViolationException.class, PageException.class})
+    public ResponseEntity<ApiExceptionInfo> handleBadRequestException(Exception e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RatingNotFoundException.class)
     public ResponseEntity<ApiExceptionInfo> handlePassengerNotFoundException(RatingNotFoundException e) {
         return generateApiExceptionResponse(e, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(PageException.class)
-    public ResponseEntity<ApiExceptionInfo> handlePageException(PageException e) {
-        return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RatingAlreadyExistsException.class)
