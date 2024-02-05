@@ -2,6 +2,7 @@ package com.modsen.promocode.service.impl;
 
 import com.modsen.promocode.dto.request.ApplyPromocodeRequest;
 import com.modsen.promocode.dto.request.PromocodeRequest;
+import com.modsen.promocode.dto.request.UpdateDiscountPercentRequest;
 import com.modsen.promocode.dto.response.AppliedPromocodeResponse;
 import com.modsen.promocode.dto.response.PromocodeListResponse;
 import com.modsen.promocode.dto.response.PromocodeResponse;
@@ -57,10 +58,11 @@ public class PromocodeServiceImpl implements PromocodeService {
     }
 
     @Override
-    public PromocodeResponse updatePromocode(Long promocodeId, int discountPercent) {
+    public PromocodeResponse updatePromocode(UpdateDiscountPercentRequest request) {
+        Long promocodeId = request.getPromocodeId();
         Promocode promocode = promocodeRepository.findById(promocodeId)
                 .orElseThrow(() -> new PromocodeNotFoundException(promocodeId));
-        promocode.setDiscountPercent(discountPercent);
+        promocode.setDiscountPercent(request.getDiscountPercent());
         Promocode updatedPromocode = promocodeRepository.save(promocode);
 
         return promocodeMapper.toPromocodeResponse(updatedPromocode);

@@ -2,6 +2,7 @@ package com.modsen.promocode.service;
 
 import com.modsen.promocode.dto.request.ApplyPromocodeRequest;
 import com.modsen.promocode.dto.request.PromocodeRequest;
+import com.modsen.promocode.dto.request.UpdateDiscountPercentRequest;
 import com.modsen.promocode.dto.response.AppliedPromocodeResponse;
 import com.modsen.promocode.dto.response.PromocodeListResponse;
 import com.modsen.promocode.dto.response.PromocodeResponse;
@@ -13,7 +14,7 @@ public interface PromocodeService {
 
     PromocodeResponse createPromocode(PromocodeRequest request);
 
-    PromocodeResponse updatePromocode(Long promocodeId, int discountPercent);
+    PromocodeResponse updatePromocode(UpdateDiscountPercentRequest request);
 
     AppliedPromocodeResponse applyPromocode(ApplyPromocodeRequest request);
 

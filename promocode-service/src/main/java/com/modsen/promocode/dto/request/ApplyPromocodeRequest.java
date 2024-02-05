@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @Builder
 public class ApplyPromocodeRequest {
-    @NotNull(message = ValidationConstants.ID_NULL)
+    @NotNull(message = ValidationConstants.ID_NOT_NULL)
     private Long passengerId;
     @NotEmpty(message = ValidationConstants.PROMOCODE_NAME_EMPTY)
     private String promocodeName;
