@@ -10,6 +10,9 @@
                 <constraints nullable="false"/>
             </column>
         </addColumn>
+        <rollback>
+            <dropTable tableName="ratings"/>
+        </rollback>
     </changeSet>
 
 </databaseChangeLog>
