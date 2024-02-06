@@ -1,26 +1,15 @@
 package com.modsen.ride.dto.request;
 
 import com.modsen.ride.constants.ValidationConstants;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
-
-import java.math.BigDecimal;
 
 @Data
 @Builder
 public class ConfirmedRideRequest {
     @NotNull(message = ValidationConstants.ID_NOT_NULL)
-    private Long passengerId;
-    @NotNull
-    @Positive(message = ValidationConstants.RIDE_COST_INVALID)
-    private BigDecimal rideCost;
-    @NotBlank(message = ValidationConstants.ADDRESS_NOT_BLANK)
-    private String pickUpAddress;
-    @NotBlank(message = ValidationConstants.ADDRESS_NOT_BLANK)
-    private String destinationAddress;
+    private Long rideId;
     @NotNull(message = ValidationConstants.ID_NOT_NULL)
     private Long driverId;
 }

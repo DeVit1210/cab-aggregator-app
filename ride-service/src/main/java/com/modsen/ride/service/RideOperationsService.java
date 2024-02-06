@@ -5,7 +5,7 @@ import com.modsen.ride.dto.response.RideResponse;
 public interface RideOperationsService {
     RideResponse acceptRide(Long rideId);
 
-    void dismissRide(Long rideId);
+    RideResponse dismissRide(Long rideId);
 
     RideResponse notifyPassengerAboutWaiting(Long rideId);
 

@@ -1,5 +1,6 @@
 package com.modsen.ride.service.impl;
 
+import com.modsen.ride.dto.request.FindDriverRequest;
 import com.modsen.ride.dto.request.PageSettingRequest;
 import com.modsen.ride.dto.request.RideRequest;
 import com.modsen.ride.dto.response.ConfirmedRideResponse;
@@ -10,6 +11,7 @@ import com.modsen.ride.enums.RideStatus;
 import com.modsen.ride.enums.Role;
 import com.modsen.ride.exception.NoAvailableRideForDriver;
 import com.modsen.ride.exception.NoConfirmedRideForPassenger;
+import com.modsen.ride.exception.RideNotFoundException;
 import com.modsen.ride.kafka.RideRequestProducer;
 import com.modsen.ride.mapper.RideMapper;
 import com.modsen.ride.model.Ride;
@@ -62,7 +64,10 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public void createRide(RideRequest request) {
-        rideRequestProducer.sendRequestForDriver(request);
+        Ride ride = rideMapper.toRide(request);
+        Ride savedRide = rideRepository.save(ride);
+        FindDriverRequest findDriverRequest = new FindDriverRequest(savedRide.getId());
+        rideRequestProducer.sendRequestForDriver(findDriverRequest);
     }
 
     @Override
@@ -81,6 +86,18 @@ public class RideServiceImpl implements RideService {
                 .orElseThrow(() -> new NoConfirmedRideForPassenger(passengerId));
 
         return rideMapper.toConfirmedRideResponse(ride);
+    }
+
+    @Override
+    public Ride findRideById(Long rideId) {
+        return rideRepository.findById(rideId)
+                .orElseThrow(() -> new RideNotFoundException(rideId));
+    }
+
+    @Override
+    public RideResponse saveRide(Ride ride) {
+        Ride savedRide = rideRepository.save(ride);
+        return rideMapper.toRideResponse(savedRide);
     }
 
     private Specification<Ride> buildRideSpecification(Long personId, Role role) {
