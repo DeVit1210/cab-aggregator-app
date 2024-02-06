@@ -2,6 +2,7 @@ package com.modsen.payment.dto.request;
 
 import com.modsen.payment.constants.ValidationConstants;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
@@ -13,5 +14,6 @@ public class CustomerRequest {
     private Long passengerId;
     @Email
     private String email;
+    @NotBlank(message = ValidationConstants.NAME_NOT_BLANK)
     private String name;
 }

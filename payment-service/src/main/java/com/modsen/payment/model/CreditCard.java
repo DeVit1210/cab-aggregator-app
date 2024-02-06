@@ -22,7 +22,6 @@ public class CreditCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "number")
     private String number;
     @Enumerated(EnumType.STRING)
     private Role role;

@@ -2,7 +2,7 @@ package com.modsen.payment.constants;
 
 public interface ControllerMappings {
     String PAYMENT_CONTROLLER = "/payments";
-    String CREDIT_CARD_CONTROLLER = "/creditCards";
+    String CREDIT_CARD_CONTROLLER = "/credit-сards";
     String DRIVER_ACCOUNT_CONTROLLER = "/driver/accounts";
     String DRIVER_PAYOUT_CONTROLLER = "/driver/payouts";
     String STRIPE_CUSTOMER_CONTROLLER = "/customers";
