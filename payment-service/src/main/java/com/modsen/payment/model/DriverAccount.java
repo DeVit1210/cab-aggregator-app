@@ -21,6 +21,5 @@ public class DriverAccount {
     @Id
     @Column(name = "id")
     private Long driverId;
-    @Column(name = "amount")
     private BigDecimal amount;
 }

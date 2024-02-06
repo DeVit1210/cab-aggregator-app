@@ -9,4 +9,5 @@ public interface ValidationConstants {
     String AMOUNT_INVALID = "amount has to be higher than zero!";
     String ID_NOT_NULL = "id cannot be empty!";
     String ENUM_INVALID = "invalid enum value!";
+    String NAME_NOT_BLANK = "name cannot be blank!";
 }

@@ -32,9 +32,7 @@ public class DriverPayout {
     private DriverAccount account;
     @Column(name = "amount")
     private BigDecimal withdrawAmount;
-    @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
-    @Column(name = "credit_card_id")
     private Long creditCardId;
 }
