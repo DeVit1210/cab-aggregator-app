@@ -11,8 +11,10 @@ spring:
     password: FLRPVcp41NC7mwD2TtX5
     username: root
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: none
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: true
 

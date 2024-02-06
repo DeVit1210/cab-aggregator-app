@@ -5,9 +5,6 @@
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="create-rides-table" author="Mozol Denis">
-        <preConditions onFail="MARK_RAN">
-            <tableExists tableName="rides"/>
-        </preConditions>
         <createTable tableName="rides">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>

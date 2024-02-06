@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -29,5 +30,7 @@ public class Ride {
     private BigDecimal rideCost;
     @Enumerated(EnumType.STRING)
     private RideStatus rideStatus;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private Long driverId;
 }
