@@ -1,4 +1,4 @@
-package com.modsen.ride.dto;
+package com.modsen.ride.dto.request;
 
 import com.modsen.ride.constants.ValidationConstants;
 import jakarta.validation.constraints.NotBlank;
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-public class RideWithDriverDto {
+public class ConfirmedRideRequest {
     @NotNull(message = ValidationConstants.ID_NOT_NULL)
     private Long passengerId;
     @NotNull

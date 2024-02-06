@@ -10,10 +10,8 @@ public enum MessageTemplates {
     INCORRECT_PAGE_NUMBER("page.invalid.number"),
     INCORRECT_PAGE_NUMBER_WITH_LIMIT("page.invalid.number.with-limit"),
     INCORRECT_SORT_FIELD_NAME("page.invalid.sortField"),
-    RATING_NOT_FOUND_FOR_PASSENGER("rating.not-found.passenger"),
-    RATING_NOT_FOUND_FOR_DRIVER("rating.not-found.driver"),
-    RATING_ALREADY_EXISTS("rating.already-exists"),
-    RATING_NOT_FOUND("rating.not-found");
+    NO_AVAILABLE_RIDE_FOR_DRIVER("ride.not-available.driver"),
+    NO_ACTIVE_RIDE_FOR_USER("ride.not-available.passenger");
 
     private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("exception-messages");
     private final String key;
