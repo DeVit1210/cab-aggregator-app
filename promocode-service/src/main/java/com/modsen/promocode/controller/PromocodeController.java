@@ -48,7 +48,7 @@ public class PromocodeController {
         return promocodeService.updatePromocode(request);
     }
 
-    @PostMapping
+    @PostMapping("/apply")
     @ResponseStatus(HttpStatus.CREATED)
     public AppliedPromocodeResponse applyPromocode(@Valid @RequestBody ApplyPromocodeRequest request) {
         return promocodeService.applyPromocode(request);

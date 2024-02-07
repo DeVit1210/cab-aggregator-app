@@ -1,19 +1,18 @@
 package com.modsen.promocode.mapper;
 
+import com.modsen.promocode.constants.PromocodeConstants;
 import com.modsen.promocode.dto.request.PromocodeRequest;
 import com.modsen.promocode.dto.response.PromocodeResponse;
 import com.modsen.promocode.model.Promocode;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PromocodeMapper {
-    int DEFAULT_MIN_RIDES_QUANTITY = 0;
-    int DEFAULT_MAX_USAGE_COUNT = Integer.MAX_VALUE;
-
     default Promocode toPromocode(PromocodeRequest request) {
         return Promocode.builder()
                 .name(request.getName())
@@ -31,11 +30,11 @@ public interface PromocodeMapper {
 
     private int getMinRidesQuantity(PromocodeRequest request) {
         return Optional.of(request.getMinRidesQuantity())
-                .orElse(DEFAULT_MIN_RIDES_QUANTITY);
+                .orElse(PromocodeConstants.DEFAULT_MIN_RIDES_QUANTITY);
     }
 
     private int getMaxUsageCount(PromocodeRequest request) {
         return Optional.of(request.getMaxUsageCount())
-                .orElse(DEFAULT_MAX_USAGE_COUNT);
+                .orElse(PromocodeConstants.DEFAULT_MAX_USAGE_COUNT);
     }
 }

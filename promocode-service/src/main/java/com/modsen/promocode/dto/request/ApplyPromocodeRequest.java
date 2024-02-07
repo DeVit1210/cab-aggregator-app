@@ -1,7 +1,7 @@
 package com.modsen.promocode.dto.request;
 
 import com.modsen.promocode.constants.ValidationConstants;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +11,6 @@ import lombok.Data;
 public class ApplyPromocodeRequest {
     @NotNull(message = ValidationConstants.ID_NOT_NULL)
     private Long passengerId;
-    @NotEmpty(message = ValidationConstants.PROMOCODE_NAME_EMPTY)
+    @NotBlank(message = ValidationConstants.PROMOCODE_NAME_BLANK)
     private String promocodeName;
 }

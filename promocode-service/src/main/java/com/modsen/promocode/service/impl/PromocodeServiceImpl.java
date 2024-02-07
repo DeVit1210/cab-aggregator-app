@@ -6,9 +6,8 @@ import com.modsen.promocode.dto.request.UpdateDiscountPercentRequest;
 import com.modsen.promocode.dto.response.AppliedPromocodeResponse;
 import com.modsen.promocode.dto.response.PromocodeListResponse;
 import com.modsen.promocode.dto.response.PromocodeResponse;
-import com.modsen.promocode.exception.ExpiredPromocodeException;
 import com.modsen.promocode.exception.PromocodeAlreadyAppliedException;
-import com.modsen.promocode.exception.PromocodeAlreadyExists;
+import com.modsen.promocode.exception.PromocodeAlreadyExistsException;
 import com.modsen.promocode.exception.PromocodeNotFoundException;
 import com.modsen.promocode.mapper.AppliedPromocodeMapper;
 import com.modsen.promocode.mapper.PromocodeMapper;
@@ -72,12 +71,12 @@ public class PromocodeServiceImpl implements PromocodeService {
     @Transactional
     public AppliedPromocodeResponse applyPromocode(ApplyPromocodeRequest request) {
         Promocode promocode = findByName(request.getPromocodeName());
-
-        validateRequestedPromocode(promocode);
         validateAppliedPromocodeRequest(promocode, request);
-
         AppliedPromocode appliedPromocode = appliedPromocodeMapper.toAppliedPromocode(promocode, request);
         AppliedPromocode savedAppliedPromocode = appliedPromocodeRepository.save(appliedPromocode);
+        if (!isPromocodeStillValid(promocode)) {
+            deletePromocode(promocode.getId());
+        }
 
         return appliedPromocodeMapper.toAppliedPromocodeResponse(promocode, savedAppliedPromocode);
     }
@@ -106,17 +105,15 @@ public class PromocodeServiceImpl implements PromocodeService {
     private void validatePromocodeRequest(PromocodeRequest request) {
         String promocodeName = request.getName();
         if (promocodeRepository.existsByName(promocodeName)) {
-            throw new PromocodeAlreadyExists(promocodeName);
+            throw new PromocodeAlreadyExistsException(promocodeName);
         }
     }
 
-    private void validateRequestedPromocode(Promocode promocode) {
+    private boolean isPromocodeStillValid(Promocode promocode) {
         LocalDate endDate = promocode.getEndDate();
         int maxUsageCount = promocode.getMaxUsageCount();
         int usageCount = appliedPromocodeRepository.countAllByPromocode(promocode);
-        if (usageCount >= maxUsageCount || LocalDate.now().isAfter(endDate)) {
-            deletePromocode(promocode.getId());
-            throw new ExpiredPromocodeException(promocode.getName());
-        }
+
+        return usageCount < maxUsageCount && !LocalDate.now().isAfter(endDate);
     }
 }
