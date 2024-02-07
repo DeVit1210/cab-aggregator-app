@@ -16,7 +16,7 @@ public interface RideService {
 
     PagedRideResponse findRidesForPerson(Long personId, Role role, PageSettingRequest request);
 
-    void createRide(RideRequest request);
+    RideResponse createRide(RideRequest request);
 
     ConfirmedRideResponse findAvailableRideForDriver(Long driverId);
 

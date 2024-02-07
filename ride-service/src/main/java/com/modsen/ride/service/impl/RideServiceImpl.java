@@ -63,11 +63,13 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public void createRide(RideRequest request) {
+    public RideResponse createRide(RideRequest request) {
         Ride ride = rideMapper.toRide(request);
         Ride savedRide = rideRepository.save(ride);
         FindDriverRequest findDriverRequest = new FindDriverRequest(savedRide.getId());
         rideRequestProducer.sendRequestForDriver(findDriverRequest);
+
+        return rideMapper.toRideResponse(savedRide);
     }
 
     @Override
