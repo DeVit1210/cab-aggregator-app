@@ -65,11 +65,9 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public DriverResponse updateDriver(Long driverId, DriverRequest driverRequest) {
-        if (!driverRepository.existsById(driverId)) {
-            throw new DriverNotFoundException(driverId);
-        }
-        Driver driver = driverMapper.toDriver(driverRequest, DriverStatus.OFFLINE);
-        driver.setId(driverId);
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new DriverNotFoundException(driverId));
+        driverMapper.updateDriver(driverRequest, driver);
         Driver updatedDriver = driverRepository.save(driver);
 
         return driverMapper.toDriverResponse(updatedDriver);
