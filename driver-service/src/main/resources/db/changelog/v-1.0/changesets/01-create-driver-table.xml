@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-drivers-table" author="Mozol Denis">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="drivers"/>
+        </preConditions>
+        <createTable tableName="drivers">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="first_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="phone_number" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="licence_number" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="driver_status" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="drivers"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
