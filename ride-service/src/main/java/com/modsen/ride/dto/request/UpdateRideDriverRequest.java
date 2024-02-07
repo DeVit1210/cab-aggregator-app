@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ConfirmedRideRequest {
+public class UpdateRideDriverRequest {
     @NotNull(message = ValidationConstants.ID_NOT_NULL)
     private Long rideId;
     @NotNull(message = ValidationConstants.ID_NOT_NULL)

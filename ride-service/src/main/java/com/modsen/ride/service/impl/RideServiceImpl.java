@@ -11,6 +11,7 @@ import com.modsen.ride.enums.RideStatus;
 import com.modsen.ride.enums.Role;
 import com.modsen.ride.exception.NoAvailableRideForDriver;
 import com.modsen.ride.exception.NoConfirmedRideForPassenger;
+import com.modsen.ride.exception.NotFinishedRideAlreadyExistsException;
 import com.modsen.ride.exception.RideNotFoundException;
 import com.modsen.ride.kafka.RideRequestProducer;
 import com.modsen.ride.mapper.RideMapper;
@@ -64,6 +65,7 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public RideResponse createRide(RideRequest request) {
+        validateRideRequest(request);
         Ride ride = rideMapper.toRide(request);
         Ride savedRide = rideRepository.save(ride);
         FindDriverRequest findDriverRequest = new FindDriverRequest(savedRide.getId());
@@ -102,17 +104,24 @@ public class RideServiceImpl implements RideService {
         return rideMapper.toRideResponse(savedRide);
     }
 
+    private void validateRideRequest(RideRequest request) {
+        Long passengerId = request.getPassengerId();
+        if (rideRepository.existsByPassengerIdAndRideStatusIn(passengerId, RideStatus.getNotFinishedStatusList())) {
+            throw new NotFinishedRideAlreadyExistsException(passengerId);
+        }
+    }
+
     private Specification<Ride> buildRideSpecification(Long personId, Role role) {
         return (root, query, criteriaBuilder) -> {
             String searchIdColumnName = resolveSearchColumnName(role);
             return criteriaBuilder.and(
                     criteriaBuilder.equal(root.get(searchIdColumnName), personId),
-                    criteriaBuilder.equal(root.get("ride_status"), RideStatus.FINISHED)
+                    criteriaBuilder.equal(root.get("rideStatus"), RideStatus.FINISHED)
             );
         };
     }
 
     private String resolveSearchColumnName(Role role) {
-        return role.equals(Role.DRIVER) ? "driver_id" : "passenger_id";
+        return role.equals(Role.DRIVER) ? "driverId" : "passengerId";
     }
 }

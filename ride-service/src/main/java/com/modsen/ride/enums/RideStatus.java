@@ -16,10 +16,13 @@ public enum RideStatus {
     FINISHED(ExceptionConstants.FINISHED_STATUS_REQUIRED),
     CANCELED(ExceptionConstants.CANCELED_STATUS_REQUIRED);
 
-
     private final String exceptionMessage;
 
     public static List<RideStatus> getConfirmedRideStatusList() {
         return List.of(PENDING, ACTIVE);
+    }
+
+    public static List<RideStatus> getNotFinishedStatusList() {
+        return List.of(PENDING, ACTIVE, WAITING_FOR_DRIVER_CONFIRMATION, WITHOUT_DRIVER);
     }
 }

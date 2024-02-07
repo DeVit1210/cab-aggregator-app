@@ -38,8 +38,8 @@ public class RideController {
         return rideService.findRides(request);
     }
 
-    @GetMapping("/page")
-    public PagedRideResponse findRidesForPerson(@RequestParam Long personId,
+    @GetMapping("/page/{personId}")
+    public PagedRideResponse findRidesForPerson(@PathVariable Long personId,
                                                 @RequestParam String role,
                                                 PageSettingRequest request) {
         return rideService.findRidesForPerson(personId, Role.valueOf(role), request);

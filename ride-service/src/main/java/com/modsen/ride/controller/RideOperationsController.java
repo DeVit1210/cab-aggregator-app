@@ -37,7 +37,7 @@ public class RideOperationsController {
 
     @PatchMapping("/finish/{rideId}")
     public RideResponse finishRide(@PathVariable Long rideId) {
-        return rideOperationsService.startRide(rideId);
+        return rideOperationsService.finishRide(rideId);
     }
 
     @PatchMapping("/cancel/{rideId}")

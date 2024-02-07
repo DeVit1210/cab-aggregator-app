@@ -1,6 +1,5 @@
 package com.modsen.ride.mapper;
 
-import com.modsen.ride.dto.request.ConfirmedRideRequest;
 import com.modsen.ride.dto.request.RideRequest;
 import com.modsen.ride.dto.response.ConfirmedRideResponse;
 import com.modsen.ride.dto.response.PagedRideResponse;
@@ -15,12 +14,8 @@ import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface RideMapper {
-    Ride toRide(ConfirmedRideRequest request);
-
     @Mapping(target = "rideStatus", constant = "WITHOUT_DRIVER")
     Ride toRide(RideRequest request);
-
-    RideRequest toRideRequest(Ride ride);
 
     RideResponse toRideResponse(Ride ride);
 

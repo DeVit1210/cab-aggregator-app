@@ -12,7 +12,8 @@ public enum MessageTemplates {
     INCORRECT_SORT_FIELD_NAME("page.invalid.sortField"),
     NO_AVAILABLE_RIDE_FOR_DRIVER("ride.not-available.driver"),
     NO_ACTIVE_RIDE_FOR_USER("ride.not-available.passenger"),
-    RIDE_NOT_FOUND_BY_ID("ride.not-found.id");
+    RIDE_NOT_FOUND_BY_ID("ride.not-found.id"),
+    NOT_FINISHED_RIDE_EXISTS_FOR_PASSENGER("ride.not-finished.passenger");
 
     private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("exception-messages");
     private final String key;

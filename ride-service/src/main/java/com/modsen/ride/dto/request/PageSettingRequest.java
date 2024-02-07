@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PageSettingRequest {
-    private int number = PageConstants.SIZE;
-    private int size = PageConstants.NUMBER;
+    private int number = PageConstants.NUMBER;
+    private int size = PageConstants.SIZE;
     private String sortField = PageConstants.SORT_FIELD;
 }

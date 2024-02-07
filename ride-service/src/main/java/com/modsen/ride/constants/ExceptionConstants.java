@@ -2,7 +2,7 @@ package com.modsen.ride.constants;
 
 public interface ExceptionConstants {
     String WAITING_FOR_CONFIRMATION_STATE_REQUIRED =
-            "Ride need to be in WAITING_FOR_DRIVER_CONFIRMATION state if you want to accept the ride";
+            "Ride need to be in WAITING_FOR_DRIVER_CONFIRMATION state if you want to accept or cancel the ride";
     String PENDING_STATUS_REQUIRED =
             "Ride need to be in PENDING state if you want to notify passenger about driver arrival!";
     String ACTIVE_STATUS_REQUIRED =

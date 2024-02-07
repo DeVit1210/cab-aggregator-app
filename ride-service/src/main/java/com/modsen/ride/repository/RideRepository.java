@@ -16,4 +16,6 @@ public interface RideRepository extends JpaRepository<Ride, Long>, JpaSpecificat
     Optional<Ride> findFirstByDriverIdAndRideStatus(Long driverId, RideStatus rideStatus);
 
     Optional<Ride> findFirstByPassengerIdAndRideStatusIn(Long passengerId, List<RideStatus> rideStatusList);
+
+    boolean existsByPassengerIdAndRideStatusIn(Long passengerId, List<RideStatus> rideStatusList);
 }

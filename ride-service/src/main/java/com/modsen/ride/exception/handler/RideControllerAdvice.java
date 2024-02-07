@@ -4,6 +4,8 @@ import com.modsen.ride.exception.ApiExceptionInfo;
 import com.modsen.ride.exception.IllegalRideStatusException;
 import com.modsen.ride.exception.MultipleApiExceptionInfo;
 import com.modsen.ride.exception.NoAvailableRideForDriver;
+import com.modsen.ride.exception.NoConfirmedRideForPassenger;
+import com.modsen.ride.exception.NotFinishedRideAlreadyExistsException;
 import com.modsen.ride.exception.PageException;
 import com.modsen.ride.exception.RideNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -33,7 +35,7 @@ public class RideControllerAdvice {
             SQLIntegrityConstraintViolationException.class,
             PageException.class,
             NoAvailableRideForDriver.class,
-            NoAvailableRideForDriver.class,
+            NoConfirmedRideForPassenger.class,
             IllegalRideStatusException.class
     })
     public ResponseEntity<ApiExceptionInfo> handleBadRequestException(Exception e) {
@@ -43,6 +45,11 @@ public class RideControllerAdvice {
     @ExceptionHandler(RideNotFoundException.class)
     public ResponseEntity<ApiExceptionInfo> handleRideNotFoundException(RideNotFoundException e) {
         return generateApiExceptionResponse(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NotFinishedRideAlreadyExistsException.class)
+    public ResponseEntity<ApiExceptionInfo> handleNotFinishedRideAlreadyExists(NotFinishedRideAlreadyExistsException e) {
+        return generateApiExceptionResponse(e, HttpStatus.CONFLICT);
     }
 
     private ResponseEntity<ApiExceptionInfo> generateApiExceptionResponse(Throwable e, HttpStatus status) {

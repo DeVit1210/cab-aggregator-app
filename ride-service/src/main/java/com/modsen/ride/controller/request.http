@@ -1,0 +1,42 @@
+POST localhost:8086/api/v1/rides
+Content-Type: application/json
+
+{
+  "passengerId": 2,
+  "rideCost": 10.50,
+  "pickUpAddress": "Kolasa, 23",
+  "destinationAddress": "Kupaly, 18"
+}
+
+###
+
+GET localhost:8086/api/v1/rides/page/1?role=DRIVER
+
+###
+
+GET localhost:8086/api/v1/rides?role=PASSENGER&personId=1
+
+###
+
+GET localhost:8086/api/v1/rides/available/driver/1
+
+###
+
+GET localhost:8086/api/v1/rides/confirmed/passenger/1
+
+###
+
+PATCH localhost:8086/api/v1/ride-operations/accept/1
+
+###
+
+PATCH localhost:8086/api/v1/ride-operations/dismiss/1
+
+###
+
+PATCH localhost:8086/api/v1/ride-operations/finish/1
+
+###
+
+PATCH localhost:8086/api/v1/ride-operations/cancel/2
+

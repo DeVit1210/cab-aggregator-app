@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
@@ -75,7 +76,7 @@ public class RideOperationsServiceImpl implements RideOperationsService {
     @Override
     public RideResponse cancelRide(Long rideId) {
         Ride ride = rideService.findRideById(rideId);
-        validateRideStatus(ride, RideStatus.WAITING_FOR_DRIVER_CONFIRMATION, RideStatus.WITHOUT_DRIVER);
+        validateRideStatus(ride, RideStatus.WITHOUT_DRIVER, RideStatus.WAITING_FOR_DRIVER_CONFIRMATION);
         changeDriverStatus(ride.getDriverId(), DriverStatus.AVAILABLE);
 
         return doUpdateRideStatus(ride, RideStatus.CANCELED);
@@ -94,11 +95,16 @@ public class RideOperationsServiceImpl implements RideOperationsService {
         return rideService.saveRide(ride);
     }
 
-    private void validateRideStatus(Ride ride, RideStatus... expectedRideStatuses) {
-        for (RideStatus expectedRideStatus : expectedRideStatuses) {
-            if (!ride.getRideStatus().equals(expectedRideStatus)) {
-                throw new IllegalRideStatusException(expectedRideStatus);
-            }
+    private void validateRideStatus(Ride ride, RideStatus expectedRideStatus) {
+        if (!ride.getRideStatus().equals(expectedRideStatus)) {
+            throw new IllegalRideStatusException(expectedRideStatus);
         }
+    }
+
+    private void validateRideStatus(Ride ride, RideStatus... expectedRideStatuses) {
+        Arrays.stream(expectedRideStatuses)
+                .filter(rideStatus -> ride.getRideStatus().equals(rideStatus))
+                .findAny()
+                .orElseThrow(() -> new IllegalRideStatusException(expectedRideStatuses[0]));
     }
 }
