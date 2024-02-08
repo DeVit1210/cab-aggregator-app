@@ -9,6 +9,7 @@ import com.modsen.ride.dto.response.RideListResponse;
 import com.modsen.ride.dto.response.RideResponse;
 import com.modsen.ride.enums.Role;
 import com.modsen.ride.service.RideService;
+import com.modsen.ride.validation.EnumValue;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,14 +41,14 @@ public class RideController {
 
     @GetMapping("/page/{personId}")
     public PagedRideResponse findRidesForPerson(@PathVariable Long personId,
-                                                @RequestParam String role,
+                                                @RequestParam @EnumValue(enumClass = Role.class) String role,
                                                 PageSettingRequest request) {
         return rideService.findRidesForPerson(personId, Role.valueOf(role), request);
     }
 
     @GetMapping
     public RideListResponse findAllRidesForPerson(@RequestParam Long personId,
-                                                  @RequestParam String role) {
+                                                  @RequestParam @EnumValue(enumClass = Role.class) String role) {
         return rideService.findAllRidesForPerson(personId, Role.valueOf(role));
     }
 

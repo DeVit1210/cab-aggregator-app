@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -76,7 +76,7 @@ public class RideOperationsServiceImpl implements RideOperationsService {
     @Override
     public RideResponse cancelRide(Long rideId) {
         Ride ride = rideService.findRideById(rideId);
-        validateRideStatus(ride, RideStatus.WITHOUT_DRIVER, RideStatus.WAITING_FOR_DRIVER_CONFIRMATION);
+        validateRideStatus(ride, RideStatus.getNotConfirmedStatusList());
         changeDriverStatus(ride.getDriverId(), DriverStatus.AVAILABLE);
 
         return doUpdateRideStatus(ride, RideStatus.CANCELED);
@@ -101,10 +101,10 @@ public class RideOperationsServiceImpl implements RideOperationsService {
         }
     }
 
-    private void validateRideStatus(Ride ride, RideStatus... expectedRideStatuses) {
-        Arrays.stream(expectedRideStatuses)
+    private void validateRideStatus(Ride ride, List<RideStatus> expectedRideStatuses) {
+        expectedRideStatuses.stream()
                 .filter(rideStatus -> ride.getRideStatus().equals(rideStatus))
                 .findAny()
-                .orElseThrow(() -> new IllegalRideStatusException(expectedRideStatuses[0]));
+                .orElseThrow(() -> new IllegalRideStatusException(expectedRideStatuses.get(0)));
     }
 }

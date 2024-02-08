@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class UpdateRideDriverReequestConsumer {
+public class UpdateRideDriverRequestConsumer {
     private final RideService rideService;
 
     @KafkaListener(topics = "${spring.kafka.ride-consumer-topic.name}", groupId = "${spring.kafka.consumer.group-id}")
