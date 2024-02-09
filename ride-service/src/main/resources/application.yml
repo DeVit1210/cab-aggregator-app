@@ -1,0 +1,36 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /api/v1
+spring:
+  application:
+    name: ride-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rides
+    password: FLRPVcp41NC7mwD2TtX5
+    username: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: true
+  kafka:
+    consumer:
+      auto-offset-reset: latest
+      bootstrap-servers: localhost:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: ride-service-group
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    ride-producer-topic:
+      name: ride-topic
+    status-producer-topic:
+      name: driver-status-topic
+    ride-consumer-topic:
+      name: ride-with-driver-topic
