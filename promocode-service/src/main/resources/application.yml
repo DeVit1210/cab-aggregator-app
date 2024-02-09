@@ -1,0 +1,17 @@
+server:
+  port: 8085
+  servlet:
+    context-path: /api/v1
+spring:
+  application:
+    name: promocode-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/promocodes
+    username: root
+    password: FLRPVcp41NC7mwD2TtX5
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
