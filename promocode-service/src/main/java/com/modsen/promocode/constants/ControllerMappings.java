@@ -1,5 +1,8 @@
 package com.modsen.promocode.constants;
 
-public interface ControllerMappings {
-    String PROMOCODE_CONTROLLER = "/promocodes";
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+public class ControllerMappings {
+    public static final String PROMOCODE_CONTROLLER = "/promocodes";
 }
