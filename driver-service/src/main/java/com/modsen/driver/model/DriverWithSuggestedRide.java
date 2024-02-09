@@ -1,6 +1,5 @@
 package com.modsen.driver.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +25,5 @@ public class DriverWithSuggestedRide {
     @ManyToOne
     @JoinColumn(name = "driver_id")
     private Driver driver;
-    @Column(name = "suggested_ride_id")
     private Long suggestedRideId;
 }

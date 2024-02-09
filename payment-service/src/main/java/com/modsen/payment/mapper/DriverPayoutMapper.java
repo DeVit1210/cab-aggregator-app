@@ -5,12 +5,13 @@ import com.modsen.payment.dto.response.Paged;
 import com.modsen.payment.model.DriverPayout;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface DriverPayoutMapper {
     @Mapping(target = "driverId", source = "driverPayout.account.driverId")
     DriverPayoutResponse toDriverPayoutResponse(DriverPayout driverPayout, BigDecimal leftoverAmount);

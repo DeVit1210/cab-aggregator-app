@@ -4,12 +4,12 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <include file="01-create-credit-cards-table.xml" relativeToChangelogFile="true"/>
-    <include file="03-create-driver-accounts-table.xml" relativeToChangelogFile="true"/>
-    <include file="05-create-driver-payouts-table.xml" relativeToChangelogFile="true"/>
-    <include file="07-create-payments-table.xml" relativeToChangelogFile="true"/>
-    <include file="09-create-stripe-customers-table.xml" relativeToChangelogFile="true"/>
-    <include file="01-add-driver-payout-foreign-key.xml" relativeToChangelogFile="true"/>
-    <include file="03-add-credit-card-id-field.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/01-create-credit-cards-table.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/03-create-driver-accounts-table.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/05-create-driver-payouts-table.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/07-create-payments-table.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/09-create-stripe-customers-table.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/01-add-driver-payout-foreign-key.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/03-add-credit-card-id-field.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

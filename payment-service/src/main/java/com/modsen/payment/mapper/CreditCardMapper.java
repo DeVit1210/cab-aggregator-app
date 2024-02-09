@@ -4,10 +4,11 @@ import com.modsen.payment.dto.request.CreditCardRequest;
 import com.modsen.payment.dto.response.CreditCardResponse;
 import com.modsen.payment.model.CreditCard;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CreditCardMapper {
     CreditCard toCreditCard(CreditCardRequest request);
 

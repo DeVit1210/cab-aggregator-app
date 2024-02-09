@@ -3,10 +3,10 @@ package com.modsen.driver.mapper;
 import com.modsen.driver.dto.request.DriverRequest;
 import com.modsen.driver.dto.response.DriverResponse;
 import com.modsen.driver.dto.response.PagedDriverResponse;
-import com.modsen.driver.enums.DriverStatus;
 import com.modsen.driver.model.Driver;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
@@ -18,7 +18,8 @@ import java.util.List;
 public interface DriverMapper {
     DriverResponse toDriverResponse(Driver driver);
 
-    Driver toDriver(DriverRequest request, DriverStatus status);
+    @Mapping(target = "driverStatus", constant = "OFFLINE")
+    Driver toDriver(DriverRequest request);
 
     List<DriverResponse> toDriverListResponse(List<Driver> driverList);
 

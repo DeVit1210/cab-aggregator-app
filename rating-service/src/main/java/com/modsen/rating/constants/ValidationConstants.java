@@ -1,6 +1,9 @@
 package com.modsen.rating.constants;
 
-public interface ValidationConstants {
-    String ENUM_INVALID = "invalid enum format!";
-    String ID_NOT_EMPTY = "id cannot be empty!";
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+public class ValidationConstants {
+    public static final String ENUM_INVALID = "invalid enum format!";
+    public static final String ID_NOT_EMPTY = "id cannot be empty!";
 }

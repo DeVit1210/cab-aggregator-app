@@ -4,6 +4,7 @@ import com.modsen.driver.exception.IncorrectPageNumberException;
 import com.modsen.driver.exception.IncorrectPageSizeException;
 import com.modsen.driver.exception.IncorrectSortFieldNameException;
 import com.modsen.driver.model.Driver;
+import lombok.experimental.UtilityClass;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+@UtilityClass
 public class PageRequestUtils {
     private static final Predicate<String> IS_SORT_FIELD_EXIST_PREDICATE = sortField ->
             Arrays.stream(Driver.class.getDeclaredFields())

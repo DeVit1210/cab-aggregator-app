@@ -1,5 +1,6 @@
 package com.modsen.passenger.service.impl;
 
+import com.modsen.passenger.dto.request.PageSettingRequest;
 import com.modsen.passenger.dto.request.PassengerRequest;
 import com.modsen.passenger.dto.response.PagedPassengerResponse;
 import com.modsen.passenger.dto.response.PassengerListResponse;
@@ -68,12 +69,12 @@ public class PassengerServiceImpl implements PassengerService {
         List<Passenger> passengers = passengerRepository.findAll();
         List<PassengerResponse> passengerResponses = passengerMapper.toPassengerListResponse(passengers);
 
-        return new PassengerListResponse(passengerResponses);
+        return PassengerListResponse.of(passengerResponses);
     }
 
     @Override
-    public PagedPassengerResponse findPassengers(int pageNumber, int pageSize, String sortField) {
-        PageRequest pageRequest = PageRequestUtils.makePageRequest(pageNumber, pageSize, sortField);
+    public PagedPassengerResponse findPassengers(PageSettingRequest request) {
+        PageRequest pageRequest = PageRequestUtils.makePageRequest(request);
         Page<Passenger> passengerPage = passengerRepository.findAll(pageRequest);
         PageRequestUtils.validatePageResponse(pageRequest, passengerPage);
 
@@ -81,10 +82,7 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     private PassengerResponse doUpdatePassenger(Passenger passenger, PassengerRequest request) {
-        passenger.setFirstName(request.getFirstName());
-        passenger.setLastName(request.getLastName());
-        passenger.setEmail(request.getEmail());
-        passenger.setPhoneNumber(request.getPhoneNumber());
+        passengerMapper.updatePassenger(request, passenger);
         Passenger updatedPassenger = passengerRepository.save(passenger);
 
         return passengerMapper.toPassengerResponse(updatedPassenger);

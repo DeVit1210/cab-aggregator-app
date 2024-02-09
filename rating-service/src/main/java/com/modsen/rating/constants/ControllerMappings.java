@@ -1,5 +1,8 @@
 package com.modsen.rating.constants;
 
-public interface ControllerMappings {
-    String RATING_CONTROLLER = "/ratings";
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+public class ControllerMappings {
+    public static final String RATING_CONTROLLER = "/ratings";
 }

@@ -57,7 +57,7 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public DriverResponse createDriver(DriverRequest request) {
-        Driver driver = driverMapper.toDriver(request, DriverStatus.OFFLINE);
+        Driver driver = driverMapper.toDriver(request);
         Driver savedDriver = driverRepository.save(driver);
 
         return driverMapper.toDriverResponse(savedDriver);

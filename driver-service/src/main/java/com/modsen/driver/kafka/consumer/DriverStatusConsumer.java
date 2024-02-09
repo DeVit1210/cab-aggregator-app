@@ -1,4 +1,4 @@
-package com.modsen.driver.kafka;
+package com.modsen.driver.kafka.consumer;
 
 import com.modsen.driver.dto.request.ChangeDriverStatusRequest;
 import com.modsen.driver.service.DriverService;

@@ -1,7 +1,8 @@
-package com.modsen.driver.kafka;
+package com.modsen.driver.kafka.consumer;
 
 import com.modsen.driver.dto.request.RideRequest;
 import com.modsen.driver.dto.response.RideResponse;
+import com.modsen.driver.kafka.producer.RideResponseProducer;
 import com.modsen.driver.mapper.RideResponseMapper;
 import com.modsen.driver.service.DriverService;
 import com.modsen.driver.service.DriverWithSuggestedRideService;

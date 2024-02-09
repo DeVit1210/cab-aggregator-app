@@ -1,5 +1,8 @@
 package com.modsen.driver.constants;
 
-public interface ControllerMappings {
-    String DRIVER_CONTROLLER = "/drivers";
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+public class ControllerMappings {
+    public static final String DRIVER_CONTROLLER = "/drivers";
 }

@@ -5,11 +5,12 @@ import com.modsen.payment.dto.response.Paged;
 import com.modsen.payment.dto.response.PaymentResponse;
 import com.modsen.payment.model.Payment;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PaymentMapper {
     Payment toPayment(PaymentRequest request);
 

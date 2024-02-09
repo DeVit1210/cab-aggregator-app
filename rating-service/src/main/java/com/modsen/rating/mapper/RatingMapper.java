@@ -6,11 +6,12 @@ import com.modsen.rating.dto.response.RatingResponse;
 import com.modsen.rating.model.Rating;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface RatingMapper {
     Rating toRating(RatingRequest request);
 

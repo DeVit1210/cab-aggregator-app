@@ -1,7 +1,10 @@
 package com.modsen.payment.constants;
 
-public interface PageConstants {
-    int NUMBER = 1;
-    int SIZE = 10;
-    String SORT_FIELD = "id";
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+public class PageConstants {
+    public static final int NUMBER = 1;
+    public static final int SIZE = 10;
+    public static final String SORT_FIELD = "id";
 }
