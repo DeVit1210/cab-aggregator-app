@@ -1,4 +1,4 @@
-package com.modsen.ride.kafka;
+package com.modsen.ride.kafka.producer;
 
 import com.modsen.ride.dto.request.FindDriverRequest;
 import lombok.RequiredArgsConstructor;

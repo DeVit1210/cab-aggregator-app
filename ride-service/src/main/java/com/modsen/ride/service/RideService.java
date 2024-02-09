@@ -2,6 +2,7 @@ package com.modsen.ride.service;
 
 import com.modsen.ride.dto.request.PageSettingRequest;
 import com.modsen.ride.dto.request.RideRequest;
+import com.modsen.ride.dto.request.UpdateRideDriverRequest;
 import com.modsen.ride.dto.response.ConfirmedRideResponse;
 import com.modsen.ride.dto.response.PagedRideResponse;
 import com.modsen.ride.dto.response.RideListResponse;
@@ -25,4 +26,6 @@ public interface RideService {
     Ride findRideById(Long rideId);
 
     RideResponse saveRide(Ride ride);
+
+    void handleUpdateDriver(UpdateRideDriverRequest request);
 }

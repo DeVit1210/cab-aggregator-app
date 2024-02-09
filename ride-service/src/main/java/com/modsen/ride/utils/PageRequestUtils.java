@@ -5,6 +5,7 @@ import com.modsen.ride.exception.IncorrectPageNumberException;
 import com.modsen.ride.exception.IncorrectPageSizeException;
 import com.modsen.ride.exception.IncorrectSortFieldNameException;
 import com.modsen.ride.model.Ride;
+import lombok.experimental.UtilityClass;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+@UtilityClass
 public class PageRequestUtils {
     private static final Predicate<String> IS_SORT_FIELD_EXIST_PREDICATE = sortField ->
             Arrays.stream(Ride.class.getDeclaredFields())

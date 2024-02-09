@@ -3,6 +3,7 @@ package com.modsen.ride.service.impl;
 import com.modsen.ride.dto.request.FindDriverRequest;
 import com.modsen.ride.dto.request.PageSettingRequest;
 import com.modsen.ride.dto.request.RideRequest;
+import com.modsen.ride.dto.request.UpdateRideDriverRequest;
 import com.modsen.ride.dto.response.ConfirmedRideResponse;
 import com.modsen.ride.dto.response.PagedRideResponse;
 import com.modsen.ride.dto.response.RideListResponse;
@@ -13,7 +14,7 @@ import com.modsen.ride.exception.NoAvailableRideForDriver;
 import com.modsen.ride.exception.NoConfirmedRideForPassenger;
 import com.modsen.ride.exception.NotFinishedRideAlreadyExistsException;
 import com.modsen.ride.exception.RideNotFoundException;
-import com.modsen.ride.kafka.RideRequestProducer;
+import com.modsen.ride.kafka.producer.RideRequestProducer;
 import com.modsen.ride.mapper.RideMapper;
 import com.modsen.ride.model.Ride;
 import com.modsen.ride.repository.RideRepository;
@@ -102,6 +103,14 @@ public class RideServiceImpl implements RideService {
     public RideResponse saveRide(Ride ride) {
         Ride savedRide = rideRepository.save(ride);
         return rideMapper.toRideResponse(savedRide);
+    }
+
+    @Override
+    public void handleUpdateDriver(UpdateRideDriverRequest request) {
+        Ride ride = findRideById(request.getRideId());
+        ride.setDriverId(request.getDriverId());
+        ride.setRideStatus(RideStatus.WAITING_FOR_DRIVER_CONFIRMATION);
+        saveRide(ride);
     }
 
     private void validateRideRequest(RideRequest request) {

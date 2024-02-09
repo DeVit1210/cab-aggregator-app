@@ -1,8 +1,6 @@
-package com.modsen.ride.kafka;
+package com.modsen.ride.kafka.consumer;
 
 import com.modsen.ride.dto.request.UpdateRideDriverRequest;
-import com.modsen.ride.enums.RideStatus;
-import com.modsen.ride.model.Ride;
 import com.modsen.ride.service.RideService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -15,9 +13,6 @@ public class UpdateRideDriverRequestConsumer {
 
     @KafkaListener(topics = "${spring.kafka.ride-consumer-topic.name}", groupId = "${spring.kafka.consumer.group-id}")
     public void consumeRideWithDriver(UpdateRideDriverRequest request) {
-        Ride ride = rideService.findRideById(request.getRideId());
-        ride.setDriverId(request.getDriverId());
-        ride.setRideStatus(RideStatus.WAITING_FOR_DRIVER_CONFIRMATION);
-        rideService.saveRide(ride);
+        rideService.handleUpdateDriver(request);
     }
 }
