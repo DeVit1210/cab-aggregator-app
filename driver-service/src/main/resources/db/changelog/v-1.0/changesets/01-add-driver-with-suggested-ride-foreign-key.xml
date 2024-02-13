@@ -5,11 +5,8 @@
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="add-driver-with-suggested-ride-fk" author="Mozol Denis">
-        <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="fk_driver_with_suggested_ride_drivers"/>
-        </preConditions>
         <addForeignKeyConstraint baseTableName="driver_with_suggested_ride"
-                                 baseColumnNames="suggested_ride_id"
+                                 baseColumnNames="driver_id"
                                  constraintName="fk_driver_with_suggested_ride_drivers"
                                  referencedTableName="drivers"
                                  referencedColumnNames="id"/>

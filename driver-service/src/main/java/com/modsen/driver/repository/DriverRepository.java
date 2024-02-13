@@ -13,4 +13,6 @@ public interface DriverRepository extends JpaRepository<Driver, Long> {
     Optional<Driver> findFirstByDriverStatus(DriverStatus status);
 
     Optional<Driver> findFirstByDriverStatusAndIdIsNotIn(DriverStatus status, List<Long> driversToExcludeIdList);
+
+    int countAllByDriverStatus(DriverStatus driverStatus);
 }

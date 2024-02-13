@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 public enum MessageTemplates {
     DRIVER_NOT_FOUND_BY_ID("driver.not-found.id"),
     DRIVER_NOT_FOUND_BY_STATUS("driver.not-found.status"),
+    DRIVER_ALREADY_ONLINE("driver.already-online"),
+    DRIVER_NOT_AVAILABLE("driver.not-available"),
     INCORRECT_PAGE_SIZE("page.invalid.size"),
     INCORRECT_PAGE_NUMBER("page.invalid.number"),
     INCORRECT_PAGE_NUMBER_WITH_LIMIT("page.invalid.number.with-limit"),

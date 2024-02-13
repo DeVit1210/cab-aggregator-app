@@ -1,6 +1,8 @@
 package com.modsen.driver.exception.handler;
 
 import com.modsen.driver.exception.ApiExceptionInfo;
+import com.modsen.driver.exception.DriverAlreadyOnlineException;
+import com.modsen.driver.exception.DriverNotAvailableException;
 import com.modsen.driver.exception.DriverNotFoundException;
 import com.modsen.driver.exception.MultipleApiExceptionInfo;
 import com.modsen.driver.exception.PageException;
@@ -35,6 +37,11 @@ public class DriverControllerAdvice {
     @ExceptionHandler(DriverNotFoundException.class)
     public ResponseEntity<ApiExceptionInfo> handleDriverNotFoundException(DriverNotFoundException e) {
         return generateApiExceptionResponse(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({DriverAlreadyOnlineException.class, DriverNotAvailableException.class})
+    public ResponseEntity<ApiExceptionInfo> handleDriverConflictException(RuntimeException e) {
+        return generateApiExceptionResponse(e, HttpStatus.CONFLICT);
     }
 
     private ResponseEntity<ApiExceptionInfo> generateApiExceptionResponse(Throwable e, HttpStatus status) {

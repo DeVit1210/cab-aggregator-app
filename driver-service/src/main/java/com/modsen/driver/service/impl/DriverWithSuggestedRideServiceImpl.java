@@ -1,6 +1,6 @@
 package com.modsen.driver.service.impl;
 
-import com.modsen.driver.dto.request.RideRequest;
+import com.modsen.driver.dto.request.FindDriverRequest;
 import com.modsen.driver.model.Driver;
 import com.modsen.driver.model.DriverWithSuggestedRide;
 import com.modsen.driver.repository.DriverWithSuggestedRideRepository;
@@ -18,7 +18,7 @@ public class DriverWithSuggestedRideServiceImpl implements DriverWithSuggestedRi
     private final DriverWithSuggestedRideRepository suggestedRideRepository;
 
     @Override
-    public List<Long> getDriverIdList(RideRequest request) {
+    public List<Long> getDriverIdList(FindDriverRequest request) {
         return Optional.of(request.getRideId())
                 .map(rideId -> suggestedRideRepository.findAllBySuggestedRideId(rideId)
                         .stream()

@@ -1,9 +1,10 @@
 package com.modsen.driver.enums;
 
 public enum DriverStatus {
-    OFFLINE,
-    ON_TRIP,
-    DRIVING_FOR_PASSENGER,
+    HAS_UNCONFIRMED_RIDE,
+    ON_WAY_TO_PASSENGER,
     WAITING_FOR_PASSENGER,
+    ON_TRIP,
+    OFFLINE,
     AVAILABLE
 }

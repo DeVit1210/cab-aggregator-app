@@ -2,13 +2,19 @@ package com.modsen.driver.service.impl;
 
 import com.modsen.driver.dto.request.ChangeDriverStatusRequest;
 import com.modsen.driver.dto.request.DriverRequest;
-import com.modsen.driver.dto.request.RideRequest;
+import com.modsen.driver.dto.request.FindDriverRequest;
+import com.modsen.driver.dto.request.UpdateRideDriverRequest;
+import com.modsen.driver.dto.response.DriverAvailabilityResponse;
 import com.modsen.driver.dto.response.DriverListResponse;
 import com.modsen.driver.dto.response.DriverResponse;
 import com.modsen.driver.dto.response.PagedDriverResponse;
 import com.modsen.driver.enums.DriverStatus;
+import com.modsen.driver.exception.DriverAlreadyOnlineException;
+import com.modsen.driver.exception.DriverNotAvailableException;
 import com.modsen.driver.exception.DriverNotFoundException;
+import com.modsen.driver.kafka.producer.RideResponseProducer;
 import com.modsen.driver.mapper.DriverMapper;
+import com.modsen.driver.mapper.RideResponseMapper;
 import com.modsen.driver.model.Driver;
 import com.modsen.driver.repository.DriverRepository;
 import com.modsen.driver.service.DriverService;
@@ -30,6 +36,8 @@ public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
     private final DriverWithSuggestedRideService suggestedRideService;
+    private final RideResponseMapper rideResponseMapper;
+    private final RideResponseProducer rideResponseProducer;
 
     @Override
     public DriverListResponse findAllDrivers() {
@@ -82,7 +90,14 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public Optional<Driver> findAvailableDriverForRide(RideRequest request) {
+    public DriverAvailabilityResponse getDriverAvailability() {
+        long allDriversCount = driverRepository.count();
+        long availableDriversCount = driverRepository.countAllByDriverStatus(DriverStatus.AVAILABLE);
+
+        return new DriverAvailabilityResponse(allDriversCount, availableDriversCount);
+    }
+
+    private Optional<Driver> findAvailableDriverForRide(FindDriverRequest request) {
         List<Long> alreadySuggestedDriverList = suggestedRideService.getDriverIdList(request);
 
         return alreadySuggestedDriverList.isEmpty()
@@ -95,7 +110,49 @@ public class DriverServiceImpl implements DriverService {
         long driverId = request.getDriverId();
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new DriverNotFoundException(driverId));
-        driver.setDriverStatus(request.getNewStatus());
+        driver.setDriverStatus(request.getDriverStatus());
         driverRepository.save(driver);
     }
+
+    @Override
+    public DriverResponse makeDriverOnline(Long driverId) {
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new DriverNotFoundException(driverId));
+        if (!driver.getDriverStatus().equals(DriverStatus.OFFLINE)) {
+            throw new DriverAlreadyOnlineException(driverId);
+        }
+        driver.setDriverStatus(DriverStatus.AVAILABLE);
+        driverRepository.save(driver);
+
+        return driverMapper.toDriverResponse(driver);
+    }
+
+    @Override
+    public DriverResponse makeDriverOffline(Long driverId) {
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new DriverNotFoundException(driverId));
+        if (!driver.getDriverStatus().equals(DriverStatus.AVAILABLE)) {
+            throw new DriverNotAvailableException(driverId);
+        }
+        driver.setDriverStatus(DriverStatus.OFFLINE);
+        driverRepository.save(driver);
+
+        return driverMapper.toDriverResponse(driver);
+    }
+
+    @Override
+    public void handleFindDriverRequest(FindDriverRequest rideRequest) {
+        Optional<Driver> availableDriverForRide = findAvailableDriverForRide(rideRequest);
+        availableDriverForRide.ifPresentOrElse(driver -> {
+            driver.setDriverStatus(DriverStatus.HAS_UNCONFIRMED_RIDE);
+            driverRepository.save(driver);
+            suggestedRideService.save(driver, rideRequest.getRideId());
+            UpdateRideDriverRequest request = rideResponseMapper.toResponseWithDriver(rideRequest, driver.getId());
+            rideResponseProducer.sendUpdateRideRequest(request);
+        }, () -> {
+            UpdateRideDriverRequest request = rideResponseMapper.toResponseWithoutDriver(rideRequest);
+            rideResponseProducer.sendUpdateRideRequest(request);
+        });
+    }
+
 }
