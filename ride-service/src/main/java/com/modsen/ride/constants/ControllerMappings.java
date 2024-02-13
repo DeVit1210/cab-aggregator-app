@@ -6,4 +6,5 @@ import lombok.experimental.UtilityClass;
 public class ControllerMappings {
     public static final String RIDE_CONTROLLER = "/rides";
     public static final String RIDE_OPERATIONS_CONTROLLER = "/ride-operations";
+    public static final String RIDE_COST_CONTROLLER = "/rides/cost";
 }

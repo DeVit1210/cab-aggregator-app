@@ -39,6 +39,11 @@ public class RideController {
         return rideService.findRides(request);
     }
 
+    @GetMapping("/{rideId}")
+    public RideResponse findRideById(@PathVariable Long rideId) {
+        return rideService.findRide(rideId);
+    }
+
     @GetMapping("/page/{personId}")
     public PagedRideResponse findRidesForPerson(@PathVariable Long personId,
                                                 @RequestParam @EnumValue(enumClass = Role.class) String role,
