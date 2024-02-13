@@ -11,6 +11,7 @@ import com.modsen.ride.kafka.producer.RideRequestProducer;
 import com.modsen.ride.model.Ride;
 import com.modsen.ride.service.RideOperationsService;
 import com.modsen.ride.service.RideService;
+import com.modsen.ride.service.feign.PaymentServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class RideOperationsServiceImpl implements RideOperationsService {
     private final RideService rideService;
     private final DriverStatusRequestProducer driverStatusRequestProducer;
     private final RideRequestProducer rideRequestProducer;
+    private final PaymentServiceClient paymentServiceClient;
 
     @Override
     public RideResponse acceptRide(Long rideId) {

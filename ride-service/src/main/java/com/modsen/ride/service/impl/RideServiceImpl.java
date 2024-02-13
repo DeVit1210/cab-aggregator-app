@@ -19,6 +19,8 @@ import com.modsen.ride.mapper.RideMapper;
 import com.modsen.ride.model.Ride;
 import com.modsen.ride.repository.RideRepository;
 import com.modsen.ride.service.RideService;
+import com.modsen.ride.service.feign.PassengerServiceClient;
+import com.modsen.ride.service.feign.PaymentServiceClient;
 import com.modsen.ride.utils.PageRequestUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,6 +36,8 @@ public class RideServiceImpl implements RideService {
     private final RideRepository rideRepository;
     private final RideMapper rideMapper;
     private final RideRequestProducer rideRequestProducer;
+    private final PassengerServiceClient passengerServiceClient;
+    private final PaymentServiceClient paymentServiceClient;
 
     @Override
     public PagedRideResponse findRides(PageSettingRequest request) {
@@ -76,6 +80,13 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
+    public RideResponse findRide(Long rideId) {
+        return rideRepository.findById(rideId)
+                .map(rideMapper::toRideResponse)
+                .orElseThrow(() -> new RideNotFoundException(rideId));
+    }
+
+    @Override
     public ConfirmedRideResponse findAvailableRideForDriver(Long driverId) {
         Ride ride = rideRepository
                 .findFirstByDriverIdAndRideStatus(driverId, RideStatus.WAITING_FOR_DRIVER_CONFIRMATION)
@@ -107,10 +118,17 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public void handleUpdateDriver(UpdateRideDriverRequest request) {
+        validateUpdateRideDriverRequest(request);
         Ride ride = findRideById(request.getRideId());
         ride.setDriverId(request.getDriverId());
         ride.setRideStatus(RideStatus.WAITING_FOR_DRIVER_CONFIRMATION);
         saveRide(ride);
+    }
+
+    private void validateUpdateRideDriverRequest(UpdateRideDriverRequest request) {
+        if (!request.isDriverAvailable()) {
+            requestDriverForRide(request.getRideId());
+        }
     }
 
     private void validateRideRequest(RideRequest request) {
@@ -118,6 +136,8 @@ public class RideServiceImpl implements RideService {
         if (rideRepository.existsByPassengerIdAndRideStatusIn(passengerId, RideStatus.getNotFinishedStatusList())) {
             throw new NotFinishedRideAlreadyExistsException(passengerId);
         }
+        passengerServiceClient.findPassengerById(passengerId);
+        paymentServiceClient.findStripeCustomerById(passengerId);
     }
 
     private Specification<Ride> buildRideSpecification(Long personId, Role role) {
@@ -132,5 +152,10 @@ public class RideServiceImpl implements RideService {
 
     private String resolveSearchColumnName(Role role) {
         return role.equals(Role.DRIVER) ? "driverId" : "passengerId";
+    }
+
+    private void requestDriverForRide(Long rideId) {
+        FindDriverRequest findDriverRequest = new FindDriverRequest(rideId);
+        rideRequestProducer.sendRequestForDriver(findDriverRequest);
     }
 }
