@@ -12,6 +12,7 @@ import com.modsen.driver.enums.DriverStatus;
 import com.modsen.driver.exception.DriverAlreadyOnlineException;
 import com.modsen.driver.exception.DriverNotAvailableException;
 import com.modsen.driver.exception.DriverNotFoundException;
+import com.modsen.driver.exception.DriverStatusChangeNotAllowedException;
 import com.modsen.driver.kafka.producer.RideResponseProducer;
 import com.modsen.driver.mapper.DriverMapper;
 import com.modsen.driver.mapper.RideResponseMapper;
@@ -19,6 +20,7 @@ import com.modsen.driver.model.Driver;
 import com.modsen.driver.repository.DriverRepository;
 import com.modsen.driver.service.DriverService;
 import com.modsen.driver.service.DriverWithSuggestedRideService;
+import com.modsen.driver.service.feign.PaymentServiceClient;
 import com.modsen.driver.utils.PageRequestUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +40,7 @@ public class DriverServiceImpl implements DriverService {
     private final DriverWithSuggestedRideService suggestedRideService;
     private final RideResponseMapper rideResponseMapper;
     private final RideResponseProducer rideResponseProducer;
+    private final PaymentServiceClient paymentServiceClient;
 
     @Override
     public DriverListResponse findAllDrivers() {
@@ -106,38 +109,12 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public void updateDriverStatus(ChangeDriverStatusRequest request) {
+    public void handleChangeDriverStatusRequest(ChangeDriverStatusRequest request) {
         long driverId = request.getDriverId();
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new DriverNotFoundException(driverId));
         driver.setDriverStatus(request.getDriverStatus());
         driverRepository.save(driver);
-    }
-
-    @Override
-    public DriverResponse makeDriverOnline(Long driverId) {
-        Driver driver = driverRepository.findById(driverId)
-                .orElseThrow(() -> new DriverNotFoundException(driverId));
-        if (!driver.getDriverStatus().equals(DriverStatus.OFFLINE)) {
-            throw new DriverAlreadyOnlineException(driverId);
-        }
-        driver.setDriverStatus(DriverStatus.AVAILABLE);
-        driverRepository.save(driver);
-
-        return driverMapper.toDriverResponse(driver);
-    }
-
-    @Override
-    public DriverResponse makeDriverOffline(Long driverId) {
-        Driver driver = driverRepository.findById(driverId)
-                .orElseThrow(() -> new DriverNotFoundException(driverId));
-        if (!driver.getDriverStatus().equals(DriverStatus.AVAILABLE)) {
-            throw new DriverNotAvailableException(driverId);
-        }
-        driver.setDriverStatus(DriverStatus.OFFLINE);
-        driverRepository.save(driver);
-
-        return driverMapper.toDriverResponse(driver);
     }
 
     @Override
@@ -155,4 +132,46 @@ public class DriverServiceImpl implements DriverService {
         });
     }
 
+    @Override
+    public DriverResponse changeDriverStatus(ChangeDriverStatusRequest request) {
+        DriverStatus newStatus = request.getDriverStatus();
+        Long driverId = request.getDriverId();
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new DriverNotFoundException(driverId));
+        validateNewDriverStatus(driver, newStatus);
+
+        return changeStatusAndSave(driver, newStatus);
+    }
+
+    private void validateNewDriverStatus(Driver driver, DriverStatus driverStatus) {
+        if(!DriverStatus.allowedToBeChangedByDriver().contains(driverStatus)) {
+            throw new DriverStatusChangeNotAllowedException(driverStatus);
+        }
+
+        if (driverStatus.equals(DriverStatus.AVAILABLE)) {
+            validateDriverOnlineStatus(driver);
+        } else {
+            validateDriverOfflineStatus(driver);
+        }
+    }
+
+    private void validateDriverOnlineStatus(Driver driver) {
+        if (!driver.getDriverStatus().equals(DriverStatus.OFFLINE)) {
+            throw new DriverAlreadyOnlineException(driver.getId());
+        }
+        paymentServiceClient.findAccountById(driver.getId());
+    }
+
+    private void validateDriverOfflineStatus(Driver driver) {
+        if (!driver.getDriverStatus().equals(DriverStatus.AVAILABLE)) {
+            throw new DriverNotAvailableException(driver.getId());
+        }
+    }
+
+    private DriverResponse changeStatusAndSave(Driver driver, DriverStatus driverStatus) {
+        driver.setDriverStatus(driverStatus);
+        driverRepository.save(driver);
+
+        return driverMapper.toDriverResponse(driver);
+    }
 }

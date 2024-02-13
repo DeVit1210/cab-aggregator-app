@@ -4,6 +4,7 @@ import com.modsen.driver.exception.ApiExceptionInfo;
 import com.modsen.driver.exception.DriverAlreadyOnlineException;
 import com.modsen.driver.exception.DriverNotAvailableException;
 import com.modsen.driver.exception.DriverNotFoundException;
+import com.modsen.driver.exception.DriverStatusChangeNotAllowedException;
 import com.modsen.driver.exception.MultipleApiExceptionInfo;
 import com.modsen.driver.exception.PageException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -29,7 +30,11 @@ public class DriverControllerAdvice {
         return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({SQLIntegrityConstraintViolationException.class, PageException.class})
+    @ExceptionHandler({
+            SQLIntegrityConstraintViolationException.class,
+            PageException.class,
+            DriverStatusChangeNotAllowedException.class
+    })
     public ResponseEntity<ApiExceptionInfo> handleBadRequestException(RuntimeException e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }

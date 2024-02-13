@@ -2,6 +2,7 @@ package com.modsen.driver.controller;
 
 import com.modsen.driver.constants.ControllerMappings;
 import com.modsen.driver.constants.PageConstants;
+import com.modsen.driver.dto.request.ChangeDriverStatusRequest;
 import com.modsen.driver.dto.request.DriverRequest;
 import com.modsen.driver.dto.response.DriverAvailabilityResponse;
 import com.modsen.driver.dto.response.DriverListResponse;
@@ -57,14 +58,9 @@ public class DriverController {
         return driverService.getDriverAvailability();
     }
 
-    @PatchMapping("/online/{driverId}")
-    public DriverResponse makeDriverOnline(@PathVariable Long driverId) {
-        return driverService.makeDriverOnline(driverId);
-    }
-
-    @PatchMapping("/offline/{driverId}")
-    public DriverResponse makeDriverOffline(@PathVariable Long driverId) {
-        return driverService.makeDriverOffline(driverId);
+    @PatchMapping("/status")
+    public DriverResponse changeDriverStatus(@RequestBody ChangeDriverStatusRequest request) {
+        return driverService.changeDriverStatus(request);
     }
 
     @PutMapping("/{id}")

@@ -23,11 +23,9 @@ public interface DriverService {
 
     void deleteDriver(Long driverId);
 
-    void updateDriverStatus(ChangeDriverStatusRequest request);
-
-    DriverResponse makeDriverOnline(Long driverId);
-
-    DriverResponse makeDriverOffline(Long driverId);
+    void handleChangeDriverStatusRequest(ChangeDriverStatusRequest request);
 
     void handleFindDriverRequest(FindDriverRequest rideRequest);
+
+    DriverResponse changeDriverStatus(ChangeDriverStatusRequest request);
 }
