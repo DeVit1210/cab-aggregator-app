@@ -6,14 +6,19 @@ import com.modsen.rating.dto.response.AverageRatingResponse;
 import com.modsen.rating.dto.response.PagedRatingResponse;
 import com.modsen.rating.dto.response.RatingListResponse;
 import com.modsen.rating.dto.response.RatingResponse;
+import com.modsen.rating.dto.response.RideResponse;
 import com.modsen.rating.enums.RatingValue;
 import com.modsen.rating.enums.Role;
+import com.modsen.rating.exception.IllegalRatingAttemptException;
 import com.modsen.rating.exception.RatingAlreadyExistsException;
 import com.modsen.rating.exception.RatingNotFoundException;
 import com.modsen.rating.mapper.RatingMapper;
 import com.modsen.rating.model.Rating;
 import com.modsen.rating.repository.RatingRepository;
 import com.modsen.rating.service.RatingService;
+import com.modsen.rating.service.feign.DriverServiceClient;
+import com.modsen.rating.service.feign.PassengerServiceClient;
+import com.modsen.rating.service.feign.RideServiceClient;
 import com.modsen.rating.utils.PageRequestUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +36,9 @@ import java.util.stream.Collectors;
 public class RatingServiceImpl implements RatingService {
     private final RatingRepository ratingRepository;
     private final RatingMapper ratingMapper;
+    private final DriverServiceClient driverServiceClient;
+    private final PassengerServiceClient passengerServiceClient;
+    private final RideServiceClient rideServiceClient;
     @Value("${rating.average.default}")
     private double defaultAverageRating;
 
@@ -101,8 +109,16 @@ public class RatingServiceImpl implements RatingService {
     }
 
     private void validateRatingRequest(RatingRequest request) {
-        Role role = Role.valueOf(request.getRole());
         Long rideId = request.getRideId();
+        RideResponse rideResponse = validateRideId(rideId);
+
+        Role role = Role.valueOf(request.getRole());
+        if(role.equals(Role.DRIVER)) {
+            validateDriverRating(rideResponse.driverId(), request.getRatedPersonId());
+        } else {
+            validatePassengerRating(rideResponse.passengerId(), request.getRatedPersonId());
+        }
+
         if (ratingRepository.existsByRoleAndRideId(role, rideId)) {
             throw new RatingAlreadyExistsException(role, rideId);
         }
@@ -112,5 +128,23 @@ public class RatingServiceImpl implements RatingService {
         return ratingList.stream()
                 .map(Rating::getRatingValue)
                 .collect(Collectors.averagingDouble(RatingValue::getValue));
+    }
+
+    private void validatePassengerRating(Long ratedPersonId, Long passengerId) {
+        if(!ratedPersonId.equals(passengerId)) {
+            throw new IllegalRatingAttemptException(ratedPersonId, Role.PASSENGER);
+        }
+        passengerServiceClient.findPassengerById(passengerId);
+    }
+
+    private void validateDriverRating(Long ratedPersonId, Long driverId) {
+        if(!ratedPersonId.equals(driverId)) {
+            throw new IllegalRatingAttemptException(ratedPersonId, Role.DRIVER);
+        }
+        driverServiceClient.findDriverById(driverId);
+    }
+
+    private RideResponse validateRideId(Long rideId) {
+        return rideServiceClient.findRideById(rideId);
     }
 }

@@ -1,6 +1,7 @@
 package com.modsen.rating.exception.handler;
 
 import com.modsen.rating.exception.ApiExceptionInfo;
+import com.modsen.rating.exception.IllegalRatingAttemptException;
 import com.modsen.rating.exception.MultipleApiExceptionInfo;
 import com.modsen.rating.exception.PageException;
 import com.modsen.rating.exception.RatingAlreadyExistsException;
@@ -28,7 +29,11 @@ public class RatingControllerAdvice {
         return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({SQLIntegrityConstraintViolationException.class, PageException.class})
+    @ExceptionHandler({
+            SQLIntegrityConstraintViolationException.class,
+            PageException.class,
+            IllegalRatingAttemptException.class
+    })
     public ResponseEntity<ApiExceptionInfo> handleBadRequestException(Exception e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
