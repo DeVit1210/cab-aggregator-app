@@ -8,6 +8,7 @@ import com.modsen.driver.dto.response.DriverAvailabilityResponse;
 import com.modsen.driver.dto.response.DriverListResponse;
 import com.modsen.driver.dto.response.DriverResponse;
 import com.modsen.driver.dto.response.PagedDriverResponse;
+import com.modsen.driver.dto.response.ShortDriverResponse;
 import com.modsen.driver.service.DriverService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +60,7 @@ public class DriverController {
     }
 
     @PatchMapping("/status")
-    public DriverResponse changeDriverStatus(@RequestBody ChangeDriverStatusRequest request) {
+    public ShortDriverResponse changeDriverStatus(@RequestBody ChangeDriverStatusRequest request) {
         return driverService.changeDriverStatus(request);
     }
 

@@ -7,6 +7,7 @@ import com.modsen.driver.dto.response.DriverAvailabilityResponse;
 import com.modsen.driver.dto.response.DriverListResponse;
 import com.modsen.driver.dto.response.DriverResponse;
 import com.modsen.driver.dto.response.PagedDriverResponse;
+import com.modsen.driver.dto.response.ShortDriverResponse;
 
 public interface DriverService {
     DriverListResponse findAllDrivers();
@@ -27,5 +28,5 @@ public interface DriverService {
 
     void handleFindDriverRequest(FindDriverRequest rideRequest);
 
-    DriverResponse changeDriverStatus(ChangeDriverStatusRequest request);
+    ShortDriverResponse changeDriverStatus(ChangeDriverStatusRequest request);
 }

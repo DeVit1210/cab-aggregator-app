@@ -4,14 +4,12 @@ import com.modsen.driver.enums.DriverStatus;
 import lombok.Builder;
 
 @Builder
-public record DriverResponse(
+public record ShortDriverResponse(
         Long id,
         String firstName,
         String lastName,
         String email,
         String phoneNumber,
-        DriverStatus driverStatus,
-        double averageRating,
-        int ratesTotalQuantity
+        DriverStatus driverStatus
 ) {
 }
