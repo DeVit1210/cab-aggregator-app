@@ -11,4 +11,6 @@ public interface RatingRepository extends JpaRepository<Rating, Long>, JpaSpecif
     boolean existsByRoleAndRideId(Role role, Long rideId);
 
     List<Rating> findAllByRoleAndRatedPersonId(Role role, Long ratedPersonId);
+
+    List<Rating> findAllByRole(Role role);
 }

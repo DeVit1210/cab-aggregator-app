@@ -3,6 +3,7 @@ package com.modsen.rating.controller;
 import com.modsen.rating.constants.ControllerMappings;
 import com.modsen.rating.dto.request.PageSettingRequest;
 import com.modsen.rating.dto.request.RatingRequest;
+import com.modsen.rating.dto.response.AverageRatingListResponse;
 import com.modsen.rating.dto.response.AverageRatingResponse;
 import com.modsen.rating.dto.response.PagedRatingResponse;
 import com.modsen.rating.dto.response.RatingListResponse;
@@ -49,10 +50,15 @@ public class RatingController {
         return ratingService.createRating(request);
     }
 
-    @GetMapping("/average")
-    public AverageRatingResponse getAverageRating(@RequestParam Long ratedPersonId,
+    @GetMapping("/average/{ratedPersonId}")
+    public AverageRatingResponse getAverageRating(@PathVariable Long ratedPersonId,
                                                   @RequestParam @EnumValue(enumClass = Role.class) String role) {
         return ratingService.getAverageRating(ratedPersonId, Role.valueOf(role));
+    }
+
+    @GetMapping("/average")
+    public AverageRatingListResponse getAllAverageRatings(@RequestParam @EnumValue(enumClass = Role.class) String role) {
+        return ratingService.getAllAverageRatings(Role.valueOf(role));
     }
 
     @GetMapping("/{ratingId}")
