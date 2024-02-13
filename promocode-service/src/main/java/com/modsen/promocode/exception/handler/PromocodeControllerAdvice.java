@@ -1,6 +1,7 @@
 package com.modsen.promocode.exception.handler;
 
 import com.modsen.promocode.exception.ApiExceptionInfo;
+import com.modsen.promocode.exception.InvalidRideAmountForUsingPromocodeException;
 import com.modsen.promocode.exception.MultipleApiExceptionInfo;
 import com.modsen.promocode.exception.PromocodeAlreadyAppliedException;
 import com.modsen.promocode.exception.PromocodeAlreadyExistsException;
@@ -28,8 +29,8 @@ public class PromocodeControllerAdvice {
         return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<ApiExceptionInfo> handleSqlIntegrityException(SQLIntegrityConstraintViolationException e) {
+    @ExceptionHandler({SQLIntegrityConstraintViolationException.class, InvalidRideAmountForUsingPromocodeException.class})
+    public ResponseEntity<ApiExceptionInfo> handleBadRequestException(RuntimeException e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 

@@ -6,6 +6,9 @@ import com.modsen.promocode.dto.request.UpdateDiscountPercentRequest;
 import com.modsen.promocode.dto.response.AppliedPromocodeResponse;
 import com.modsen.promocode.dto.response.PromocodeListResponse;
 import com.modsen.promocode.dto.response.PromocodeResponse;
+import com.modsen.promocode.dto.response.RideListResponse;
+import com.modsen.promocode.enums.Role;
+import com.modsen.promocode.exception.InvalidRideAmountForUsingPromocodeException;
 import com.modsen.promocode.exception.PromocodeAlreadyAppliedException;
 import com.modsen.promocode.exception.PromocodeAlreadyExistsException;
 import com.modsen.promocode.exception.PromocodeNotFoundException;
@@ -16,6 +19,7 @@ import com.modsen.promocode.model.Promocode;
 import com.modsen.promocode.repository.AppliedPromocodeRepository;
 import com.modsen.promocode.repository.PromocodeRepository;
 import com.modsen.promocode.service.PromocodeService;
+import com.modsen.promocode.service.feign.RideServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +35,7 @@ public class PromocodeServiceImpl implements PromocodeService {
     private final AppliedPromocodeRepository appliedPromocodeRepository;
     private final PromocodeMapper promocodeMapper;
     private final AppliedPromocodeMapper appliedPromocodeMapper;
+    private final RideServiceClient rideServiceClient;
 
     @Override
     public PromocodeListResponse findAllPromocodes() {
@@ -96,9 +101,17 @@ public class PromocodeServiceImpl implements PromocodeService {
 
     private void validateAppliedPromocodeRequest(Promocode actualPromocode, ApplyPromocodeRequest request) {
         Long passengerId = request.getPassengerId();
+
         String promocodeName = request.getPromocodeName();
         if (appliedPromocodeRepository.existsByPromocodeAndPassengerId(actualPromocode, passengerId)) {
             throw new PromocodeAlreadyAppliedException(promocodeName, passengerId);
+        }
+
+        int minRidesAmount = actualPromocode.getMinRidesAmount();
+        RideListResponse passengerRides = rideServiceClient.findAllRidesForPerson(passengerId, Role.PASSENGER.name());
+        int quantity = passengerRides.quantity();
+        if (quantity < minRidesAmount) {
+            throw new InvalidRideAmountForUsingPromocodeException(promocodeName, minRidesAmount, quantity);
         }
     }
 

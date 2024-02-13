@@ -1,5 +1,6 @@
 package com.modsen.promocode.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +30,7 @@ public class AppliedPromocode {
     @JoinColumn(name = "promocode_id")
     private Promocode promocode;
     @CreationTimestamp
+    @Column(name = "applied_at")
     private LocalDateTime appliedAt;
     private Long passengerId;
 }
