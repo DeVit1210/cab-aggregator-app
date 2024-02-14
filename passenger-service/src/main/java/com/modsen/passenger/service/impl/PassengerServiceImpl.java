@@ -2,14 +2,17 @@ package com.modsen.passenger.service.impl;
 
 import com.modsen.passenger.dto.request.PageSettingRequest;
 import com.modsen.passenger.dto.request.PassengerRequest;
+import com.modsen.passenger.dto.response.AverageRatingResponse;
 import com.modsen.passenger.dto.response.PagedPassengerResponse;
 import com.modsen.passenger.dto.response.PassengerListResponse;
 import com.modsen.passenger.dto.response.PassengerResponse;
+import com.modsen.passenger.enums.Role;
 import com.modsen.passenger.exception.PassengerNotFoundException;
 import com.modsen.passenger.mapper.PassengerMapper;
 import com.modsen.passenger.model.Passenger;
 import com.modsen.passenger.repository.PassengerRepository;
 import com.modsen.passenger.service.PassengerService;
+import com.modsen.passenger.service.feign.RatingServiceClient;
 import com.modsen.passenger.utils.PageRequestUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,12 +27,15 @@ import java.util.Optional;
 public class PassengerServiceImpl implements PassengerService {
     private final PassengerRepository passengerRepository;
     private final PassengerMapper passengerMapper;
+    private final RatingServiceClient ratingServiceClient;
 
     @Override
     public PassengerResponse findPassengerById(Long passengerId) {
-        return passengerRepository.findById(passengerId)
-                .map(passengerMapper::toPassengerResponse)
+        Passenger passenger = passengerRepository.findById(passengerId)
                 .orElseThrow(() -> new PassengerNotFoundException(passengerId));
+        AverageRatingResponse averageRating = ratingServiceClient.findAverageRating(passengerId, Role.PASSENGER.name());
+
+        return passengerMapper.toPassengerResponse(passenger, averageRating);
     }
 
     @Override
@@ -44,8 +50,9 @@ public class PassengerServiceImpl implements PassengerService {
     public PassengerResponse savePassenger(PassengerRequest request) {
         Passenger passenger = passengerMapper.toPassenger(request);
         Passenger savedPassenger = passengerRepository.save(passenger);
+        AverageRatingResponse averageRating = AverageRatingResponse.empty(savedPassenger.getId());
 
-        return passengerMapper.toPassengerResponse(savedPassenger);
+        return passengerMapper.toPassengerResponse(savedPassenger, averageRating);
     }
 
     @Override
@@ -67,7 +74,11 @@ public class PassengerServiceImpl implements PassengerService {
     @Override
     public PassengerListResponse findAllPassengers() {
         List<Passenger> passengers = passengerRepository.findAll();
-        List<PassengerResponse> passengerResponses = passengerMapper.toPassengerListResponse(passengers);
+        List<AverageRatingResponse> allAverageRatings = ratingServiceClient
+                .findAllAverageRatings(Role.PASSENGER.name())
+                .averageRatingResponses();
+        List<PassengerResponse> passengerResponses =
+                passengerMapper.toPassengerListResponse(passengers, allAverageRatings);
 
         return PassengerListResponse.of(passengerResponses);
     }
@@ -83,8 +94,10 @@ public class PassengerServiceImpl implements PassengerService {
 
     private PassengerResponse doUpdatePassenger(Passenger passenger, PassengerRequest request) {
         passengerMapper.updatePassenger(request, passenger);
-        Passenger updatedPassenger = passengerRepository.save(passenger);
+        passengerRepository.save(passenger);
+        AverageRatingResponse averageRating =
+                ratingServiceClient.findAverageRating(passenger.getId(), Role.PASSENGER.name());
 
-        return passengerMapper.toPassengerResponse(updatedPassenger);
+        return passengerMapper.toPassengerResponse(passenger, averageRating);
     }
 }

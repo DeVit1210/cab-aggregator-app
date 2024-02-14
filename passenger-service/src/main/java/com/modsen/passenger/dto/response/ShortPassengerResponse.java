@@ -3,13 +3,11 @@ package com.modsen.passenger.dto.response;
 import lombok.Builder;
 
 @Builder
-public record PassengerResponse(
+public record ShortPassengerResponse(
         Long id,
         String firstName,
         String lastName,
         String email,
-        String phoneNumber,
-        double averageRating,
-        int ratesTotalQuantity
+        String phoneNumber
 ) {
 }

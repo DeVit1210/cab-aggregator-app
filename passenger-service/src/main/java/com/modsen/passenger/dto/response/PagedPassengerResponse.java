@@ -6,7 +6,7 @@ import java.util.List;
 
 @Builder
 public record PagedPassengerResponse(
-        List<PassengerResponse> content,
+        List<ShortPassengerResponse> content,
         int pageNumber,
         int pageSize,
         int totalPages,
