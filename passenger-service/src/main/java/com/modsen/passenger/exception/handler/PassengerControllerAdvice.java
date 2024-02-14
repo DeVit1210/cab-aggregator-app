@@ -2,6 +2,7 @@ package com.modsen.passenger.exception.handler;
 
 import com.modsen.passenger.exception.ApiExceptionInfo;
 import com.modsen.passenger.exception.MultipleApiExceptionInfo;
+import com.modsen.passenger.exception.NotFoundException;
 import com.modsen.passenger.exception.PageException;
 import com.modsen.passenger.exception.PassengerNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -32,8 +33,8 @@ public class PassengerControllerAdvice {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(PassengerNotFoundException.class)
-    public ResponseEntity<ApiExceptionInfo> handlePassengerNotFoundException(PassengerNotFoundException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiExceptionInfo> handleNotFoundException(NotFoundException e) {
         return generateApiExceptionResponse(e, HttpStatus.NOT_FOUND);
     }
 

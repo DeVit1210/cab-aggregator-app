@@ -3,9 +3,11 @@ package com.modsen.driver.exception.handler;
 import com.modsen.driver.exception.ApiExceptionInfo;
 import com.modsen.driver.exception.DriverAlreadyOnlineException;
 import com.modsen.driver.exception.DriverNotAvailableException;
-import com.modsen.driver.exception.DriverNotFoundException;
 import com.modsen.driver.exception.DriverStatusChangeNotAllowedException;
 import com.modsen.driver.exception.MultipleApiExceptionInfo;
+import com.modsen.driver.exception.base.BadRequestException;
+import com.modsen.driver.exception.base.ConflictException;
+import com.modsen.driver.exception.base.NotFoundException;
 import com.modsen.driver.exception.PageException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -33,19 +35,19 @@ public class DriverControllerAdvice {
     @ExceptionHandler({
             SQLIntegrityConstraintViolationException.class,
             PageException.class,
-            DriverStatusChangeNotAllowedException.class
+            BadRequestException.class
     })
     public ResponseEntity<ApiExceptionInfo> handleBadRequestException(RuntimeException e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(DriverNotFoundException.class)
-    public ResponseEntity<ApiExceptionInfo> handleDriverNotFoundException(DriverNotFoundException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiExceptionInfo> handleNotFoundException(NotFoundException e) {
         return generateApiExceptionResponse(e, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({DriverAlreadyOnlineException.class, DriverNotAvailableException.class})
-    public ResponseEntity<ApiExceptionInfo> handleDriverConflictException(RuntimeException e) {
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ApiExceptionInfo> handleDriverConflictException(ConflictException e) {
         return generateApiExceptionResponse(e, HttpStatus.CONFLICT);
     }
 
