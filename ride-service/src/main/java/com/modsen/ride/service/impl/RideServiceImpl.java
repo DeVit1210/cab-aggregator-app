@@ -133,11 +133,14 @@ public class RideServiceImpl implements RideService {
 
     private void validateRideRequest(RideRequest request) {
         Long passengerId = request.getPassengerId();
+
+        passengerServiceClient.findPassengerById(passengerId);
         if (rideRepository.existsByPassengerIdAndRideStatusIn(passengerId, RideStatus.getNotFinishedStatusList())) {
             throw new NotFinishedRideAlreadyExistsException(passengerId);
         }
-        passengerServiceClient.findPassengerById(passengerId);
+
         paymentServiceClient.findStripeCustomerById(passengerId);
+        paymentServiceClient.getDefaultCreditCard(passengerId);
     }
 
     private Specification<Ride> buildRideSpecification(Long personId, Role role) {

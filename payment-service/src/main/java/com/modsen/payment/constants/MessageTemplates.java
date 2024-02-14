@@ -18,6 +18,7 @@ public enum MessageTemplates {
     DRIVER_ACCOUNT_NOT_FOUND_FOR_DRIVER_ID("account.not-found.driver-id"),
     CREDIT_CARD_ALREADY_EXISTS("card.already-exists"),
     DEFAULT_CREDIT_CARD("card.default"),
+    CREDIT_CARD_MISSING("card.default.missing"),
     CREDIT_CARD_INVALID_HOLDER("card.holder.invalid"),
     RIDE_ALREADY_PAID("ride.already-paid"),
     DRIVER_ACCOUNT_ALREADY_EXISTS("driver.already-exists");
