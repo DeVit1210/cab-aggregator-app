@@ -2,6 +2,7 @@ package com.modsen.promocode.mapper;
 
 import com.modsen.promocode.dto.request.ApplyPromocodeRequest;
 import com.modsen.promocode.dto.response.AppliedPromocodeResponse;
+import com.modsen.promocode.enums.ApplianceStatus;
 import com.modsen.promocode.model.AppliedPromocode;
 import com.modsen.promocode.model.Promocode;
 import org.mapstruct.Mapper;
@@ -13,6 +14,7 @@ public interface AppliedPromocodeMapper {
     default AppliedPromocode toAppliedPromocode(Promocode actualPromocode, ApplyPromocodeRequest request) {
         return AppliedPromocode.builder()
                 .promocode(actualPromocode)
+                .applianceStatus(ApplianceStatus.NOT_CONFIRMED)
                 .passengerId(request.getPassengerId())
                 .build();
     }

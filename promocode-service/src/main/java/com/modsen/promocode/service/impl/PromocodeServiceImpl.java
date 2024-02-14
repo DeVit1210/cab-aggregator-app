@@ -1,30 +1,18 @@
 package com.modsen.promocode.service.impl;
 
-import com.modsen.promocode.dto.request.ApplyPromocodeRequest;
 import com.modsen.promocode.dto.request.PromocodeRequest;
 import com.modsen.promocode.dto.request.UpdateDiscountPercentRequest;
-import com.modsen.promocode.dto.response.AppliedPromocodeResponse;
 import com.modsen.promocode.dto.response.PromocodeListResponse;
 import com.modsen.promocode.dto.response.PromocodeResponse;
-import com.modsen.promocode.dto.response.RideListResponse;
-import com.modsen.promocode.enums.Role;
-import com.modsen.promocode.exception.InvalidRideAmountForUsingPromocodeException;
-import com.modsen.promocode.exception.PromocodeAlreadyAppliedException;
 import com.modsen.promocode.exception.PromocodeAlreadyExistsException;
 import com.modsen.promocode.exception.PromocodeNotFoundException;
-import com.modsen.promocode.mapper.AppliedPromocodeMapper;
 import com.modsen.promocode.mapper.PromocodeMapper;
-import com.modsen.promocode.model.AppliedPromocode;
 import com.modsen.promocode.model.Promocode;
-import com.modsen.promocode.repository.AppliedPromocodeRepository;
 import com.modsen.promocode.repository.PromocodeRepository;
 import com.modsen.promocode.service.PromocodeService;
-import com.modsen.promocode.service.feign.RideServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,10 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PromocodeServiceImpl implements PromocodeService {
     private final PromocodeRepository promocodeRepository;
-    private final AppliedPromocodeRepository appliedPromocodeRepository;
     private final PromocodeMapper promocodeMapper;
-    private final AppliedPromocodeMapper appliedPromocodeMapper;
-    private final RideServiceClient rideServiceClient;
 
     @Override
     public PromocodeListResponse findAllPromocodes() {
@@ -73,17 +58,9 @@ public class PromocodeServiceImpl implements PromocodeService {
     }
 
     @Override
-    @Transactional
-    public AppliedPromocodeResponse applyPromocode(ApplyPromocodeRequest request) {
-        Promocode promocode = findByName(request.getPromocodeName());
-        validateAppliedPromocodeRequest(promocode, request);
-        AppliedPromocode appliedPromocode = appliedPromocodeMapper.toAppliedPromocode(promocode, request);
-        AppliedPromocode savedAppliedPromocode = appliedPromocodeRepository.save(appliedPromocode);
-        if (!isPromocodeStillValid(promocode)) {
-            deletePromocode(promocode.getId());
-        }
-
-        return appliedPromocodeMapper.toAppliedPromocodeResponse(promocode, savedAppliedPromocode);
+    public Promocode findByName(String promocodeName) {
+        return promocodeRepository.findByName(promocodeName)
+                .orElseThrow(() -> new PromocodeNotFoundException(promocodeName));
     }
 
     @Override
@@ -94,39 +71,10 @@ public class PromocodeServiceImpl implements PromocodeService {
         });
     }
 
-    private Promocode findByName(String promocodeName) {
-        return promocodeRepository.findByName(promocodeName)
-                .orElseThrow(() -> new PromocodeNotFoundException(promocodeName));
-    }
-
-    private void validateAppliedPromocodeRequest(Promocode actualPromocode, ApplyPromocodeRequest request) {
-        Long passengerId = request.getPassengerId();
-
-        String promocodeName = request.getPromocodeName();
-        if (appliedPromocodeRepository.existsByPromocodeAndPassengerId(actualPromocode, passengerId)) {
-            throw new PromocodeAlreadyAppliedException(promocodeName, passengerId);
-        }
-
-        int minRidesAmount = actualPromocode.getMinRidesAmount();
-        RideListResponse passengerRides = rideServiceClient.findAllRidesForPerson(passengerId, Role.PASSENGER.name());
-        int quantity = passengerRides.quantity();
-        if (quantity < minRidesAmount) {
-            throw new InvalidRideAmountForUsingPromocodeException(promocodeName, minRidesAmount, quantity);
-        }
-    }
-
     private void validatePromocodeRequest(PromocodeRequest request) {
         String promocodeName = request.getName();
         if (promocodeRepository.existsByName(promocodeName)) {
             throw new PromocodeAlreadyExistsException(promocodeName);
         }
-    }
-
-    private boolean isPromocodeStillValid(Promocode promocode) {
-        LocalDate endDate = promocode.getEndDate();
-        int maxUsageCount = promocode.getMaxUsageCount();
-        int usageCount = appliedPromocodeRepository.countAllByPromocode(promocode);
-
-        return usageCount < maxUsageCount && !LocalDate.now().isAfter(endDate);
     }
 }
