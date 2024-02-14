@@ -1,6 +1,7 @@
 package com.modsen.ride.service.feign;
 
 import com.modsen.ride.dto.response.CreditCardResponse;
+import com.modsen.ride.dto.response.PaymentResponse;
 import com.modsen.ride.dto.response.StripeCustomerResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,4 +14,7 @@ public interface PaymentServiceClient {
 
     @GetMapping("/api/v1/credit-cards/{passengerId}")
     CreditCardResponse getDefaultCreditCard(@PathVariable Long passengerId);
+
+    @GetMapping("/api/v1/payments/{rideId}")
+    PaymentResponse findPaymentByRide(@PathVariable Long rideId);
 }

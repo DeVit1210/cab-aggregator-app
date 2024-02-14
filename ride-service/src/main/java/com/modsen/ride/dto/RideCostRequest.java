@@ -1,11 +1,18 @@
 package com.modsen.ride.dto;
 
+import com.modsen.ride.constants.ValidationConstants;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
+@Data
 @Builder
-@Getter
 public class RideCostRequest {
+    @NotNull(message = ValidationConstants.ID_NOT_NULL)
+    private Long passengerId;
+    @NotBlank(message = ValidationConstants.ADDRESS_NOT_BLANK)
     private String pickUpAddress;
+    @NotBlank(message = ValidationConstants.ADDRESS_NOT_BLANK)
     private String destinationAddress;
 }

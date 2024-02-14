@@ -16,4 +16,6 @@ public class ExceptionConstants {
             "Ride need to be in FINISHED state if you want to count its total ride time!";
     public static final String CANCELED_STATUS_REQUIRED =
             "Ride need to be in CANCELED state if you want to delete it!";
+    public static final String WAITING_FOR_PAYMENT_STATUS_REQUIRED =
+            "Ride need to be in WAITING_FOR_PAYMENT status if you want to finish it!";
 }

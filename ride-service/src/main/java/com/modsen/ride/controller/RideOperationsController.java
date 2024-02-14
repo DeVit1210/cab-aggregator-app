@@ -25,7 +25,7 @@ public class RideOperationsController {
         return rideOperationsService.dismissRide(rideId);
     }
 
-    @PatchMapping("/notify-passenger/{rideId}")
+    @PatchMapping("/notify-waiting/{rideId}")
     public RideResponse notifyPassengerAboutWaiting(@PathVariable Long rideId) {
         return rideOperationsService.notifyPassengerAboutWaiting(rideId);
     }
@@ -33,6 +33,11 @@ public class RideOperationsController {
     @PatchMapping("/start/{rideId}")
     public RideResponse startRide(@PathVariable Long rideId) {
         return rideOperationsService.startRide(rideId);
+    }
+
+    @PatchMapping("/notify-arrival/{rideId}")
+    public RideResponse notifyPassengerAboutArrival(@PathVariable Long rideId) {
+        return rideOperationsService.notifyPassengerAboutArrival(rideId);
     }
 
     @PatchMapping("/finish/{rideId}")

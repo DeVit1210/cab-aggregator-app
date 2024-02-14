@@ -1,11 +1,13 @@
 package com.modsen.ride.service.impl;
 
 import com.modsen.ride.dto.RideCostRequest;
+import com.modsen.ride.dto.response.AppliedPromocodeResponse;
 import com.modsen.ride.dto.response.DriverAvailabilityResponse;
 import com.modsen.ride.dto.response.RideCostResponse;
 import com.modsen.ride.enums.RideDemand;
 import com.modsen.ride.service.RideCostService;
 import com.modsen.ride.service.feign.DriverServiceClient;
+import com.modsen.ride.service.feign.PromocodeServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class RideCostServiceImpl implements RideCostService {
     private final DriverServiceClient driverServiceClient;
+    private final PromocodeServiceClient promocodeServiceClient;
     @Value("${ride.cost.start}")
     private BigDecimal startCost;
     @Value("${ride.cost.per-kilometer}")
@@ -27,15 +30,26 @@ public class RideCostServiceImpl implements RideCostService {
     public RideCostResponse calculateCost(RideCostRequest request) {
         double distanceInKm = new Random().nextDouble(0.5) * 100;
         RideDemand rideDemand = getRideDemand();
-        BigDecimal totalCost = calculateTotalCost(distanceInKm, rideDemand);
+        BigDecimal rideCost = calculateTotalCost(distanceInKm, rideDemand);
+        BigDecimal discountedCost = applyPromocode(request.getPassengerId(), rideCost);
 
         return RideCostResponse.builder()
+                .passengerId(request.getPassengerId())
                 .pickUpAddress(request.getPickUpAddress())
                 .destinationAddress(request.getDestinationAddress())
-                .totalCost(totalCost)
                 .rideDemand(rideDemand)
                 .distanceInKm(distanceInKm)
+                .rideCost(rideCost)
+                .discountedCost(discountedCost)
                 .build();
+    }
+
+    private BigDecimal applyPromocode(Long passengerId, BigDecimal rideCost) {
+        AppliedPromocodeResponse promocode = promocodeServiceClient.findNotConfirmedPromocode(passengerId);
+        BigDecimal discountDecimal = BigDecimal.valueOf(promocode.discountPercent());
+        BigDecimal discountAmount = rideCost.multiply(discountDecimal);
+        return rideCost.subtract(discountAmount)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
     private double getAvailabilityCoefficient(DriverAvailabilityResponse response) {

@@ -7,10 +7,12 @@ import java.math.BigDecimal;
 
 @Builder
 public record RideCostResponse(
+        Long passengerId,
         String pickUpAddress,
         String destinationAddress,
         double distanceInKm,
         RideDemand rideDemand,
-        BigDecimal totalCost
+        BigDecimal rideCost,
+        BigDecimal discountedCost
 ) {
 }

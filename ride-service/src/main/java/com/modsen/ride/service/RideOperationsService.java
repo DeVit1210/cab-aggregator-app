@@ -11,6 +11,8 @@ public interface RideOperationsService {
 
     RideResponse startRide(Long rideId);
 
+    RideResponse notifyPassengerAboutArrival(Long rideId);
+
     RideResponse finishRide(Long rideId);
 
     RideResponse cancelRide(Long rideId);
