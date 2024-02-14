@@ -2,8 +2,9 @@ package com.modsen.rating.exception;
 
 import com.modsen.rating.constants.MessageTemplates;
 import com.modsen.rating.enums.Role;
+import com.modsen.rating.exception.base.NotFoundException;
 
-public class RatingNotFoundException extends RuntimeException {
+public class RatingNotFoundException extends NotFoundException {
     public RatingNotFoundException(Long id, Role role) {
         super(String.format(resolveMessageTemplate(role), id));
     }

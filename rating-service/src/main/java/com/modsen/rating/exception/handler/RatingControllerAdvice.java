@@ -1,11 +1,11 @@
 package com.modsen.rating.exception.handler;
 
 import com.modsen.rating.exception.ApiExceptionInfo;
-import com.modsen.rating.exception.IllegalRatingAttemptException;
 import com.modsen.rating.exception.MultipleApiExceptionInfo;
 import com.modsen.rating.exception.PageException;
-import com.modsen.rating.exception.RatingAlreadyExistsException;
-import com.modsen.rating.exception.RatingNotFoundException;
+import com.modsen.rating.exception.base.BadRequestException;
+import com.modsen.rating.exception.base.ConflictException;
+import com.modsen.rating.exception.base.NotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,19 +32,19 @@ public class RatingControllerAdvice {
     @ExceptionHandler({
             SQLIntegrityConstraintViolationException.class,
             PageException.class,
-            IllegalRatingAttemptException.class
+            BadRequestException.class
     })
     public ResponseEntity<ApiExceptionInfo> handleBadRequestException(Exception e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(RatingNotFoundException.class)
-    public ResponseEntity<ApiExceptionInfo> handlePassengerNotFoundException(RatingNotFoundException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiExceptionInfo> handleNotFoundException(NotFoundException e) {
         return generateApiExceptionResponse(e, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(RatingAlreadyExistsException.class)
-    public ResponseEntity<ApiExceptionInfo> handleRatingAlreadyExistsException(RatingAlreadyExistsException e) {
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ApiExceptionInfo> handleConflictException(ConflictException e) {
         return generateApiExceptionResponse(e, HttpStatus.CONFLICT);
     }
 
