@@ -1,0 +1,47 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /api/v1
+spring:
+  application:
+    name: driver-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/drivers
+    username: root
+    password: FLRPVcp41NC7mwD2TtX5
+  jpa:
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: driver-service-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: latest
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.modsen.driver.dto.request
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    producer-topic:
+      name: ride-with-driver-topic
+    ride-consumer-topic:
+      name: rides-topic
+    status-consumer-topic:
+      name: driver-status-topic
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 1000
+            read-timeout: 1000
+      circuitbreaker:
+        enabled: true

@@ -4,7 +4,6 @@ import com.modsen.passenger.exception.ApiExceptionInfo;
 import com.modsen.passenger.exception.MultipleApiExceptionInfo;
 import com.modsen.passenger.exception.NotFoundException;
 import com.modsen.passenger.exception.PageException;
-import com.modsen.passenger.exception.PassengerNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

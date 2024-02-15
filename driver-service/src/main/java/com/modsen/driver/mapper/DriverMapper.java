@@ -15,23 +15,29 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface DriverMapper {
+    @Mapping(target = "driverStatus", constant = "OFFLINE")
+    Driver toDriver(DriverRequest request);
+
     @Mapping(target = "id", source = "driver.id")
     DriverResponse toDriverResponse(Driver driver, AverageRatingResponse response);
 
     ShortDriverResponse toShortDriverResponse(Driver driver);
 
-    @Mapping(target = "driverStatus", constant = "OFFLINE")
-    Driver toDriver(DriverRequest request);
-
-    List<DriverResponse> toDriverListResponse(List<Driver> driverList, List<AverageRatingResponse> averageRatingList);
-
     List<ShortDriverResponse> toShortDriverListResponse(List<Driver> driverList);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateDriver(DriverRequest request, @MappingTarget Driver driver);
+
+    default List<DriverResponse> toDriverListResponse(List<Driver> driverList,
+                                                      List<AverageRatingResponse> averageRatingList) {
+        return IntStream.range(0, driverList.size())
+                .mapToObj(value -> toDriverResponse(driverList.get(value), averageRatingList.get(value)))
+                .toList();
+    }
 
     default PagedDriverResponse toPagedDriverResponse(Page<Driver> driverPage) {
         return PagedDriverResponse.builder()

@@ -3,7 +3,6 @@ package com.modsen.passenger.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.modsen.passenger.exception.ApiExceptionInfo;
 import com.modsen.passenger.exception.NotFoundException;
-import feign.FeignException;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import org.springframework.stereotype.Component;

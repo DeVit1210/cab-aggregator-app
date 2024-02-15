@@ -1,14 +1,11 @@
 package com.modsen.driver.exception.handler;
 
 import com.modsen.driver.exception.ApiExceptionInfo;
-import com.modsen.driver.exception.DriverAlreadyOnlineException;
-import com.modsen.driver.exception.DriverNotAvailableException;
-import com.modsen.driver.exception.DriverStatusChangeNotAllowedException;
 import com.modsen.driver.exception.MultipleApiExceptionInfo;
+import com.modsen.driver.exception.PageException;
 import com.modsen.driver.exception.base.BadRequestException;
 import com.modsen.driver.exception.base.ConflictException;
 import com.modsen.driver.exception.base.NotFoundException;
-import com.modsen.driver.exception.PageException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
