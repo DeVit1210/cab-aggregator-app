@@ -1,6 +1,6 @@
 package com.modsen.promocode.controller;
 
-import com.modsen.promocode.constants.ControllerMappings;
+import com.modsen.promocode.constants.ServiceMappings;
 import com.modsen.promocode.dto.request.ApplyPromocodeRequest;
 import com.modsen.promocode.dto.response.AppliedPromocodeResponse;
 import com.modsen.promocode.service.AppliedPromocodeService;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(ControllerMappings.APPLIED_PROMOCODE_CONTROLLER)
+@RequestMapping(ServiceMappings.APPLIED_PROMOCODE_CONTROLLER)
 @RequiredArgsConstructor
 public class AppliedPromocodeController {
     private final AppliedPromocodeService appliedPromocodeService;

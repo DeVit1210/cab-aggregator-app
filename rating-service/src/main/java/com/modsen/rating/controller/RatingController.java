@@ -1,6 +1,6 @@
 package com.modsen.rating.controller;
 
-import com.modsen.rating.constants.ControllerMappings;
+import com.modsen.rating.constants.ServiceMappings;
 import com.modsen.rating.dto.request.PageSettingRequest;
 import com.modsen.rating.dto.request.RatingRequest;
 import com.modsen.rating.dto.response.AverageRatingListResponse;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(ControllerMappings.RATING_CONTROLLER)
+@RequestMapping(ServiceMappings.RATING_CONTROLLER)
 @RequiredArgsConstructor
 public class RatingController {
     private final RatingService ratingService;

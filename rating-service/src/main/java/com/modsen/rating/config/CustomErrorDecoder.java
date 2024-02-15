@@ -2,6 +2,9 @@ package com.modsen.rating.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.modsen.rating.exception.ApiExceptionInfo;
+import com.modsen.rating.exception.base.BadRequestException;
+import com.modsen.rating.exception.base.ConflictException;
+import com.modsen.rating.exception.base.NotFoundException;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import org.springframework.stereotype.Component;
@@ -24,6 +27,9 @@ public class CustomErrorDecoder implements ErrorDecoder {
         try (InputStream bodyInputStream = response.body().asInputStream()) {
             ApiExceptionInfo exceptionInfo = objectMapper.readValue(bodyInputStream, ApiExceptionInfo.class);
             return switch (exceptionInfo.getHttpStatus()) {
+                case NOT_FOUND -> new NotFoundException(exceptionInfo.getMessage());
+                case CONFLICT -> new ConflictException(exceptionInfo.getMessage());
+                case BAD_REQUEST -> new BadRequestException(exceptionInfo.getMessage());
                 default -> errorDecoder.decode(s, response);
             };
         } catch (IOException e) {

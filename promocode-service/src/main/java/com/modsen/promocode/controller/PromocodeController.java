@@ -1,6 +1,6 @@
 package com.modsen.promocode.controller;
 
-import com.modsen.promocode.constants.ControllerMappings;
+import com.modsen.promocode.constants.ServiceMappings;
 import com.modsen.promocode.dto.request.PromocodeRequest;
 import com.modsen.promocode.dto.request.UpdateDiscountPercentRequest;
 import com.modsen.promocode.dto.response.PromocodeListResponse;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(ControllerMappings.PROMOCODE_CONTROLLER)
+@RequestMapping(ServiceMappings.PROMOCODE_CONTROLLER)
 @RequiredArgsConstructor
 public class PromocodeController {
     private final PromocodeService promocodeService;
