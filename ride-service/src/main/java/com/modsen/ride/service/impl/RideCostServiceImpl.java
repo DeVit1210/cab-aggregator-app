@@ -1,6 +1,6 @@
 package com.modsen.ride.service.impl;
 
-import com.modsen.ride.dto.RideCostRequest;
+import com.modsen.ride.dto.request.RideCostRequest;
 import com.modsen.ride.dto.response.AppliedPromocodeResponse;
 import com.modsen.ride.dto.response.DriverAvailabilityResponse;
 import com.modsen.ride.dto.response.RideCostResponse;

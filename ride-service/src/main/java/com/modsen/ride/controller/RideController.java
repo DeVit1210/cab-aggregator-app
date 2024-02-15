@@ -1,6 +1,6 @@
 package com.modsen.ride.controller;
 
-import com.modsen.ride.constants.ControllerMappings;
+import com.modsen.ride.constants.ServiceMappings;
 import com.modsen.ride.dto.request.PageSettingRequest;
 import com.modsen.ride.dto.request.RideRequest;
 import com.modsen.ride.dto.response.ConfirmedRideResponse;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(ControllerMappings.RIDE_CONTROLLER)
+@RequestMapping(ServiceMappings.RIDE_CONTROLLER)
 @RequiredArgsConstructor
 public class RideController {
     private final RideService rideService;

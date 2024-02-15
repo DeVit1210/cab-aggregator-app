@@ -2,6 +2,8 @@ package com.modsen.ride.service.impl;
 
 import com.modsen.ride.dto.request.ChangeDriverStatusRequest;
 import com.modsen.ride.dto.request.FindDriverRequest;
+import com.modsen.ride.dto.request.FinishRideRequest;
+import com.modsen.ride.dto.request.PaymentRequest;
 import com.modsen.ride.dto.response.AppliedPromocodeResponse;
 import com.modsen.ride.dto.response.RideResponse;
 import com.modsen.ride.enums.DriverStatus;
@@ -9,6 +11,7 @@ import com.modsen.ride.enums.RideStatus;
 import com.modsen.ride.exception.IllegalRideStatusException;
 import com.modsen.ride.kafka.producer.DriverStatusRequestProducer;
 import com.modsen.ride.kafka.producer.RideRequestProducer;
+import com.modsen.ride.mapper.RideOperationsMapper;
 import com.modsen.ride.model.Ride;
 import com.modsen.ride.service.RideOperationsService;
 import com.modsen.ride.service.RideService;
@@ -24,6 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RideOperationsServiceImpl implements RideOperationsService {
     private final RideService rideService;
+    private final RideOperationsMapper rideOperationsMapper;
     private final DriverStatusRequestProducer driverStatusRequestProducer;
     private final RideRequestProducer rideRequestProducer;
     private final PaymentServiceClient paymentServiceClient;
@@ -69,19 +73,11 @@ public class RideOperationsServiceImpl implements RideOperationsService {
     }
 
     @Override
-    public RideResponse notifyPassengerAboutArrival(Long rideId) {
-        Ride ride = rideService.findRideById(rideId);
+    public RideResponse finishRide(FinishRideRequest request) {
+        Ride ride = rideService.findRideById(request.getId());
+
         validateRideStatus(ride, RideStatus.ACTIVE);
-
-        return doUpdateRideStatus(ride, RideStatus.WAITING_FOR_PAYMENT);
-    }
-
-    @Override
-    public RideResponse finishRide(Long rideId) {
-        Ride ride = rideService.findRideById(rideId);
-
-        validateRideStatus(ride, RideStatus.WAITING_FOR_PAYMENT);
-        validatePaymentForRide(ride);
+        processPaymentForRide(ride, request);
         validatePromocodeAppliance(ride);
 
         changeDriverStatus(ride.getDriverId(), DriverStatus.AVAILABLE);
@@ -125,8 +121,9 @@ public class RideOperationsServiceImpl implements RideOperationsService {
                 .orElseThrow(() -> new IllegalRideStatusException(expectedRideStatuses.get(0)));
     }
 
-    private void validatePaymentForRide(Ride ride) {
-        paymentServiceClient.findPaymentByRide(ride.getId());
+    private void processPaymentForRide(Ride ride, FinishRideRequest request) {
+        PaymentRequest paymentRequest = rideOperationsMapper.toPaymentRequest(ride, request);
+        paymentServiceClient.createPayment(paymentRequest);
     }
 
     private void validatePromocodeAppliance(Ride ride) {

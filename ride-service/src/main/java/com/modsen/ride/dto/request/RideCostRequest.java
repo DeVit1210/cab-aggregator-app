@@ -1,4 +1,4 @@
-package com.modsen.ride.dto;
+package com.modsen.ride.dto.request;
 
 import com.modsen.ride.constants.ValidationConstants;
 import jakarta.validation.constraints.NotBlank;
