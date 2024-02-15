@@ -1,9 +1,16 @@
 package com.modsen.driver.enums;
 
+import java.util.List;
+
 public enum DriverStatus {
-    OFFLINE,
-    ON_TRIP,
-    DRIVING_FOR_PASSENGER,
+    HAS_UNCONFIRMED_RIDE,
+    ON_WAY_TO_PASSENGER,
     WAITING_FOR_PASSENGER,
-    AVAILABLE
+    ON_TRIP,
+    OFFLINE,
+    AVAILABLE;
+
+    public static List<DriverStatus> allowedToBeChangedByDriver() {
+        return List.of(OFFLINE, AVAILABLE);
+    }
 }

@@ -13,6 +13,6 @@ public class DriverStatusConsumer {
 
     @KafkaListener(groupId = "${spring.kafka.consumer.group-id}", topics = "${spring.kafka.status-consumer-topic.name}")
     public void handleChangeDriverStatusRequest(ChangeDriverStatusRequest request) {
-        driverService.updateDriverStatus(request);
+        driverService.handleChangeDriverStatusRequest(request);
     }
 }

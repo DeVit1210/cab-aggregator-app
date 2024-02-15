@@ -6,7 +6,7 @@ import java.util.List;
 
 @Builder
 public record PagedDriverResponse(
-        List<DriverResponse> content,
+        List<ShortDriverResponse> content,
         int pageNumber,
         int pageSize,
         int totalPageCount,
