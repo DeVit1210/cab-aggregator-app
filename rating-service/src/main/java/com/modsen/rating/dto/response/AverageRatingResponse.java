@@ -7,6 +7,7 @@ import lombok.Builder;
 public record AverageRatingResponse(
         Long ratedPersonId,
         Role role,
-        double averageRating
+        double averageRating,
+        int ratesQuantity
 ) {
 }

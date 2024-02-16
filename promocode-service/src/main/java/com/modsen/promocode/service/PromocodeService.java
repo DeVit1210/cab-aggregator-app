@@ -1,11 +1,10 @@
 package com.modsen.promocode.service;
 
-import com.modsen.promocode.dto.request.ApplyPromocodeRequest;
 import com.modsen.promocode.dto.request.PromocodeRequest;
 import com.modsen.promocode.dto.request.UpdateDiscountPercentRequest;
-import com.modsen.promocode.dto.response.AppliedPromocodeResponse;
 import com.modsen.promocode.dto.response.PromocodeListResponse;
 import com.modsen.promocode.dto.response.PromocodeResponse;
+import com.modsen.promocode.model.Promocode;
 
 public interface PromocodeService {
     PromocodeListResponse findAllPromocodes();
@@ -16,7 +15,7 @@ public interface PromocodeService {
 
     PromocodeResponse updatePromocode(UpdateDiscountPercentRequest request);
 
-    AppliedPromocodeResponse applyPromocode(ApplyPromocodeRequest request);
+    Promocode findByName(String promocodeName);
 
     void deletePromocode(Long promocodeId);
 }

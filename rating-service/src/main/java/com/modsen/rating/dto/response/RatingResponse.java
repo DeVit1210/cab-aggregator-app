@@ -7,10 +7,12 @@ import java.time.LocalDateTime;
 
 @Builder
 public record RatingResponse(
+        Long id,
         Long ratedPersonId,
         Role role,
         int ratingValue,
         LocalDateTime createdAt,
+        String comment,
         Long rideId
 ) {
 }
