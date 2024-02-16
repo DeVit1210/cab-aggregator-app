@@ -7,12 +7,10 @@ import com.modsen.promocode.exception.base.ConflictException;
 import com.modsen.promocode.exception.base.NotFoundException;
 import feign.Response;
 import feign.codec.ErrorDecoder;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-@Component
 public class CustomErrorDecoder implements ErrorDecoder {
     private final ObjectMapper objectMapper;
     private final ErrorDecoder errorDecoder;
