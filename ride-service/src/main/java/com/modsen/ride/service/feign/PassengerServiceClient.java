@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(
-        name = ServiceMappings.ServiceName.PASSENGER_SERVICE,
+        name = "${feign.client.passenger.name}",
         configuration = FeignConfig.class,
-        url = ServiceMappings.BaseUrl.PASSENGER_SERVICE
+        url = "${feign.client.passenger.url}"
 )
 public interface PassengerServiceClient {
     @GetMapping(ServiceMappings.Url.PASSENGER_BY_ID_URL)

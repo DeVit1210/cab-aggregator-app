@@ -8,9 +8,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @FeignClient(
-        name = ServiceMappings.ServiceName.DRIVER_SERVICE,
+        name = "${feign.client.driver.name}",
         configuration = FeignConfig.class,
-        url = ServiceMappings.BaseUrl.DRIVER_SERVICE,
+        url = "${feign.client.driver.url}",
         fallback = DriverServiceClientFallback.class
 )
 public interface DriverServiceClient {

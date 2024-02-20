@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
-        name = ServiceMappings.ServiceName.PAYMENT_SERVICE,
+        name = "${feign.client.payment.name}",
         configuration = FeignConfig.class,
-        url = ServiceMappings.BaseUrl.PAYMENT_SERVICE
+        url = "${feign.client.payment.url}"
 )
 public interface PaymentServiceClient {
     @GetMapping(ServiceMappings.Url.STRIPE_CUSTOMER_BY_ID_URL)
