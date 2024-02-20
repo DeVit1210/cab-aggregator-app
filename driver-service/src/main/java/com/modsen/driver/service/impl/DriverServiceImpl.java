@@ -1,5 +1,6 @@
 package com.modsen.driver.service.impl;
 
+import com.modsen.driver.constants.MessageTemplates;
 import com.modsen.driver.dto.request.ChangeDriverStatusRequest;
 import com.modsen.driver.dto.request.DriverRequest;
 import com.modsen.driver.dto.request.FindDriverRequest;
@@ -13,9 +14,11 @@ import com.modsen.driver.dto.response.ShortDriverResponse;
 import com.modsen.driver.enums.DriverStatus;
 import com.modsen.driver.enums.Role;
 import com.modsen.driver.exception.DriverAlreadyOnlineException;
+import com.modsen.driver.exception.DriverModifyingNotAllowedException;
 import com.modsen.driver.exception.DriverNotAvailableException;
 import com.modsen.driver.exception.DriverNotFoundException;
 import com.modsen.driver.exception.DriverStatusChangeNotAllowedException;
+import com.modsen.driver.exception.UniqueConstraintViolationException;
 import com.modsen.driver.kafka.producer.RideResponseProducer;
 import com.modsen.driver.mapper.DriverMapper;
 import com.modsen.driver.mapper.RideResponseMapper;
@@ -78,6 +81,7 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public DriverResponse createDriver(DriverRequest request) {
+        validateDriverRequest(request);
         Driver driver = driverMapper.toDriver(request);
         Driver savedDriver = driverRepository.save(driver);
         AverageRatingResponse defaultAverageRating = AverageRatingResponse.empty(savedDriver.getId());
@@ -89,6 +93,8 @@ public class DriverServiceImpl implements DriverService {
     public DriverResponse updateDriver(Long driverId, DriverRequest driverRequest) {
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new DriverNotFoundException(driverId));
+        validateDriverModifyingAllowance(driver);
+        validateDriverRequest(driverRequest, driver);
         driverMapper.updateDriver(driverRequest, driver);
         Driver updatedDriver = driverRepository.save(driver);
         AverageRatingResponse averageRating = ratingServiceClient.findAverageRating(driverId, Role.DRIVER.name());
@@ -98,10 +104,10 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public void deleteDriver(Long driverId) {
-        Optional<Driver> driver = driverRepository.findById(driverId);
-        driver.ifPresentOrElse(driverRepository::delete, () -> {
-            throw new DriverNotFoundException(driverId);
-        });
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new DriverNotFoundException(driverId));
+        validateDriverModifyingAllowance(driver);
+        driverRepository.delete(driver);
     }
 
     @Override
@@ -185,5 +191,43 @@ public class DriverServiceImpl implements DriverService {
         driverRepository.save(driver);
 
         return driverMapper.toShortDriverResponse(driver);
+    }
+
+    private void validateDriverModifyingAllowance(Driver driver) {
+        if (!driver.getDriverStatus().equals(DriverStatus.OFFLINE)) {
+            throw new DriverModifyingNotAllowedException(driver.getId());
+        }
+    }
+
+    private void validateDriverRequest(DriverRequest request) {
+        String email = request.getEmail();
+        String phoneNumber = request.getPhoneNumber();
+        String licenceNumber = request.getLicenceNumber();
+
+        if (driverRepository.existsByEmail(email)) {
+            throw new UniqueConstraintViolationException(MessageTemplates.EMAIL_NOT_UNIQUE, email);
+        }
+        if (driverRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new UniqueConstraintViolationException(MessageTemplates.PHONE_NUMBER_NOT_UNIQUE, phoneNumber);
+        }
+        if (driverRepository.existsByLicenceNumber(licenceNumber)) {
+            throw new UniqueConstraintViolationException(MessageTemplates.LICENCE_NOT_UNIQUE, licenceNumber);
+        }
+    }
+
+    private void validateDriverRequest(DriverRequest request, Driver driver) {
+        String email = request.getEmail();
+        String phoneNumber = request.getPhoneNumber();
+        String licenceNumber = request.getLicenceNumber();
+
+        if (driverRepository.existsByEmail(email) && !driver.getEmail().equals(email)) {
+            throw new UniqueConstraintViolationException(MessageTemplates.EMAIL_NOT_UNIQUE, email);
+        }
+        if (driverRepository.existsByPhoneNumber(phoneNumber) && !driver.getPhoneNumber().equals(phoneNumber)) {
+            throw new UniqueConstraintViolationException(MessageTemplates.PHONE_NUMBER_NOT_UNIQUE, phoneNumber);
+        }
+        if (driverRepository.existsByLicenceNumber(licenceNumber) && !driver.getLicenceNumber().equals(licenceNumber)) {
+            throw new UniqueConstraintViolationException(MessageTemplates.LICENCE_NOT_UNIQUE, licenceNumber);
+        }
     }
 }

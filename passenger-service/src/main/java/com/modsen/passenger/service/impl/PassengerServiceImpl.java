@@ -1,5 +1,6 @@
 package com.modsen.passenger.service.impl;
 
+import com.modsen.passenger.constants.MessageTemplates;
 import com.modsen.passenger.dto.request.PageSettingRequest;
 import com.modsen.passenger.dto.request.PassengerRequest;
 import com.modsen.passenger.dto.response.AverageRatingResponse;
@@ -8,6 +9,7 @@ import com.modsen.passenger.dto.response.PassengerListResponse;
 import com.modsen.passenger.dto.response.PassengerResponse;
 import com.modsen.passenger.enums.Role;
 import com.modsen.passenger.exception.PassengerNotFoundException;
+import com.modsen.passenger.exception.UniqueConstraintViolationException;
 import com.modsen.passenger.mapper.PassengerMapper;
 import com.modsen.passenger.model.Passenger;
 import com.modsen.passenger.repository.PassengerRepository;
@@ -48,6 +50,7 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public PassengerResponse savePassenger(PassengerRequest request) {
+        validatePassengerRequest(request);
         Passenger passenger = passengerMapper.toPassenger(request);
         Passenger savedPassenger = passengerRepository.save(passenger);
         AverageRatingResponse averageRating = AverageRatingResponse.empty(savedPassenger.getId());
@@ -59,6 +62,7 @@ public class PassengerServiceImpl implements PassengerService {
     public PassengerResponse updatePassenger(Long passengerId, PassengerRequest request) {
         Passenger passenger = passengerRepository.findById(passengerId)
                 .orElseThrow(() -> new PassengerNotFoundException(passengerId));
+        validatePassengerRequest(request, passenger);
 
         return doUpdatePassenger(passenger, request);
     }
@@ -67,6 +71,7 @@ public class PassengerServiceImpl implements PassengerService {
     public PassengerResponse updatePassengerByEmail(String email, PassengerRequest request) {
         Passenger passenger = passengerRepository.findByEmail(email)
                 .orElseThrow(() -> new PassengerNotFoundException(email));
+        validatePassengerRequest(request, passenger);
 
         return doUpdatePassenger(passenger, request);
     }
@@ -99,5 +104,29 @@ public class PassengerServiceImpl implements PassengerService {
                 ratingServiceClient.findAverageRating(passenger.getId(), Role.PASSENGER.name());
 
         return passengerMapper.toPassengerResponse(passenger, averageRating);
+    }
+
+    private void validatePassengerRequest(PassengerRequest request) {
+        String email = request.getEmail();
+        String phoneNumber = request.getPhoneNumber();
+
+        if (passengerRepository.existsByEmail(email)) {
+            throw new UniqueConstraintViolationException(MessageTemplates.EMAIL_NOT_UNIQUE, email);
+        }
+        if (passengerRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new UniqueConstraintViolationException(MessageTemplates.PHONE_NUMBER_NOT_UNIQUE, phoneNumber);
+        }
+    }
+
+    private void validatePassengerRequest(PassengerRequest request, Passenger passenger) {
+        String email = request.getEmail();
+        String phoneNumber = request.getPhoneNumber();
+
+        if (passengerRepository.existsByEmail(email) && !passenger.getEmail().equals(email)) {
+            throw new UniqueConstraintViolationException(MessageTemplates.EMAIL_NOT_UNIQUE, email);
+        }
+        if (passengerRepository.existsByPhoneNumber(phoneNumber) && !passenger.getPhoneNumber().equals(phoneNumber)) {
+            throw new UniqueConstraintViolationException(MessageTemplates.PHONE_NUMBER_NOT_UNIQUE, phoneNumber);
+        }
     }
 }

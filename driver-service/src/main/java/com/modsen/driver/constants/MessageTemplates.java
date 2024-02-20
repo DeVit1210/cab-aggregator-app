@@ -14,7 +14,11 @@ public enum MessageTemplates {
     INCORRECT_PAGE_SIZE("page.invalid.size"),
     INCORRECT_PAGE_NUMBER("page.invalid.number"),
     INCORRECT_PAGE_NUMBER_WITH_LIMIT("page.invalid.number.with-limit"),
-    INCORRECT_SORT_FIELD_NAME("page.invalid.sortField");
+    INCORRECT_SORT_FIELD_NAME("page.invalid.sortField"),
+    EMAIL_NOT_UNIQUE("driver.not-unique.email"),
+    PHONE_NUMBER_NOT_UNIQUE("driver.not-unique.number"),
+    LICENCE_NOT_UNIQUE("driver.not-unique.licence"),
+    DRIVER_MODIFYING_NOT_ALLOWED("driver.modifying.not-allowed");
 
     private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("exception-messages");
     private final String key;

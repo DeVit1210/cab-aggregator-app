@@ -1,6 +1,7 @@
 package com.modsen.passenger.exception.handler;
 
 import com.modsen.passenger.exception.ApiExceptionInfo;
+import com.modsen.passenger.exception.BadRequestException;
 import com.modsen.passenger.exception.MultipleApiExceptionInfo;
 import com.modsen.passenger.exception.NotFoundException;
 import com.modsen.passenger.exception.PageException;
@@ -27,7 +28,7 @@ public class PassengerControllerAdvice {
         return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({SQLIntegrityConstraintViolationException.class, PageException.class})
+    @ExceptionHandler({BadRequestException.class, PageException.class})
     public ResponseEntity<ApiExceptionInfo> handleBadRequestException(RuntimeException e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
