@@ -19,6 +19,8 @@ public interface RideService {
 
     RideResponse createRide(RideRequest request);
 
+    RideResponse findRide(Long rideId);
+
     ConfirmedRideResponse findAvailableRideForDriver(Long driverId);
 
     ConfirmedRideResponse findConfirmedRideForPassenger(Long passengerId);

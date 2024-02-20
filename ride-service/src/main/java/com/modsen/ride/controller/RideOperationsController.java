@@ -1,16 +1,19 @@
 package com.modsen.ride.controller;
 
-import com.modsen.ride.constants.ControllerMappings;
+import com.modsen.ride.constants.ServiceMappings;
+import com.modsen.ride.dto.request.FinishRideRequest;
 import com.modsen.ride.dto.response.RideResponse;
 import com.modsen.ride.service.RideOperationsService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(ControllerMappings.RIDE_OPERATIONS_CONTROLLER)
+@RequestMapping(ServiceMappings.RIDE_OPERATIONS_CONTROLLER)
 @RequiredArgsConstructor
 public class RideOperationsController {
     private final RideOperationsService rideOperationsService;
@@ -25,7 +28,7 @@ public class RideOperationsController {
         return rideOperationsService.dismissRide(rideId);
     }
 
-    @PatchMapping("/notify-passenger/{rideId}")
+    @PatchMapping("/notify-waiting/{rideId}")
     public RideResponse notifyPassengerAboutWaiting(@PathVariable Long rideId) {
         return rideOperationsService.notifyPassengerAboutWaiting(rideId);
     }
@@ -35,9 +38,9 @@ public class RideOperationsController {
         return rideOperationsService.startRide(rideId);
     }
 
-    @PatchMapping("/finish/{rideId}")
-    public RideResponse finishRide(@PathVariable Long rideId) {
-        return rideOperationsService.finishRide(rideId);
+    @PatchMapping("/finish")
+    public RideResponse finishRide(@Valid @RequestBody FinishRideRequest request) {
+        return rideOperationsService.finishRide(request);
     }
 
     @PatchMapping("/cancel/{rideId}")

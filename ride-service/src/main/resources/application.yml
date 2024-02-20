@@ -17,6 +17,15 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
     enabled: true
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+      client:
+        config:
+          default:
+            connect-timeout: 1000
+            read-timeout: 1000
   kafka:
     consumer:
       auto-offset-reset: latest
@@ -24,13 +33,36 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       group-id: ride-service-group
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.modsen.dto.request,com.modsen.dto.response
     producer:
       bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     ride-producer-topic:
-      name: ride-topic
+      name: rides-topic
     status-producer-topic:
       name: driver-status-topic
     ride-consumer-topic:
       name: ride-with-driver-topic
+ride:
+  cost:
+    start: 3.00
+    per-kilometer: 1.50
+feign:
+  client:
+    driver:
+      name: driver-service
+      url: /api/v1/drivers
+    passenger:
+      name: passenger-service
+      url: /api/v1/passengers
+    payment:
+      name: payment-service
+      url: /api/v1/payments
+    promocode:
+      name: promocode-service
+      url: /api/v1/promocodes

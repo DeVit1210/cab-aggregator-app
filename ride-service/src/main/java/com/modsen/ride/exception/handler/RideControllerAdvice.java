@@ -1,13 +1,11 @@
 package com.modsen.ride.exception.handler;
 
 import com.modsen.ride.exception.ApiExceptionInfo;
-import com.modsen.ride.exception.IllegalRideStatusException;
 import com.modsen.ride.exception.MultipleApiExceptionInfo;
-import com.modsen.ride.exception.NoAvailableRideForDriver;
-import com.modsen.ride.exception.NoConfirmedRideForPassenger;
-import com.modsen.ride.exception.NotFinishedRideAlreadyExistsException;
 import com.modsen.ride.exception.PageException;
-import com.modsen.ride.exception.RideNotFoundException;
+import com.modsen.ride.exception.base.BadRequestException;
+import com.modsen.ride.exception.base.ConflictException;
+import com.modsen.ride.exception.base.NotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,21 +32,19 @@ public class RideControllerAdvice {
     @ExceptionHandler({
             SQLIntegrityConstraintViolationException.class,
             PageException.class,
-            NoAvailableRideForDriver.class,
-            NoConfirmedRideForPassenger.class,
-            IllegalRideStatusException.class
+            BadRequestException.class
     })
     public ResponseEntity<ApiExceptionInfo> handleBadRequestException(Exception e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(RideNotFoundException.class)
-    public ResponseEntity<ApiExceptionInfo> handleRideNotFoundException(RideNotFoundException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiExceptionInfo> handleNotFoundException(NotFoundException e) {
         return generateApiExceptionResponse(e, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(NotFinishedRideAlreadyExistsException.class)
-    public ResponseEntity<ApiExceptionInfo> handleNotFinishedRideAlreadyExists(NotFinishedRideAlreadyExistsException e) {
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ApiExceptionInfo> handleConflictException(ConflictException e) {
         return generateApiExceptionResponse(e, HttpStatus.CONFLICT);
     }
 
