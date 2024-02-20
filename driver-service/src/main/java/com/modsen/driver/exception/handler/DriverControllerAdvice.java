@@ -1,9 +1,11 @@
 package com.modsen.driver.exception.handler;
 
 import com.modsen.driver.exception.ApiExceptionInfo;
-import com.modsen.driver.exception.DriverNotFoundException;
 import com.modsen.driver.exception.MultipleApiExceptionInfo;
 import com.modsen.driver.exception.PageException;
+import com.modsen.driver.exception.base.BadRequestException;
+import com.modsen.driver.exception.base.ConflictException;
+import com.modsen.driver.exception.base.NotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,14 +29,23 @@ public class DriverControllerAdvice {
         return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({SQLIntegrityConstraintViolationException.class, PageException.class})
+    @ExceptionHandler({
+            SQLIntegrityConstraintViolationException.class,
+            PageException.class,
+            BadRequestException.class
+    })
     public ResponseEntity<ApiExceptionInfo> handleBadRequestException(RuntimeException e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(DriverNotFoundException.class)
-    public ResponseEntity<ApiExceptionInfo> handleDriverNotFoundException(DriverNotFoundException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiExceptionInfo> handleNotFoundException(NotFoundException e) {
         return generateApiExceptionResponse(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ApiExceptionInfo> handleDriverConflictException(ConflictException e) {
+        return generateApiExceptionResponse(e, HttpStatus.CONFLICT);
     }
 
     private ResponseEntity<ApiExceptionInfo> generateApiExceptionResponse(Throwable e, HttpStatus status) {

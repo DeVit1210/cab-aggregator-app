@@ -1,6 +1,6 @@
 package com.modsen.passenger.controller;
 
-import com.modsen.passenger.constants.ControllerMappings;
+import com.modsen.passenger.constants.ServiceMappings;
 import com.modsen.passenger.dto.request.PageSettingRequest;
 import com.modsen.passenger.dto.request.PassengerRequest;
 import com.modsen.passenger.dto.response.PagedPassengerResponse;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(ControllerMappings.PASSENGER_CONTROLLER)
+@RequestMapping(ServiceMappings.PASSENGER_CONTROLLER)
 @RequiredArgsConstructor
 public class PassengerController {
     private final PassengerService passengerService;

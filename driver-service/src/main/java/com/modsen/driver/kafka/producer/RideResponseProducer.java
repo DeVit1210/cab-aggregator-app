@@ -1,6 +1,6 @@
 package com.modsen.driver.kafka.producer;
 
-import com.modsen.driver.dto.response.RideResponse;
+import com.modsen.driver.dto.request.UpdateRideDriverRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class RideResponseProducer {
-    private final KafkaTemplate<String, RideResponse> kafkaTemplate;
+    private final KafkaTemplate<String, UpdateRideDriverRequest> kafkaTemplate;
     @Value("${spring.kafka.producer-topic.name}")
     private String producerTopicName;
 
-    public void sendRideResponse(RideResponse rideResponse) {
-        kafkaTemplate.send(producerTopicName, rideResponse);
+    public void sendUpdateRideRequest(UpdateRideDriverRequest updateRideDriverRequest) {
+        kafkaTemplate.send(producerTopicName, updateRideDriverRequest);
     }
 }

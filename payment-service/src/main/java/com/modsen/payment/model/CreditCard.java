@@ -29,4 +29,5 @@ public class CreditCard {
     private Long cardHolderId;
     @Column(name = "stripe_card_id")
     private String stripeId;
+    private boolean isDefault;
 }

@@ -6,6 +6,7 @@ import com.modsen.payment.dto.response.CreditCardResponse;
 import com.modsen.payment.enums.Role;
 import com.modsen.payment.exception.CardIsNotDefaultException;
 import com.modsen.payment.exception.CreditCardAlreadyExistsException;
+import com.modsen.payment.exception.DefaultCreditCardMissingException;
 import com.modsen.payment.exception.PaymentEntityNotFoundException;
 import com.modsen.payment.mapper.CreditCardMapper;
 import com.modsen.payment.model.CreditCard;
@@ -69,6 +70,13 @@ public class CreditCardServiceImpl implements CreditCardService {
         stripeService.setDefaultCreditCard(stripeCustomerId, creditCard.getStripeId());
 
         return creditCardMapper.toCreditCardResponse(creditCard);
+    }
+
+    @Override
+    public CreditCardResponse getDefaultCreditCard(Long passengerId) {
+        return creditCardRepository.findByDefaultIsTrue()
+                .map(creditCardMapper::toCreditCardResponse)
+                .orElseThrow(() -> new DefaultCreditCardMissingException(passengerId));
     }
 
     @Override

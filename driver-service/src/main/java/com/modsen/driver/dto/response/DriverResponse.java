@@ -10,6 +10,8 @@ public record DriverResponse(
         String lastName,
         String email,
         String phoneNumber,
-        DriverStatus driverStatus
+        DriverStatus driverStatus,
+        double averageRating,
+        int ratesTotalQuantity
 ) {
 }

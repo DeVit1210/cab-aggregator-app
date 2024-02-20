@@ -12,7 +12,7 @@
             <column name="promocode_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_at" type="datetime" value="CURRENT"/>
+            <column name="applied_at" type="datetime" value="CURRENT"/>
             <column name="passenger_id" type="bigint">
                 <constraints nullable="false"/>
             </column>

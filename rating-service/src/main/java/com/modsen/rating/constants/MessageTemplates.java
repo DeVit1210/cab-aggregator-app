@@ -13,7 +13,8 @@ public enum MessageTemplates {
     RATING_NOT_FOUND_FOR_PASSENGER("rating.not-found.passenger"),
     RATING_NOT_FOUND_FOR_DRIVER("rating.not-found.driver"),
     RATING_ALREADY_EXISTS("rating.already-exists"),
-    RATING_NOT_FOUND("rating.not-found");
+    RATING_NOT_FOUND("rating.not-found"),
+    ILLEGAL_ID_FOR_RIDE("rating.person.id.illegal");
 
     private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("exception-messages");
     private final String key;

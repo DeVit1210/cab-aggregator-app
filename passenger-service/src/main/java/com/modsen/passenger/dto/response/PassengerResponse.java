@@ -8,6 +8,8 @@ public record PassengerResponse(
         String firstName,
         String lastName,
         String email,
-        String phoneNumber
+        String phoneNumber,
+        double averageRating,
+        int ratesTotalQuantity
 ) {
 }

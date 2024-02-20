@@ -1,9 +1,10 @@
 package com.modsen.passenger.exception.handler;
 
 import com.modsen.passenger.exception.ApiExceptionInfo;
+import com.modsen.passenger.exception.BadRequestException;
 import com.modsen.passenger.exception.MultipleApiExceptionInfo;
+import com.modsen.passenger.exception.NotFoundException;
 import com.modsen.passenger.exception.PageException;
-import com.modsen.passenger.exception.PassengerNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RestControllerAdvice
@@ -27,13 +27,13 @@ public class PassengerControllerAdvice {
         return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({SQLIntegrityConstraintViolationException.class, PageException.class})
+    @ExceptionHandler({BadRequestException.class, PageException.class})
     public ResponseEntity<ApiExceptionInfo> handleBadRequestException(RuntimeException e) {
         return generateApiExceptionResponse(e, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(PassengerNotFoundException.class)
-    public ResponseEntity<ApiExceptionInfo> handlePassengerNotFoundException(PassengerNotFoundException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiExceptionInfo> handleNotFoundException(NotFoundException e) {
         return generateApiExceptionResponse(e, HttpStatus.NOT_FOUND);
     }
 
