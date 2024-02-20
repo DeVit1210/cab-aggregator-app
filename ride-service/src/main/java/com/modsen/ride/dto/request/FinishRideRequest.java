@@ -1,20 +1,17 @@
 package com.modsen.ride.dto.request;
 
 import com.modsen.ride.constants.ValidationConstants;
+import com.modsen.ride.enums.PaymentType;
+import com.modsen.ride.validation.EnumValue;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class UpdateRideDriverRequest {
+public class FinishRideRequest {
     @NotNull(message = ValidationConstants.ID_NOT_NULL)
-    private Long rideId;
-    @NotNull
-    private boolean isDriverAvailable;
-    private Long driverId;
+    private Long id;
+    @EnumValue(enumClass = PaymentType.class)
+    private String paymentType;
 }
