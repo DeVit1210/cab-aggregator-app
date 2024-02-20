@@ -34,14 +34,15 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       group-id: ride-service-group
       properties:
-        spring:
-          json:
-            trusted:
-              packages: com.modsen.dto.request,com.modsen.dto.response
+        spring.json:
+          trusted.packages: com.modsen.dto.request,com.modsen.dto.response
+          type.mapping: UpdateRideDriverRequest:com.modsen.ride.dto.request.UpdateRideDriverRequest
     producer:
       bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: ChangeDriverStatusRequest:com.modsen.ride.dto.request.ChangeDriverStatusRequest, FindDriverRequest:com.modsen.ride.dto.request.FindDriverRequest
     ride-producer-topic:
       name: rides-topic
     status-producer-topic:
