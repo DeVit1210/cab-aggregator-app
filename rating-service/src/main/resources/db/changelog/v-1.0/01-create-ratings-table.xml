@@ -15,9 +15,7 @@
             <column name="role" type="ENUM('PASSENGER', 'DRIVER')">
                 <constraints nullable="false"/>
             </column>
-            <column name="rating_value" type="ENUM('ZERO', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE')">
-                <constraints nullable="false"/>
-            </column>
+            <column name="rating_value" type="ENUM('ZERO', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE')"/>
             <column name="created_at" type="datetime" value="CURRENT"/>
             <column name="comment" type="text"/>
         </createTable>
