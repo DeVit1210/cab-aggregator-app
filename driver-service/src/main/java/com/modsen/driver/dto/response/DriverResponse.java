@@ -12,6 +12,6 @@ public record DriverResponse(
         String phoneNumber,
         DriverStatus driverStatus,
         double averageRating,
-        int ratesTotalQuantity
+        int ratesQuantity
 ) {
 }
