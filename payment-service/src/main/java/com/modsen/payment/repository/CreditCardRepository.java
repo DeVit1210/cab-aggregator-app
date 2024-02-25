@@ -12,5 +12,5 @@ public interface CreditCardRepository extends JpaRepository<CreditCard, Long> {
 
     Optional<CreditCard> findByStripeId(String stripeCardId);
 
-    Optional<CreditCard> findByDefaultIsTrue();
+    Optional<CreditCard> findByCardHolderIdAndIsDefaultIsTrue(Long cardHolderId);
 }

@@ -1,7 +1,6 @@
 package com.modsen.payment.service.impl;
 
 import com.modsen.payment.dto.response.DriverAccountResponse;
-import com.modsen.payment.exception.AccountNotFoundForDriverIdException;
 import com.modsen.payment.exception.DriverAccountAlreadyExistsException;
 import com.modsen.payment.exception.IncufficientAccountBalanceException;
 import com.modsen.payment.exception.PaymentEntityNotFoundException;
@@ -45,13 +44,12 @@ public class DriverAccountServiceImpl implements DriverAccountService {
     @Override
     public DriverAccount findAccountByDriverId(Long driverId) {
         return driverAccountRepository.findById(driverId)
-                .orElseThrow(() -> new AccountNotFoundForDriverIdException(driverId));
+                .orElseThrow(() -> new PaymentEntityNotFoundException(driverId, DriverAccount.class));
     }
 
     @Override
     public void replenishAccount(Long driverId, BigDecimal amount) {
-        DriverAccount driverAccount = driverAccountRepository.findById(driverId)
-                .orElseThrow(() -> new AccountNotFoundForDriverIdException(driverId));
+        DriverAccount driverAccount = findAccountByDriverId(driverId);
         BigDecimal currentAmount = driverAccount.getAmount();
         driverAccount.setAmount(currentAmount.add(amount));
         driverAccountRepository.save(driverAccount);

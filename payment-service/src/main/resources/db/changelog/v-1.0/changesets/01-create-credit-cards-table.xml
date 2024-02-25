@@ -21,6 +21,7 @@
             <column name="stripe_card_id" type="varchar(255)">
                 <constraints nullable="false" unique="true"/>
             </column>
+            <column name="is_default" type="bool"/>
         </createTable>
         <rollback>
             <dropTable tableName="credit-cards"/>

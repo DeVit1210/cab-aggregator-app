@@ -16,6 +16,7 @@
             <column name="passenger_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
+            <column name="appliance_status" type="ENUM('NOT_CONFIRMED', 'CONFIRMED')"/>
         </createTable>
         <rollback>
             <dropTable tableName="applied_promocodes"/>

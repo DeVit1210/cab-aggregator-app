@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.math.BigDecimal;
 
 @Builder
-public record ConfirmedRideResponse(
+public record ShortRideResponse(
         Long id,
         Long passengerId,
         Long driverId,

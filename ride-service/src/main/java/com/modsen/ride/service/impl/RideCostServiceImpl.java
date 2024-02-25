@@ -5,30 +5,28 @@ import com.modsen.ride.dto.response.AppliedPromocodeResponse;
 import com.modsen.ride.dto.response.DriverAvailabilityResponse;
 import com.modsen.ride.dto.response.RideCostResponse;
 import com.modsen.ride.enums.RideDemand;
+import com.modsen.ride.service.DistanceCalculator;
 import com.modsen.ride.service.RideCostService;
 import com.modsen.ride.service.feign.DriverServiceClient;
 import com.modsen.ride.service.feign.PromocodeServiceClient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Random;
 
 @Component
 @RequiredArgsConstructor
 public class RideCostServiceImpl implements RideCostService {
     private final DriverServiceClient driverServiceClient;
     private final PromocodeServiceClient promocodeServiceClient;
-    @Value("${ride.cost.start}")
-    private BigDecimal startCost;
-    @Value("${ride.cost.per-kilometer}")
-    private BigDecimal kilometerCost;
+    private final DistanceCalculator distanceCalculator;
+    private final BigDecimal startCost = BigDecimal.valueOf(3.00);
+    private final BigDecimal kilometerCost = BigDecimal.valueOf(1.50);
 
     @Override
     public RideCostResponse calculateCost(RideCostRequest request) {
-        double distanceInKm = new Random().nextDouble(0.5) * 100;
+        double distanceInKm = distanceCalculator.calculateDistance(request);
         RideDemand rideDemand = getRideDemand();
         BigDecimal rideCost = calculateTotalCost(distanceInKm, rideDemand);
         BigDecimal discountedCost = applyPromocode(request.getPassengerId(), rideCost);
@@ -46,7 +44,7 @@ public class RideCostServiceImpl implements RideCostService {
 
     private BigDecimal applyPromocode(Long passengerId, BigDecimal rideCost) {
         AppliedPromocodeResponse promocode = promocodeServiceClient.findNotConfirmedPromocode(passengerId);
-        BigDecimal discountDecimal = BigDecimal.valueOf(promocode.discountPercent());
+        BigDecimal discountDecimal = BigDecimal.valueOf((double) promocode.discountPercent() / 100);
         BigDecimal discountAmount = rideCost.multiply(discountDecimal);
         return rideCost.subtract(discountAmount)
                 .setScale(2, RoundingMode.HALF_UP);

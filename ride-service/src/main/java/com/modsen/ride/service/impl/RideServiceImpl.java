@@ -4,12 +4,13 @@ import com.modsen.ride.dto.request.FindDriverRequest;
 import com.modsen.ride.dto.request.PageSettingRequest;
 import com.modsen.ride.dto.request.RideRequest;
 import com.modsen.ride.dto.request.UpdateRideDriverRequest;
-import com.modsen.ride.dto.response.ConfirmedRideResponse;
 import com.modsen.ride.dto.response.PagedRideResponse;
 import com.modsen.ride.dto.response.RideListResponse;
 import com.modsen.ride.dto.response.RideResponse;
+import com.modsen.ride.dto.response.ShortRideResponse;
 import com.modsen.ride.enums.RideStatus;
 import com.modsen.ride.enums.Role;
+import com.modsen.ride.exception.NoAvailableDriverForRide;
 import com.modsen.ride.exception.NoAvailableRideForDriver;
 import com.modsen.ride.exception.NoConfirmedRideForPassenger;
 import com.modsen.ride.exception.NotFinishedRideAlreadyExistsException;
@@ -87,21 +88,21 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public ConfirmedRideResponse findAvailableRideForDriver(Long driverId) {
+    public ShortRideResponse findAvailableRideForDriver(Long driverId) {
         Ride ride = rideRepository
                 .findFirstByDriverIdAndRideStatus(driverId, RideStatus.WAITING_FOR_DRIVER_CONFIRMATION)
                 .orElseThrow(() -> new NoAvailableRideForDriver(driverId));
 
-        return rideMapper.toConfirmedRideResponse(ride);
+        return rideMapper.toShortRideResponse(ride);
     }
 
     @Override
-    public ConfirmedRideResponse findConfirmedRideForPassenger(Long passengerId) {
+    public ShortRideResponse findConfirmedRideForPassenger(Long passengerId) {
         Ride ride = rideRepository
                 .findFirstByPassengerIdAndRideStatusIn(passengerId, RideStatus.getConfirmedRideStatusList())
                 .orElseThrow(() -> new NoConfirmedRideForPassenger(passengerId));
 
-        return rideMapper.toConfirmedRideResponse(ride);
+        return rideMapper.toShortRideResponse(ride);
     }
 
     @Override
@@ -118,16 +119,20 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public void handleUpdateDriver(UpdateRideDriverRequest request) {
-        validateUpdateRideDriverRequest(request);
-        Ride ride = findRideById(request.getRideId());
-        ride.setDriverId(request.getDriverId());
-        ride.setRideStatus(RideStatus.WAITING_FOR_DRIVER_CONFIRMATION);
-        saveRide(ride);
+        try {
+            validateUpdateRideDriverRequest(request);
+            Ride ride = findRideById(request.getRideId());
+            ride.setDriverId(request.getDriverId());
+            ride.setRideStatus(RideStatus.WAITING_FOR_DRIVER_CONFIRMATION);
+            saveRide(ride);
+        } catch (NoAvailableDriverForRide e) {
+            requestDriverForRide(request.getRideId());
+        }
     }
 
     private void validateUpdateRideDriverRequest(UpdateRideDriverRequest request) {
         if (!request.isDriverAvailable()) {
-            requestDriverForRide(request.getRideId());
+            throw new NoAvailableDriverForRide(request.getRideId());
         }
     }
 

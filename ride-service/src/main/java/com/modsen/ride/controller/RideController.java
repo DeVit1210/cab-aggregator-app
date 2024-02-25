@@ -3,10 +3,10 @@ package com.modsen.ride.controller;
 import com.modsen.ride.constants.ServiceMappings;
 import com.modsen.ride.dto.request.PageSettingRequest;
 import com.modsen.ride.dto.request.RideRequest;
-import com.modsen.ride.dto.response.ConfirmedRideResponse;
 import com.modsen.ride.dto.response.PagedRideResponse;
 import com.modsen.ride.dto.response.RideListResponse;
 import com.modsen.ride.dto.response.RideResponse;
+import com.modsen.ride.dto.response.ShortRideResponse;
 import com.modsen.ride.enums.Role;
 import com.modsen.ride.service.RideService;
 import com.modsen.ride.validation.EnumValue;
@@ -58,12 +58,12 @@ public class RideController {
     }
 
     @GetMapping("/available/driver/{driverId}")
-    public ConfirmedRideResponse findAvailableRideForDriver(@PathVariable Long driverId) {
+    public ShortRideResponse findAvailableRideForDriver(@PathVariable Long driverId) {
         return rideService.findAvailableRideForDriver(driverId);
     }
 
     @GetMapping("/confirmed/passenger/{passengerId}")
-    public ConfirmedRideResponse findConfirmedRideForPassenger(@PathVariable Long passengerId) {
+    public ShortRideResponse findConfirmedRideForPassenger(@PathVariable Long passengerId) {
         return rideService.findConfirmedRideForPassenger(passengerId);
     }
 }

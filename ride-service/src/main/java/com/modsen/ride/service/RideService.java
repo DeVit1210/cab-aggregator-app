@@ -3,10 +3,10 @@ package com.modsen.ride.service;
 import com.modsen.ride.dto.request.PageSettingRequest;
 import com.modsen.ride.dto.request.RideRequest;
 import com.modsen.ride.dto.request.UpdateRideDriverRequest;
-import com.modsen.ride.dto.response.ConfirmedRideResponse;
 import com.modsen.ride.dto.response.PagedRideResponse;
 import com.modsen.ride.dto.response.RideListResponse;
 import com.modsen.ride.dto.response.RideResponse;
+import com.modsen.ride.dto.response.ShortRideResponse;
 import com.modsen.ride.enums.Role;
 import com.modsen.ride.model.Ride;
 
@@ -21,9 +21,9 @@ public interface RideService {
 
     RideResponse findRide(Long rideId);
 
-    ConfirmedRideResponse findAvailableRideForDriver(Long driverId);
+    ShortRideResponse findAvailableRideForDriver(Long driverId);
 
-    ConfirmedRideResponse findConfirmedRideForPassenger(Long passengerId);
+    ShortRideResponse findConfirmedRideForPassenger(Long passengerId);
 
     Ride findRideById(Long rideId);
 

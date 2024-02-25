@@ -1,9 +1,9 @@
 package com.modsen.ride.mapper;
 
 import com.modsen.ride.dto.request.RideRequest;
-import com.modsen.ride.dto.response.ConfirmedRideResponse;
 import com.modsen.ride.dto.response.PagedRideResponse;
 import com.modsen.ride.dto.response.RideResponse;
+import com.modsen.ride.dto.response.ShortRideResponse;
 import com.modsen.ride.model.Ride;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,7 +19,7 @@ public interface RideMapper {
 
     RideResponse toRideResponse(Ride ride);
 
-    ConfirmedRideResponse toConfirmedRideResponse(Ride ride);
+    ShortRideResponse toShortRideResponse(Ride ride);
 
     List<RideResponse> toRideListResponse(List<Ride> rideList);
 
