@@ -68,15 +68,6 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    public PassengerResponse updatePassengerByEmail(String email, PassengerRequest request) {
-        Passenger passenger = passengerRepository.findByEmail(email)
-                .orElseThrow(() -> new PassengerNotFoundException(email));
-        validatePassengerRequest(request, passenger);
-
-        return doUpdatePassenger(passenger, request);
-    }
-
-    @Override
     public PassengerListResponse findAllPassengers() {
         List<Passenger> passengers = passengerRepository.findAll();
         List<AverageRatingResponse> allAverageRatings = ratingServiceClient

@@ -52,12 +52,6 @@ public class PassengerController {
         return passengerService.updatePassenger(id, request);
     }
 
-    @PutMapping("/email/{email}")
-    public PassengerResponse updatePassengerByEmail(@PathVariable String email,
-                                                    @Valid @RequestBody PassengerRequest request) {
-        return passengerService.updatePassengerByEmail(email, request);
-    }
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePassenger(@PathVariable Long id) {
