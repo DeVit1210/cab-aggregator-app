@@ -27,6 +27,6 @@ public enum RideStatus {
     }
 
     public static List<RideStatus> getNotConfirmedStatusList() {
-        return List.of(WAITING_FOR_DRIVER_CONFIRMATION, WITHOUT_DRIVER);
+        return List.of(WAITING_FOR_DRIVER_CONFIRMATION, WITHOUT_DRIVER, PENDING);
     }
 }
