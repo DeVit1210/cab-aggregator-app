@@ -30,12 +30,11 @@ public class DriverWithSuggestedRideServiceImpl implements DriverWithSuggestedRi
     }
 
     @Override
-    public Driver save(Driver driver, Long rideId) {
+    public void save(Driver driver, Long rideId) {
         DriverWithSuggestedRide driverWithSuggestedRide = DriverWithSuggestedRide.builder()
                 .suggestedRideId(rideId)
                 .driver(driver)
                 .build();
         suggestedRideRepository.save(driverWithSuggestedRide);
-        return driver;
     }
 }

@@ -15,8 +15,6 @@ public interface PassengerService {
 
     PassengerResponse updatePassenger(Long passengerId, PassengerRequest request);
 
-    PassengerResponse updatePassengerByEmail(String email, PassengerRequest request);
-
     PassengerListResponse findAllPassengers();
 
     PagedPassengerResponse findPassengers(PageSettingRequest request);

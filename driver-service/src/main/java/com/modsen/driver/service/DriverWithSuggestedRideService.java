@@ -8,5 +8,5 @@ import java.util.List;
 public interface DriverWithSuggestedRideService {
     List<Long> getDriverIdList(FindDriverRequest request);
 
-    Driver save(Driver driver, Long rideId);
+    void save(Driver driver, Long rideId);
 }
