@@ -6,16 +6,19 @@ import com.modsen.ride.dto.request.PaymentRequest;
 import com.modsen.ride.dto.response.CreditCardResponse;
 import com.modsen.ride.dto.response.PaymentResponse;
 import com.modsen.ride.dto.response.StripeCustomerResponse;
+import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @FeignClient(
         name = "${feign.client.payment.name}",
         configuration = FeignConfig.class,
-        url = "${feign.client.payment.url}"
+        path = "${feign.client.payment.url}"
 )
 public interface PaymentServiceClient {
     @GetMapping(ServiceMappings.Url.STRIPE_CUSTOMER_BY_ID_URL)
@@ -24,6 +27,7 @@ public interface PaymentServiceClient {
     @GetMapping(ServiceMappings.Url.DEFAULT_CARD_FOR_PASSENGER_URL)
     CreditCardResponse getDefaultCreditCard(@PathVariable Long passengerId);
 
-    @PostMapping
-    PaymentResponse createPayment(@RequestBody PaymentRequest request);
+    @PostMapping(ServiceMappings.Url.CREATE_PAYMENT_URL)
+    @ResponseStatus(HttpStatus.CREATED)
+    PaymentResponse createPayment(@RequestBody @Valid PaymentRequest request);
 }

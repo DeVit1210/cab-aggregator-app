@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(
         name = "${feign.client.passenger.name}",
         configuration = FeignConfig.class,
-        url = "${feign.client.passenger.url}"
+        path = "${feign.client.passenger.url}"
 )
 public interface PassengerServiceClient {
     @GetMapping(ServiceMappings.Url.PASSENGER_BY_ID_URL)

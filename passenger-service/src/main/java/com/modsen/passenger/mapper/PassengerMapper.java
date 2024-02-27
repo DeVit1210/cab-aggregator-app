@@ -20,6 +20,7 @@ import java.util.stream.IntStream;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PassengerMapper {
     Passenger toPassenger(PassengerRequest request);
+
     @Mapping(target = "id", source = "passenger.id")
     PassengerResponse toPassengerResponse(Passenger passenger, AverageRatingResponse averageRating);
 
@@ -33,7 +34,13 @@ public interface PassengerMapper {
     default List<PassengerResponse> toPassengerListResponse(List<Passenger> passengerList,
                                                             List<AverageRatingResponse> averageRatingList) {
         return IntStream.range(0, passengerList.size())
-                .mapToObj(value -> toPassengerResponse(passengerList.get(value), averageRatingList.get(value)))
+                .mapToObj(value -> {
+                    Passenger passenger = passengerList.get(value);
+                    AverageRatingResponse averageRating = value < averageRatingList.size()
+                            ? averageRatingList.get(value)
+                            : AverageRatingResponse.empty(passenger.getId());
+                    return toPassengerResponse(passenger, averageRating);
+                })
                 .toList();
     }
 

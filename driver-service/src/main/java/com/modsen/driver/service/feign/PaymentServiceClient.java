@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(
         name = ServiceMappings.PAYMENT_SERVICE,
         configuration = FeignConfig.class,
-        url = ServiceMappings.PAYMENT_BASE_URL
+        path = ServiceMappings.PAYMENT_BASE_URL
 )
 public interface PaymentServiceClient {
     @GetMapping(ServiceMappings.DRIVER_ACCOUNT_BY_ID_URL)

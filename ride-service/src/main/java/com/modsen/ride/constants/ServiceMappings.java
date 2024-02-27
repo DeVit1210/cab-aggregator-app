@@ -15,5 +15,6 @@ public class ServiceMappings {
         public static final String DEFAULT_CARD_FOR_PASSENGER_URL = "/credit-cards/{passengerId}";
         public static final String NOT_CONFIRMED_PROMOCODE_FOR_PASSENGER_URL = "/appliance/{passengerId}";
         public static final String CONFIRMED_PROMOCODE_APPLIANCE = "/appliance/{promocodeId}";
+        public static final String CREATE_PAYMENT_URL = "/charges";
     }
 }

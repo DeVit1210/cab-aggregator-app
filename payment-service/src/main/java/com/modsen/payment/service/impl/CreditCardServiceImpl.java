@@ -78,7 +78,10 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     @Override
     public CreditCardResponse getDefaultCreditCard(Long passengerId) {
-        return creditCardRepository.findByCardHolderIdAndIsDefaultIsTrue(passengerId)
+        List<CreditCard> creditCardList = creditCardRepository.findAllByCardHolderIdAndRole(passengerId, Role.PASSENGER);
+        return creditCardList.stream()
+                .filter(CreditCard::isDefault)
+                .findFirst()
                 .map(creditCardMapper::toCreditCardResponse)
                 .orElseThrow(() -> new DefaultCreditCardMissingException(passengerId));
     }

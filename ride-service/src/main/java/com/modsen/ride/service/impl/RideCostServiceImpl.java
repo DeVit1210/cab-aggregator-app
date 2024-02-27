@@ -44,6 +44,9 @@ public class RideCostServiceImpl implements RideCostService {
 
     private BigDecimal applyPromocode(Long passengerId, BigDecimal rideCost) {
         AppliedPromocodeResponse promocode = promocodeServiceClient.findNotConfirmedPromocode(passengerId);
+        if (AppliedPromocodeResponse.isEmpty(promocode)) {
+            return rideCost;
+        }
         BigDecimal discountDecimal = BigDecimal.valueOf((double) promocode.discountPercent() / 100);
         BigDecimal discountAmount = rideCost.multiply(discountDecimal);
         return rideCost.subtract(discountAmount)

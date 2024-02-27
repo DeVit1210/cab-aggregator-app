@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(
         name = ServiceMappings.RIDE_SERVICE,
         configuration = FeignConfig.class,
-        url = ServiceMappings.RIDE_BASE_URL
+        path = ServiceMappings.RIDE_BASE_URL
 )
 public interface RideServiceClient {
     @GetMapping

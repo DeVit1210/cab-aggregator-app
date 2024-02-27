@@ -13,4 +13,13 @@ public record AppliedPromocodeResponse(
         int discountPercent,
         LocalDateTime appliedAt
 ) {
+    public static AppliedPromocodeResponse empty() {
+        return AppliedPromocodeResponse.builder()
+                .id(0L)
+                .build();
+    }
+
+    public static boolean isEmpty(AppliedPromocodeResponse appliedPromocodeResponse) {
+        return appliedPromocodeResponse.id.equals(0L);
+    }
 }

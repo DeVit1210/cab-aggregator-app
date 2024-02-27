@@ -10,5 +10,7 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface RideOperationsMapper {
     @Mapping(target = "rideId", source = "ride.id")
+    @Mapping(target = "type", source = "request.paymentType")
+    @Mapping(target = "amount", source = "ride.rideCost")
     PaymentRequest toPaymentRequest(Ride ride, FinishRideRequest request);
 }

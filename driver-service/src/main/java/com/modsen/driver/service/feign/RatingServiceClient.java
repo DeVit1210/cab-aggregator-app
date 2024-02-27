@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(
         name = ServiceMappings.RATING_SERVICE,
         configuration = FeignConfig.class,
-        url = ServiceMappings.RATING_BASE_URL,
+        path = ServiceMappings.RATING_BASE_URL,
         fallback = RatingServiceClientFallback.class
 )
 public interface RatingServiceClient {

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(
         name = "${feign.client.driver.name}",
         configuration = FeignConfig.class,
-        url = "${feign.client.driver.url}",
+        path = "${feign.client.driver.url}",
         fallback = DriverServiceClientFallback.class
 )
 public interface DriverServiceClient {

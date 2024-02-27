@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(
         name = ServiceMappings.DRIVER_SERVICE,
         configuration = FeignConfig.class,
-        url = ServiceMappings.DRIVER_BASE_URL
+        path = ServiceMappings.DRIVER_BASE_URL
 )
 public interface DriverServiceClient {
     @GetMapping(ServiceMappings.DRIVER_BY_ID_URL)

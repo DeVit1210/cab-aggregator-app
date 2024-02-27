@@ -9,7 +9,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ratings
     username: root
-    password: validate
+    password: FLRPVcp41NC7mwD2TtX5
   jpa:
     hibernate:
       ddl-auto: validate

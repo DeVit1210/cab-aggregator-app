@@ -21,11 +21,6 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
-      client:
-        config:
-          default:
-            connect-timeout: 1000
-            read-timeout: 1000
   kafka:
     consumer:
       auto-offset-reset: latest

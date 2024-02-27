@@ -128,6 +128,8 @@ public class RideOperationsServiceImpl implements RideOperationsService {
 
     private void validatePromocodeAppliance(Ride ride) {
         AppliedPromocodeResponse promocode = promocodeServiceClient.findNotConfirmedPromocode(ride.getPassengerId());
-        promocodeServiceClient.confirmPromocodeAppliance(promocode.id());
+        if (!AppliedPromocodeResponse.isEmpty(promocode)) {
+            promocodeServiceClient.confirmPromocodeAppliance(promocode.id());
+        }
     }
 }

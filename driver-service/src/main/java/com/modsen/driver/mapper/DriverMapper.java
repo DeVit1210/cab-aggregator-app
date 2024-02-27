@@ -35,7 +35,13 @@ public interface DriverMapper {
     default List<DriverResponse> toDriverListResponse(List<Driver> driverList,
                                                       List<AverageRatingResponse> averageRatingList) {
         return IntStream.range(0, driverList.size())
-                .mapToObj(value -> toDriverResponse(driverList.get(value), averageRatingList.get(value)))
+                .mapToObj(value -> {
+                    Driver driver = driverList.get(value);
+                    AverageRatingResponse averageRating = value < averageRatingList.size()
+                            ? averageRatingList.get(value)
+                            : AverageRatingResponse.empty(driver.getId());
+                    return toDriverResponse(driver, averageRating);
+                })
                 .toList();
     }
 
