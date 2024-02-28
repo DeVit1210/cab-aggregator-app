@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/passengers
+    username: root
+    password: FLRPVcp41NC7mwD2TtX5
+  liquibase:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create
+eureka:
+  client:
+    enabled: false
