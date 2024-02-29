@@ -181,7 +181,7 @@ class CreditCardServiceImplTest {
         when(creditCardMapper.toCreditCardResponse(any(CreditCard.class)))
                 .thenCallRealMethod();
 
-        CreditCardResponse actualCreditCard = creditCardService.getDefaultCreditCard(cardHolderId);
+        CreditCard actualCreditCard = creditCardService.getDefaultCreditCard(cardHolderId);
 
         assertNotNull(actualCreditCard);
         verify(creditCardRepository).findByCardHolderIdAndIsDefaultIsTrue(cardHolderId);

@@ -8,7 +8,7 @@ public class InvalidCreditCardHolderException extends RuntimeException {
         super(String.format(
                 MessageTemplates.CREDIT_CARD_INVALID_HOLDER.getValue(),
                 creditCardId,
-                role.name().toLowerCase(),
+                role.name(),
                 driverId
         ));
     }

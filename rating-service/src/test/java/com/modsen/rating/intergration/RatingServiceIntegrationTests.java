@@ -53,7 +53,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 public class RatingServiceIntegrationTests {
     @Container
     @ServiceConnection
-    private static MySQLContainer<?> mySQLContainer = new MySQLContainer<>(DockerImageName.parse("mysql:8.2.0"));
+    static MySQLContainer<?> mySQLContainer = new MySQLContainer<>(DockerImageName.parse("mysql:8.2.0"));
     @LocalServerPort
     private Integer port;
     @Autowired
@@ -100,7 +100,6 @@ public class RatingServiceIntegrationTests {
     @MethodSource("findAllRatingsForPersonArgumentsProvider")
     @Sql("classpath:insert-ratings-data.sql")
     void findAllRatingsForPerson_Success(Long ratedPersonId, String role, int expectedSize, BigDecimal expectedRating) {
-
         RatingListResponse ratingListResponse = RestAssuredUtils.getAllRatingsForPersonResponse(ratedPersonId, role)
                 .then()
                 .assertThat()

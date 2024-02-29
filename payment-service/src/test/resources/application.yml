@@ -1,0 +1,21 @@
+server:
+  servlet:
+    context-path: /payments
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/payments
+    username: root
+    password: FLRPVcp41NC7mwD2TtX5
+  liquibase:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+eureka:
+  client:
+    enabled: false
+stripe:
+  currency:
+    code: BYN

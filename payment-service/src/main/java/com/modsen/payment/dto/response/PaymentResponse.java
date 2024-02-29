@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public record PaymentResponse(
         Long id,
         Long passengerId,
+        Long rideId,
         BigDecimal amount,
         LocalDateTime createdAt
 ) {
