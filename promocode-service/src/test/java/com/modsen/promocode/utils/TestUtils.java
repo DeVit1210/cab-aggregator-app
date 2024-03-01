@@ -39,7 +39,9 @@ public class TestUtils {
     public static PromocodeRequest defaultPromocodeRequest() {
         return PromocodeRequest.builder()
                 .name(TestConstants.PROMOCODE_NAME)
+                .daysQuantity(10)
                 .discountPercent(TestConstants.PROMOCODE_DISCOUNT_PERCENT)
+                .minRidesQuantity(0)
                 .build();
     }
 
@@ -53,6 +55,13 @@ public class TestUtils {
     public static ApplyPromocodeRequest defaultApplyPromocodeRequest() {
         return ApplyPromocodeRequest.builder()
                 .promocodeName(TestConstants.PROMOCODE_NAME)
+                .passengerId(TestConstants.PASSENGER_ID)
+                .build();
+    }
+
+    public static ApplyPromocodeRequest applyPromocodeRequestWithName(String promocodeName) {
+        return ApplyPromocodeRequest.builder()
+                .promocodeName(promocodeName)
                 .passengerId(TestConstants.PASSENGER_ID)
                 .build();
     }
