@@ -4,10 +4,14 @@ import com.modsen.ride.constants.ValidationConstants;
 import com.modsen.ride.enums.DriverStatus;
 import com.modsen.ride.validation.EnumValue;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ChangeDriverStatusRequest {
     @NotNull(message = ValidationConstants.ID_NOT_NULL)
