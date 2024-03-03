@@ -17,6 +17,8 @@ import com.modsen.ride.service.feign.PaymentServiceClient;
 import com.modsen.ride.utils.RestAssuredUtils;
 import com.modsen.ride.utils.TestUtils;
 import io.restassured.response.Response;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,11 +26,14 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.time.Duration;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -44,10 +49,15 @@ import static org.mockito.ArgumentMatchers.anyLong;
 public class RideControllerIntegrationTest extends BaseTestContainer {
     @Autowired
     private RideRepository rideRepository;
+    @Autowired
+    private KafkaConsumer<String, Object> kafkaConsumer;
     @MockBean
     private PassengerServiceClient passengerServiceClient;
     @MockBean
     private PaymentServiceClient paymentServiceClient;
+    @Value("${spring.kafka.ride-producer-topic.name}")
+    private String rideProducerTopicName;
+
 
     static Stream<Arguments> findAlLRidesForPersonArgumentsProvider() {
         return Stream.of(
@@ -64,6 +74,7 @@ public class RideControllerIntegrationTest extends BaseTestContainer {
 
     @Test
     void createRide_ValidRideRequest_ShouldReturnCreatedRide() {
+        kafkaConsumer.subscribe(Collections.singletonList(rideProducerTopicName));
         RideRequest request = TestUtils.defaultRideRequest();
         RideResponse expectedRideResponse = TestUtils.defaultRideResponse();
         setupMocksForValidResponses();
@@ -75,6 +86,7 @@ public class RideControllerIntegrationTest extends BaseTestContainer {
                 .extract()
                 .as(RideResponse.class);
 
+        validateKafkaMessageSent(true);
         assertEquals(expectedRideResponse.passengerId(), rideResponse.passengerId());
         assertEquals(expectedRideResponse.rideCost(), rideResponse.rideCost());
         assertEquals(RideStatus.WITHOUT_DRIVER, rideResponse.rideStatus());
@@ -84,6 +96,7 @@ public class RideControllerIntegrationTest extends BaseTestContainer {
     @Test
     @Sql("classpath:insert-rides-data.sql")
     void createRide_PassengerDoesNotExist_ShouldReturnApiExceptionInfo() {
+        kafkaConsumer.subscribe(Collections.singletonList(rideProducerTopicName));
         RideRequest request = TestUtils.defaultRideRequest();
         HttpStatus expectedHttpStatus = HttpStatus.NOT_FOUND;
 
@@ -94,11 +107,14 @@ public class RideControllerIntegrationTest extends BaseTestContainer {
                 .then()
                 .assertThat()
                 .statusCode(expectedHttpStatus.value());
+
+        validateKafkaMessageSent(false);
     }
 
     @Test
     @Sql("classpath:insert-rides-data.sql")
     void createRide_NotFinishedRideAlreadyExists_ShouldReturnApiExceptionInfo() {
+        kafkaConsumer.subscribe(Collections.singletonList(rideProducerTopicName));
         RideRequest request = TestUtils.defaultRideRequest();
         String expectedExceptionMessage = String.format(
                 MessageTemplates.NOT_FINISHED_RIDE_EXISTS_FOR_PASSENGER.getValue(),
@@ -110,10 +126,12 @@ public class RideControllerIntegrationTest extends BaseTestContainer {
         Response createRideResponse = RestAssuredUtils.createRideResponse(request);
 
         extractApiExceptionInfoAndAssert(createRideResponse, expectedHttpStatus, expectedExceptionMessage);
+        validateKafkaMessageSent(false);
     }
 
     @Test
     void createRide_StripeCustomerDoesNotExist_ShouldReturnApiExceptionInfo() {
+        kafkaConsumer.subscribe(Collections.singletonList(rideProducerTopicName));
         RideRequest request = TestUtils.defaultRideRequest();
         HttpStatus expectedHttpStatus = HttpStatus.NOT_FOUND;
 
@@ -124,10 +142,13 @@ public class RideControllerIntegrationTest extends BaseTestContainer {
                 .then()
                 .assertThat()
                 .statusCode(expectedHttpStatus.value());
+
+        validateKafkaMessageSent(false);
     }
 
     @Test
     void createRide_NoDefaultCreditCardForPassenger_ShouldReturnApiExceptionInfo() {
+        kafkaConsumer.subscribe(Collections.singletonList(rideProducerTopicName));
         RideRequest request = TestUtils.defaultRideRequest();
         HttpStatus expectedHttpStatus = HttpStatus.NOT_FOUND;
 
@@ -138,6 +159,8 @@ public class RideControllerIntegrationTest extends BaseTestContainer {
                 .then()
                 .assertThat()
                 .statusCode(expectedHttpStatus.value());
+
+        validateKafkaMessageSent(false);
     }
 
     @Test
@@ -238,5 +261,10 @@ public class RideControllerIntegrationTest extends BaseTestContainer {
                 .thenReturn(StripeCustomerResponse.builder().build());
         Mockito.when(paymentServiceClient.getDefaultCreditCard(anyLong()))
                 .thenReturn(CreditCardResponse.builder().build());
+    }
+
+    private void validateKafkaMessageSent(boolean isMessageSent) {
+        ConsumerRecords<String, Object> records = kafkaConsumer.poll(Duration.ofMillis(100));
+        assertEquals(isMessageSent, records.count() == 1);
     }
 }

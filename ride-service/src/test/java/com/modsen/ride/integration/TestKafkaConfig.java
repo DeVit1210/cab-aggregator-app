@@ -3,7 +3,6 @@ package com.modsen.ride.integration;
 import com.modsen.ride.constants.TestConstants;
 import com.modsen.ride.dto.request.ChangeDriverStatusRequest;
 import com.modsen.ride.dto.request.FindDriverRequest;
-import com.modsen.ride.dto.request.UpdateRideDriverRequest;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -55,8 +54,13 @@ public class TestKafkaConfig {
     }
 
     @Bean
-    public ProducerFactory<String, UpdateRideDriverRequest> updateRideDriverRequestProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(testProducerConfigs());
+    public ProducerFactory<String, Object> producerFactory() {
+        return new DefaultKafkaProducerFactory<>(testConsumerConfig());
+    }
+
+    @Bean
+    public KafkaTemplate<String, Object> kafkaTemplate() {
+        return new KafkaTemplate<>(producerFactory());
     }
 
     @Bean
@@ -67,11 +71,6 @@ public class TestKafkaConfig {
     @Bean
     public KafkaTemplate<String, ChangeDriverStatusRequest> changeDriverStatusRequestKafkaTemplate() {
         return new KafkaTemplate<>(changeDriverStatusRequestProducerFactory());
-    }
-
-    @Bean
-    public KafkaTemplate<String, UpdateRideDriverRequest> updateRideDriverRequestKafkaTemplate() {
-        return new KafkaTemplate<>(updateRideDriverRequestProducerFactory());
     }
 
     private Map<String, Object> testProducerConfigs() {
