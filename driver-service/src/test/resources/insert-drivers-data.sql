@@ -8,3 +8,5 @@ insert into drivers (id, first_name, last_name, email, phone_number, licence_num
 values (4, 'fourth', 'driver', 'fourth@gmail.com', '+375 (25) 400-00-00', '4234567890', 'OFFLINE');
 insert into drivers (id, first_name, last_name, email, phone_number, licence_number, driver_status)
 values (5, 'fifth', 'driver', 'fifth@gmail.com', '+375 (25) 500-00-00', '5234567890', 'OFFLINE');
+insert into drivers (id, first_name, last_name, email, phone_number, licence_number, driver_status)
+values (6, 'sixth', 'driver', 'sixth@gmail.com', '+375 (25) 600-00-00', '6234567890', 'AVAILABLE');

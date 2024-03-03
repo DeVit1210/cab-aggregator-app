@@ -22,4 +22,10 @@ public class TestConstants {
         public static final String EMAIL_FIELD = "email";
         public static final String DRIVER_STATUS_FIELD = "driverStatus";
     }
+
+    public static class KafkaConstants {
+        public static final String AUTO_COMMIT_RESET = "latest";
+        public static final String TRUSTED_PACKAGES_KEY = "spring.json.trusted.packages";
+        public static final String TRUSTED_PACKAGES_VALUE = "*";
+    }
 }

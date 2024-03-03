@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.HttpStatus;
+import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -20,6 +21,11 @@ public class BaseTestContainer {
     @Container
     @ServiceConnection
     static MySQLContainer<?> mySQLContainer = new MySQLContainer<>(DockerImageName.parse("mysql:8.2.0"));
+
+    @Container
+    @ServiceConnection
+    static KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka"));
+
     @LocalServerPort
     private Integer port;
 
@@ -27,7 +33,7 @@ public class BaseTestContainer {
     void setUp() {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = port;
-        RestAssured.basePath = "/api/v1" + ServiceMappings.DRIVER_CONTROLLER;
+        RestAssured.basePath = ServiceMappings.DRIVER_CONTROLLER;
     }
 
     protected void extractApiExceptionInfoAndAssert(Response response,

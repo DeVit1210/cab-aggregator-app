@@ -4,6 +4,8 @@ import com.modsen.driver.constants.MessageTemplates;
 import com.modsen.driver.constants.TestConstants;
 import com.modsen.driver.dto.request.ChangeDriverStatusRequest;
 import com.modsen.driver.dto.request.DriverRequest;
+import com.modsen.driver.dto.response.AverageRatingListResponse;
+import com.modsen.driver.dto.response.AverageRatingResponse;
 import com.modsen.driver.dto.response.DriverAccountResponse;
 import com.modsen.driver.dto.response.DriverAvailabilityResponse;
 import com.modsen.driver.dto.response.DriverResponse;
@@ -11,6 +13,7 @@ import com.modsen.driver.enums.DriverStatus;
 import com.modsen.driver.model.Driver;
 import com.modsen.driver.repository.DriverRepository;
 import com.modsen.driver.service.feign.PaymentServiceClient;
+import com.modsen.driver.service.feign.RatingServiceClient;
 import com.modsen.driver.utils.RestAssuredUtils;
 import com.modsen.driver.utils.TestUtils;
 import io.restassured.response.Response;
@@ -19,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +37,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.iterableWithSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class DriverControllerIntegrationTest extends BaseTestContainer {
@@ -42,6 +47,8 @@ public class DriverControllerIntegrationTest extends BaseTestContainer {
     private DriverRepository driverRepository;
     @MockBean
     private PaymentServiceClient paymentServiceClient;
+    @MockBean
+    private RatingServiceClient ratingServiceClient;
 
     static Stream<Arguments> changeDriverStatusArgumentsProvider() {
         return Stream.of(
@@ -70,6 +77,9 @@ public class DriverControllerIntegrationTest extends BaseTestContainer {
     void findAllDrivers_Success() {
         int expectedSize = 5;
 
+        Mockito.when(ratingServiceClient.findAllAverageRatings(any()))
+                .thenReturn(AverageRatingListResponse.empty());
+
         RestAssuredUtils.findAllDriversResponse()
                 .then()
                 .assertThat()
@@ -83,6 +93,9 @@ public class DriverControllerIntegrationTest extends BaseTestContainer {
     void findDriverById_DriverExists_ShouldReturnDriver() {
         Long driverId = TestConstants.DRIVER_ID;
         Driver expectedDriver = TestUtils.driverWithStatus(DriverStatus.AVAILABLE);
+
+        Mockito.when(ratingServiceClient.findAverageRating(anyLong(), anyString()))
+                .thenReturn(AverageRatingResponse.empty(driverId));
 
         DriverResponse driverResponse = RestAssuredUtils.findDriverByIdResponse(driverId)
                 .then()
@@ -167,6 +180,9 @@ public class DriverControllerIntegrationTest extends BaseTestContainer {
         String expectedNewEmail = TestConstants.DRIVER_UPDATED_EMAIL;
         DriverRequest driverRequest = TestUtils.driverRequestWithEmail(expectedNewEmail);
 
+        Mockito.when(ratingServiceClient.findAverageRating(anyLong(), anyString()))
+                .thenReturn(AverageRatingResponse.empty(driverId));
+
         RestAssuredUtils.updateDriverResponse(driverId, driverRequest)
                 .then()
                 .assertThat()
@@ -180,6 +196,9 @@ public class DriverControllerIntegrationTest extends BaseTestContainer {
     void updateDriver_DuplicateDataButForTheSameDriver_ShouldReturnUpdatedDriver() {
         Long driverId = TestConstants.DRIVER_ID;
         DriverRequest driverRequest = TestUtils.defaultDriverRequest();
+
+        Mockito.when(ratingServiceClient.findAverageRating(anyLong(), anyString()))
+                .thenReturn(AverageRatingResponse.empty(driverId));
 
         RestAssuredUtils.updateDriverResponse(driverId, driverRequest)
                 .then()
@@ -287,7 +306,7 @@ public class DriverControllerIntegrationTest extends BaseTestContainer {
     @MethodSource("changeDriverStatusArgumentsProvider")
     @Sql("classpath:insert-drivers-data.sql")
     void changeDriverStatus_ValidChangeDriverStatusRequest_ShouldReturnUpdatedDriver(ChangeDriverStatusRequest request) {
-        Mockito.when(paymentServiceClient.findAccountById(ArgumentMatchers.any()))
+        Mockito.when(paymentServiceClient.findAccountById(any()))
                 .thenReturn(DriverAccountResponse.builder().build());
 
         RestAssuredUtils.changeDriverStatusResponse(request)
