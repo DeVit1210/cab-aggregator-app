@@ -34,15 +34,14 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.time.Duration;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.iterableWithSize;
 import static org.hamcrest.Matchers.oneOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -176,9 +175,10 @@ public class RideControllerIntegrationTest extends BaseTestContainer {
                 .extract()
                 .as(RideResponse.class);
 
-        Optional<Ride> foundRide = rideRepository.findById(rideResponse.id());
-        assertTrue(foundRide.isPresent());
-        assertEquals(foundRide.get(), expectedRide);
+        assertThat(rideRepository.findById(rideResponse.id()))
+                .isPresent()
+                .get()
+                .isEqualTo(expectedRide);
     }
 
     @Test

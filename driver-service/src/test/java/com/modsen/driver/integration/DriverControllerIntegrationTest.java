@@ -135,8 +135,9 @@ public class DriverControllerIntegrationTest extends BaseTestContainer {
 
         Optional<Driver> createdDriver = driverRepository.findById(driverResponse.id());
 
-        assertTrue(createdDriver.isPresent());
-        assertThat(createdDriver.get())
+        assertThat(createdDriver)
+                .isPresent()
+                .get()
                 .usingRecursiveComparison()
                 .ignoringFields(TestConstants.FieldNames.ID_FIELD)
                 .isEqualTo(expectedDriver);
