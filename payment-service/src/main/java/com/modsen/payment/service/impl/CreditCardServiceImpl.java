@@ -67,10 +67,10 @@ public class CreditCardServiceImpl implements CreditCardService {
         CreditCard creditCard = creditCardRepository.findById(cardId)
                 .orElseThrow(() -> new PaymentEntityNotFoundException(cardId, CreditCard.class));
         if (!creditCard.isDefault()) {
+            String stripeCustomerId = stripeCustomerService.getCustomerId(creditCard.getCardHolderId());
             CreditCard defaultCreditCard = getDefaultCreditCard(creditCard.getCardHolderId());
             defaultCreditCard.setDefault(false);
             creditCardRepository.save(defaultCreditCard);
-            String stripeCustomerId = stripeCustomerService.getCustomerId(creditCard.getCardHolderId());
             stripeService.setDefaultCreditCard(stripeCustomerId, creditCard.getStripeId());
             creditCard.setDefault(true);
             creditCardRepository.save(creditCard);

@@ -19,6 +19,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.iterableWithSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -144,9 +145,8 @@ public class PromocodeControllerIntegrationTest extends BaseTestContainer {
                 .assertThat()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        Optional<Promocode> deletedPromocode = promocodeRepository.findById(promocodeId);
-
-        assertTrue(deletedPromocode.isEmpty());
+        assertThat(promocodeRepository.findById(promocodeId))
+                .isEmpty();
     }
 
     @Test

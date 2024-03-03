@@ -5,6 +5,7 @@ import com.modsen.rating.constants.ServiceMappings;
 import com.modsen.rating.constants.TestConstants;
 import com.modsen.rating.dto.request.RatingRequest;
 import com.modsen.rating.dto.response.AverageRatingResponse;
+import com.modsen.rating.dto.response.PassengerResponse;
 import com.modsen.rating.dto.response.RatingListResponse;
 import com.modsen.rating.dto.response.RatingResponse;
 import com.modsen.rating.dto.response.RideResponse;
@@ -14,10 +15,12 @@ import com.modsen.rating.exception.ApiExceptionInfo;
 import com.modsen.rating.exception.base.NotFoundException;
 import com.modsen.rating.model.Rating;
 import com.modsen.rating.repository.RatingRepository;
+import com.modsen.rating.service.feign.PassengerServiceClient;
 import com.modsen.rating.service.feign.RideServiceClient;
 import com.modsen.rating.utils.RestAssuredUtils;
 import com.modsen.rating.utils.TestUtils;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,6 +49,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 @Testcontainers
@@ -60,6 +64,8 @@ public class RatingServiceIntegrationTests {
     private RatingRepository ratingRepository;
     @MockBean
     private RideServiceClient rideServiceClient;
+    @MockBean
+    private PassengerServiceClient passengerServiceClient;
 
     static Stream<Arguments> findAllRatingsForPersonArgumentsProvider() {
         return Stream.of(
@@ -168,25 +174,20 @@ public class RatingServiceIntegrationTests {
         String expectedExceptionMessage = String.format(MessageTemplates.RATING_NOT_FOUND.getValue(), ratingId);
         HttpStatus expectedHttpStatus = HttpStatus.NOT_FOUND;
 
-        ApiExceptionInfo apiExceptionInfo = RestAssuredUtils.getRatingResponse(ratingId)
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.NOT_FOUND.value())
-                .extract()
-                .as(ApiExceptionInfo.class);
+        Response getRatingResponse = RestAssuredUtils.getRatingResponse(ratingId);
 
-        assertEquals(expectedExceptionMessage, apiExceptionInfo.getMessage());
-        assertEquals(expectedHttpStatus, apiExceptionInfo.getHttpStatus());
+        extractApiExceptionInfoAndAssert(getRatingResponse, expectedHttpStatus, expectedExceptionMessage);
     }
 
     @Test
     void createRating_ValidRatingRequest_ShouldReturnCreatedRating() {
         RatingRequest request = TestUtils.ratingRequestForRole(Role.PASSENGER);
         Rating expectedRating = TestUtils.defaultRating(Role.PASSENGER);
-        RideResponse rideResponse = TestUtils.defaultRideResponse();
 
         Mockito.when(rideServiceClient.findRideById(anyLong()))
-                .thenReturn(rideResponse);
+                .thenReturn(TestUtils.defaultRideResponse());
+        Mockito.when(passengerServiceClient.findPassengerById(anyLong()))
+                .thenReturn(PassengerResponse.builder().build());
 
         RatingResponse ratingResponse = RestAssuredUtils.createRatingResponse(request)
                 .then()
@@ -237,22 +238,15 @@ public class RatingServiceIntegrationTests {
         Mockito.when(rideServiceClient.findRideById(anyLong()))
                 .thenReturn(rideResponse);
 
-        ApiExceptionInfo apiExceptionInfo = RestAssuredUtils.createRatingResponse(request)
-                .then()
-                .assertThat()
-                .statusCode(expectedHttpStatus.value())
-                .extract()
-                .as(ApiExceptionInfo.class);
+        Response createRatingResponse = RestAssuredUtils.createRatingResponse(request);
 
-        assertEquals(expectedExceptionMessage, apiExceptionInfo.getMessage());
-        assertEquals(expectedHttpStatus, apiExceptionInfo.getHttpStatus());
+        extractApiExceptionInfoAndAssert(createRatingResponse, expectedHttpStatus, expectedExceptionMessage);
     }
 
     @Test
     @Sql("classpath:insert-ratings-data.sql")
     void createRating_RatingAlreadyExists_ShouldReturnApiExceptionInfo() {
         RatingRequest request = TestUtils.ratingRequestForRole(Role.PASSENGER);
-        RideResponse rideResponse = TestUtils.defaultRideResponse();
         String expectedExceptionMessage = String.format(
                 MessageTemplates.RATING_ALREADY_EXISTS.getValue(),
                 Role.PASSENGER.name(),
@@ -261,17 +255,13 @@ public class RatingServiceIntegrationTests {
         HttpStatus expectedHttpStatus = HttpStatus.CONFLICT;
 
         Mockito.when(rideServiceClient.findRideById(anyLong()))
-                .thenReturn(rideResponse);
+                .thenReturn(TestUtils.defaultRideResponse());
+        Mockito.when(passengerServiceClient.findPassengerById(any()))
+                .thenReturn(PassengerResponse.builder().build());
 
-        ApiExceptionInfo apiExceptionInfo = RestAssuredUtils.createRatingResponse(request)
-                .then()
-                .assertThat()
-                .statusCode(expectedHttpStatus.value())
-                .extract()
-                .as(ApiExceptionInfo.class);
+        Response createRatingResponse = RestAssuredUtils.createRatingResponse(request);
 
-        assertEquals(expectedExceptionMessage, apiExceptionInfo.getMessage());
-        assertEquals(expectedHttpStatus, apiExceptionInfo.getHttpStatus());
+        extractApiExceptionInfoAndAssert(createRatingResponse, expectedHttpStatus, expectedExceptionMessage);
     }
 
     @Test
@@ -298,14 +288,22 @@ public class RatingServiceIntegrationTests {
         String expectedExceptionMessage = String.format(MessageTemplates.RATING_NOT_FOUND.getValue(), ratingId);
         HttpStatus expectedHttpStatus = HttpStatus.NOT_FOUND;
 
-        ApiExceptionInfo apiExceptionInfo = RestAssuredUtils.updateRatingResponse(ratingId, RatingValue.ZERO.name())
+        Response updateRatingResponse = RestAssuredUtils.updateRatingResponse(ratingId, RatingValue.ZERO.name());
+
+        extractApiExceptionInfoAndAssert(updateRatingResponse, expectedHttpStatus, expectedExceptionMessage);
+    }
+
+    private void extractApiExceptionInfoAndAssert(Response response,
+                                                  HttpStatus expectedHttpStatus,
+                                                  String exceptedExceptionMessage) {
+        ApiExceptionInfo apiExceptionInfo = response
                 .then()
                 .assertThat()
                 .statusCode(expectedHttpStatus.value())
                 .extract()
                 .as(ApiExceptionInfo.class);
 
-        assertEquals(expectedExceptionMessage, apiExceptionInfo.getMessage());
+        assertEquals(exceptedExceptionMessage, apiExceptionInfo.getMessage());
         assertEquals(expectedHttpStatus, apiExceptionInfo.getHttpStatus());
     }
 }

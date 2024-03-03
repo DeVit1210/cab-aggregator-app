@@ -15,7 +15,7 @@ import com.modsen.passenger.service.feign.RatingServiceClient;
 import com.modsen.passenger.utils.RestAssuredUtils;
 import com.modsen.passenger.utils.TestUtils;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,6 @@ import java.util.Optional;
 
 import static io.restassured.RestAssured.basePath;
 import static io.restassured.RestAssured.baseURI;
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -105,18 +104,12 @@ public class PassengerIntegrationTest {
     @Test
     void findPassengerById_PassengerDoesNotExist_ShouldReturnApiExceptionInfo() {
         Long passengerId = TestConstants.PASSENGER_ID;
-        String exceptionMessage = String.format(MessageTemplates.PASSENGER_NOT_FOUND_BY_ID.getValue(), passengerId);
+        String expectedExceptionMessage = String.format(MessageTemplates.PASSENGER_NOT_FOUND_BY_ID.getValue(), passengerId);
         HttpStatus expectedHttpStatus = HttpStatus.NOT_FOUND;
 
-        ApiExceptionInfo apiExceptionInfo = RestAssuredUtils.doGetResponse(passengerId)
-                .then()
-                .assertThat()
-                .statusCode(expectedHttpStatus.value())
-                .extract()
-                .as(ApiExceptionInfo.class);
+        Response findPassengerResponse = RestAssuredUtils.doGetResponse(passengerId);
 
-        assertEquals(exceptionMessage, apiExceptionInfo.getMessage());
-        assertEquals(expectedHttpStatus, apiExceptionInfo.getHttpStatus());
+        extractApiExceptionInfoAndAssert(findPassengerResponse, expectedHttpStatus, expectedExceptionMessage);
     }
 
 
@@ -150,15 +143,9 @@ public class PassengerIntegrationTest {
                 String.format(MessageTemplates.EMAIL_NOT_UNIQUE.getValue(), TestConstants.PASSENGER_EMAIL);
         HttpStatus expectedHttpStatus = HttpStatus.BAD_REQUEST;
 
-        ApiExceptionInfo exceptionInfo = RestAssuredUtils.doPostResponse(passengerRequest)
-                .then()
-                .assertThat()
-                .statusCode(expectedHttpStatus.value())
-                .extract()
-                .as(ApiExceptionInfo.class);
+        Response createPassengerResponse = RestAssuredUtils.doPostResponse(passengerRequest);
 
-        assertEquals(expectedExceptionMessage, exceptionInfo.getMessage());
-        assertEquals(expectedHttpStatus, exceptionInfo.getHttpStatus());
+        extractApiExceptionInfoAndAssert(createPassengerResponse, expectedHttpStatus, expectedExceptionMessage);
     }
 
     @Test
@@ -169,15 +156,9 @@ public class PassengerIntegrationTest {
                 String.format(MessageTemplates.PHONE_NUMBER_NOT_UNIQUE.getValue(), TestConstants.PASSENGER_PHONE_NUMBER);
         HttpStatus expectedHttpStatus = HttpStatus.BAD_REQUEST;
 
-        ApiExceptionInfo exceptionInfo = RestAssuredUtils.doPostResponse(passengerRequest)
-                .then()
-                .assertThat()
-                .statusCode(expectedHttpStatus.value())
-                .extract()
-                .as(ApiExceptionInfo.class);
+        Response createPassengerResponse = RestAssuredUtils.doPostResponse(passengerRequest);
 
-        assertEquals(expectedExceptionMessage, exceptionInfo.getMessage());
-        assertEquals(expectedHttpStatus, exceptionInfo.getHttpStatus());
+        extractApiExceptionInfoAndAssert(createPassengerResponse, expectedHttpStatus, expectedExceptionMessage);
     }
 
     @Test
@@ -219,18 +200,9 @@ public class PassengerIntegrationTest {
         String expectedExceptionMessage = String.format(MessageTemplates.EMAIL_NOT_UNIQUE.getValue(), TestConstants.PASSENGER_EMAIL);
         HttpStatus expectedHttpStatus = HttpStatus.BAD_REQUEST;
 
-        ApiExceptionInfo exceptionInfo = given()
-                .contentType(ContentType.JSON)
-                .body(passengerRequest)
-                .put("/" + passengerId)
-                .then()
-                .assertThat()
-                .statusCode(expectedHttpStatus.value())
-                .extract()
-                .as(ApiExceptionInfo.class);
+        Response updatePassengerResponse = RestAssuredUtils.doPutResponse(passengerRequest, passengerId);
 
-        assertEquals(expectedExceptionMessage, exceptionInfo.getMessage());
-        assertEquals(expectedHttpStatus, exceptionInfo.getHttpStatus());
+        extractApiExceptionInfoAndAssert(updatePassengerResponse, expectedHttpStatus, expectedExceptionMessage);
     }
 
     @Test
@@ -240,15 +212,9 @@ public class PassengerIntegrationTest {
         String expectedExceptionMessage = String.format(MessageTemplates.PASSENGER_NOT_FOUND_BY_ID.getValue(), passengerId);
         HttpStatus expectedHttpStatus = HttpStatus.NOT_FOUND;
 
-        ApiExceptionInfo exceptionInfo = RestAssuredUtils.doPutResponse(passengerRequest, passengerId)
-                .then()
-                .assertThat()
-                .statusCode(expectedHttpStatus.value())
-                .extract()
-                .as(ApiExceptionInfo.class);
+        Response updatePassengerResponse = RestAssuredUtils.doPutResponse(passengerRequest, passengerId);
 
-        assertEquals(expectedExceptionMessage, exceptionInfo.getMessage());
-        assertEquals(expectedHttpStatus, exceptionInfo.getHttpStatus());
+        extractApiExceptionInfoAndAssert(updatePassengerResponse, expectedHttpStatus, expectedExceptionMessage);
     }
 
     @Test
@@ -272,14 +238,22 @@ public class PassengerIntegrationTest {
         String expectedExceptionMessage = String.format(MessageTemplates.PASSENGER_NOT_FOUND_BY_ID.getValue(), passengerId);
         HttpStatus expectedHttpStatus = HttpStatus.NOT_FOUND;
 
-        ApiExceptionInfo exceptionInfo = RestAssuredUtils.doDeleteResponse(passengerId)
+        Response deletePassengerResponse = RestAssuredUtils.doDeleteResponse(passengerId);
+
+        extractApiExceptionInfoAndAssert(deletePassengerResponse, expectedHttpStatus, expectedExceptionMessage);
+    }
+
+    private void extractApiExceptionInfoAndAssert(Response response,
+                                                  HttpStatus expectedHttpStatus,
+                                                  String exceptedExceptionMessage) {
+        ApiExceptionInfo apiExceptionInfo = response
                 .then()
                 .assertThat()
                 .statusCode(expectedHttpStatus.value())
                 .extract()
                 .as(ApiExceptionInfo.class);
 
-        assertEquals(expectedExceptionMessage, exceptionInfo.getMessage());
-        assertEquals(expectedHttpStatus, exceptionInfo.getHttpStatus());
+        assertEquals(exceptedExceptionMessage, apiExceptionInfo.getMessage());
+        assertEquals(expectedHttpStatus, apiExceptionInfo.getHttpStatus());
     }
 }

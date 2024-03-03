@@ -83,7 +83,7 @@ class DriverPayoutServiceImplTest {
         String exceptionMessage = String.format(
                 MessageTemplates.CREDIT_CARD_INVALID_HOLDER.getValue(),
                 creditCardResponse.id(),
-                Role.DRIVER.name().toLowerCase(),
+                Role.DRIVER.name(),
                 driverPayoutRequest.getDriverId()
         );
 
@@ -107,7 +107,7 @@ class DriverPayoutServiceImplTest {
         String exceptionMessage = String.format(
                 MessageTemplates.CREDIT_CARD_INVALID_HOLDER.getValue(),
                 creditCardResponse.id(),
-                Role.DRIVER.name().toLowerCase(),
+                Role.DRIVER.name(),
                 driverPayoutRequest.getDriverId()
         );
 

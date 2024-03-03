@@ -30,12 +30,12 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(value = "classpath:insert-stripe-customers-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 public class CreditCardControllerIntegrationTest extends BaseTestContainer {
     @Autowired
     private CreditCardRepository creditCardRepository;
@@ -100,8 +100,6 @@ public class CreditCardControllerIntegrationTest extends BaseTestContainer {
 
     @Test
     @Sql("classpath:insert-credit-cards-data.sql")
-    @Sql(value = "classpath:insert-stripe-customers-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(value = "classpath:drop-stripe-customers-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void setDefaultCreditCard_ValidCardId_ShouldReturnNewDefaultCard() {
         Long oldDefaultCardId = 4L;
         Long newDefaultCardId = 3L;
@@ -121,10 +119,16 @@ public class CreditCardControllerIntegrationTest extends BaseTestContainer {
         Optional<CreditCard> newDefaultCreditCard = creditCardRepository.findById(newDefaultCardId);
 
         Mockito.verify(stripeService).setDefaultCreditCard(anyString(), anyString());
-        assertTrue(oldDefaultCreditCard.isPresent());
-        assertTrue(newDefaultCreditCard.isPresent());
-        assertFalse(oldDefaultCreditCard.get().isDefault());
-        assertTrue(newDefaultCreditCard.get().isDefault());
+        assertThat(oldDefaultCreditCard)
+                .isPresent()
+                .get()
+                .extracting(CreditCard::isDefault)
+                .isEqualTo(false);
+        assertThat(newDefaultCreditCard)
+                .isPresent()
+                .get()
+                .extracting(CreditCard::isDefault)
+                .isEqualTo(true);
     }
 
     @Test
@@ -145,11 +149,11 @@ public class CreditCardControllerIntegrationTest extends BaseTestContainer {
     @Test
     @Sql("classpath:insert-credit-cards-data.sql")
     void setDefaultCreditCard_StripeCustomerDoesNotExist_ShouldReturnApiExceptionInfo() {
-        Long notDefaultCreditCard = 3L;
+        Long notDefaultCreditCard = 6L;
         String expectedExceptionMessage = String.format(
                 MessageTemplates.ENTITY_NOT_FOUND_BY_ID.getValue(),
                 StripeCustomer.class.getSimpleName(),
-                TestConstants.CARD_HOLDER_ID
+                notDefaultCreditCard
         );
         HttpStatus expectedHttpStatus = HttpStatus.NOT_FOUND;
 
@@ -159,8 +163,6 @@ public class CreditCardControllerIntegrationTest extends BaseTestContainer {
     }
 
     @Test
-    @Sql(value = "classpath:insert-stripe-customers-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(value = "classpath:drop-stripe-customers-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void createCreditCard_ValidCreditCardRequest_ShouldReturnCreatedCard() {
         CreditCardRequest creditCardRequest = TestUtils.creditCardRequestWithRoleAndIsDefault(Role.PASSENGER, true);
         CreditCard expectedCreditCard = TestUtils.creditCardWithRoleAndIsDefault(Role.PASSENGER, true);
