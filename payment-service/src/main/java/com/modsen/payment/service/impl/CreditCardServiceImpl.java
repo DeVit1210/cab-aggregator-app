@@ -68,6 +68,9 @@ public class CreditCardServiceImpl implements CreditCardService {
                 .orElseThrow(() -> new PaymentEntityNotFoundException(cardId, CreditCard.class));
         if (!creditCard.isDefault()) {
             String stripeCustomerId = stripeCustomerService.getCustomerId(creditCard.getCardHolderId());
+            CreditCard defaultCreditCard = getDefaultCreditCard(creditCard.getCardHolderId());
+            defaultCreditCard.setDefault(false);
+            creditCardRepository.save(defaultCreditCard);
             stripeService.setDefaultCreditCard(stripeCustomerId, creditCard.getStripeId());
             creditCard.setDefault(true);
             creditCardRepository.save(creditCard);
@@ -77,25 +80,18 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 
     @Override
-    public CreditCardResponse getDefaultCreditCard(Long passengerId) {
-        List<CreditCard> creditCardList = creditCardRepository.findAllByCardHolderIdAndRole(passengerId, Role.PASSENGER);
+    public CreditCard getDefaultCreditCard(Long cardHolderId) {
+        List<CreditCard> creditCardList = creditCardRepository.findAllByCardHolderIdAndRole(cardHolderId, Role.PASSENGER);
         return creditCardList.stream()
                 .filter(CreditCard::isDefault)
                 .findFirst()
-                .map(creditCardMapper::toCreditCardResponse)
-                .orElseThrow(() -> new DefaultCreditCardMissingException(passengerId));
+                .orElseThrow(() -> new DefaultCreditCardMissingException(cardHolderId));
     }
 
     @Override
     public CreditCard findCreditCardByStripeId(String cardStripeId) {
         return creditCardRepository.findByStripeId(cardStripeId)
                 .orElseThrow(() -> new PaymentEntityNotFoundException(cardStripeId, CreditCard.class));
-    }
-
-    @Override
-    public CreditCard findCreditCardById(Long creditCardId) {
-        return creditCardRepository.findById(creditCardId)
-                .orElseThrow(() -> new PaymentEntityNotFoundException(creditCardId, CreditCard.class));
     }
 
     private boolean shouldSetDefault(CreditCardRequest request) {

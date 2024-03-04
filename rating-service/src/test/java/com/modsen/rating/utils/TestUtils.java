@@ -2,6 +2,7 @@ package com.modsen.rating.utils;
 
 import com.modsen.rating.constants.TestConstants;
 import com.modsen.rating.dto.request.RatingRequest;
+import com.modsen.rating.dto.response.RideResponse;
 import com.modsen.rating.enums.RatingValue;
 import com.modsen.rating.enums.Role;
 import com.modsen.rating.model.Rating;
@@ -29,6 +30,7 @@ public class TestUtils {
                 .ratedPersonId(TestConstants.RATED_PERSON_ID)
                 .role(role)
                 .ratingValue(RatingValue.FIVE)
+                .rideId(TestConstants.RIDE_ID)
                 .build();
     }
 
@@ -53,6 +55,18 @@ public class TestUtils {
                 .ratedPersonId(id)
                 .role(role)
                 .ratingValue(RatingValue.FIVE)
+                .build();
+    }
+
+    public static RideResponse defaultRideResponse() {
+        return rideResponseWithPassengerId(TestConstants.PASSENGER_ID);
+    }
+
+    public static RideResponse rideResponseWithPassengerId(Long passengerId) {
+        return RideResponse.builder()
+                .id(TestConstants.RIDE_ID)
+                .driverId(TestConstants.DRIVER_ID)
+                .passengerId(passengerId)
                 .build();
     }
 }

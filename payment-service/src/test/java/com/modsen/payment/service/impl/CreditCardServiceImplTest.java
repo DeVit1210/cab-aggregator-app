@@ -127,7 +127,12 @@ class CreditCardServiceImplTest {
         String stripeCardId = TestConstants.Stripe.CREDIT_CARD_ID;
         String stripeCustomerId = TestConstants.Stripe.CUSTOMER_ID;
         Long passengerId = TestConstants.PASSENGER_ID;
+        List<CreditCard> creditCardList = Collections.singletonList(
+                TestUtils.creditCardWithRoleAndIsDefault(Role.PASSENGER, true)
+        );
 
+        when(creditCardRepository.findAllByCardHolderIdAndRole(anyLong(), any()))
+                .thenReturn(creditCardList);
         when(creditCardRepository.findById(anyLong()))
                 .thenReturn(Optional.of(creditCard));
         when(stripeCustomerService.getCustomerId(anyLong()))
@@ -143,6 +148,7 @@ class CreditCardServiceImplTest {
 
         assertNotNull(actualCreditCard);
         assertTrue(creditCard.isDefault());
+        verify(creditCardRepository).findAllByCardHolderIdAndRole(passengerId, Role.PASSENGER);
         verify(creditCardRepository).findById(creditCardId);
         verify(stripeCustomerService).getCustomerId(passengerId);
         verify(stripeService).setDefaultCreditCard(stripeCustomerId, stripeCardId);
@@ -173,19 +179,18 @@ class CreditCardServiceImplTest {
 
     @Test
     void getDefaultCreditCard_DefaultCardExists_ShouldReturnDefaultCreditCard() {
+        List<CreditCard> creditCardList = Collections.singletonList(
+                TestUtils.creditCardWithRoleAndIsDefault(Role.PASSENGER, true)
+        );
         Long cardHolderId = TestConstants.CARD_HOLDER_ID;
-        CreditCard creditCard = TestUtils.defaultCreditCard();
 
-        when(creditCardRepository.findByCardHolderIdAndIsDefaultIsTrue(anyLong()))
-                .thenReturn(Optional.of(creditCard));
-        when(creditCardMapper.toCreditCardResponse(any(CreditCard.class)))
-                .thenCallRealMethod();
+        when(creditCardRepository.findAllByCardHolderIdAndRole(anyLong(), any()))
+                .thenReturn(creditCardList);
 
-        CreditCardResponse actualCreditCard = creditCardService.getDefaultCreditCard(cardHolderId);
+        CreditCard actualCreditCard = creditCardService.getDefaultCreditCard(cardHolderId);
 
         assertNotNull(actualCreditCard);
-        verify(creditCardRepository).findByCardHolderIdAndIsDefaultIsTrue(cardHolderId);
-        verify(creditCardMapper).toCreditCardResponse(creditCard);
+        verify(creditCardRepository).findAllByCardHolderIdAndRole(cardHolderId, Role.PASSENGER);
     }
 
     @Test
@@ -193,13 +198,13 @@ class CreditCardServiceImplTest {
         Long cardHolderId = TestConstants.CARD_HOLDER_ID;
         String exceptionMessage = String.format(MessageTemplates.CREDIT_CARD_MISSING.getValue(), cardHolderId);
 
-        when(creditCardRepository.findByCardHolderIdAndIsDefaultIsTrue(anyLong()))
-                .thenReturn(Optional.empty());
+        when(creditCardRepository.findAllByCardHolderIdAndRole(anyLong(), any()))
+                .thenReturn(Collections.emptyList());
 
         assertThatThrownBy(() -> creditCardService.getDefaultCreditCard(cardHolderId))
                 .isInstanceOf(DefaultCreditCardMissingException.class)
                 .hasMessage(exceptionMessage);
-        verify(creditCardRepository).findByCardHolderIdAndIsDefaultIsTrue(cardHolderId);
+        verify(creditCardRepository).findAllByCardHolderIdAndRole(cardHolderId, Role.PASSENGER);
     }
 
     @Test

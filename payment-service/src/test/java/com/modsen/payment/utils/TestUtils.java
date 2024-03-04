@@ -7,6 +7,7 @@ import com.modsen.payment.dto.request.DriverPayoutRequest;
 import com.modsen.payment.dto.request.PaymentRequest;
 import com.modsen.payment.dto.response.CreditCardResponse;
 import com.modsen.payment.dto.response.DriverPayoutResponse;
+import com.modsen.payment.enums.PaymentType;
 import com.modsen.payment.enums.Role;
 import com.modsen.payment.model.CreditCard;
 import com.modsen.payment.model.DriverAccount;
@@ -111,10 +112,15 @@ public class TestUtils {
     }
 
     public static Payment defaultPayment() {
+        return paymentWithAmount(BigDecimal.ONE);
+    }
+
+    public static Payment paymentWithAmount(BigDecimal amount) {
         return Payment.builder()
                 .rideId(TestConstants.RIDE_ID)
                 .creditCardId(TestConstants.CREDIT_CARD_ID)
                 .passengerId(TestConstants.PASSENGER_ID)
+                .amount(amount)
                 .build();
     }
 
@@ -125,6 +131,7 @@ public class TestUtils {
     public static PaymentRequest paymentRequestWithAmount(BigDecimal amount) {
         return PaymentRequest.builder()
                 .rideId(TestConstants.RIDE_ID)
+                .type(PaymentType.BY_CARD.name())
                 .amount(amount)
                 .driverId(TestConstants.DRIVER_ID)
                 .passengerId(TestConstants.PASSENGER_ID)

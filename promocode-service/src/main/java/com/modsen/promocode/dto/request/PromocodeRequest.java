@@ -19,7 +19,7 @@ public class PromocodeRequest {
     private int daysQuantity;
     @Range(min = 1, max = 99, message = ValidationConstants.DISCOUNT_PERCENT_INVALID)
     private int discountPercent;
-    @Positive
+    @PositiveOrZero
     private int maxUsageCount;
     @PositiveOrZero
     private int minRidesQuantity;

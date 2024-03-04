@@ -59,7 +59,7 @@ public class DriverAccountServiceImpl implements DriverAccountService {
     public DriverAccount withdraw(Long driverId, BigDecimal amountToWithdraw) {
         DriverAccount driverAccount = findAccountByDriverId(driverId);
         BigDecimal currentBalance = driverAccount.getAmount();
-        if (amountToWithdraw.compareTo(currentBalance) >= 0) {
+        if (amountToWithdraw.compareTo(currentBalance) > 0) {
             throw new IncufficientAccountBalanceException(amountToWithdraw);
         }
         driverAccount.setAmount(currentBalance.subtract(amountToWithdraw));
