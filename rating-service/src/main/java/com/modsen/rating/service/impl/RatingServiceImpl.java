@@ -22,7 +22,6 @@ import com.modsen.rating.service.feign.PassengerServiceClient;
 import com.modsen.rating.service.feign.RideServiceClient;
 import com.modsen.rating.utils.PageRequestUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -41,8 +40,7 @@ public class RatingServiceImpl implements RatingService {
     private final DriverServiceClient driverServiceClient;
     private final PassengerServiceClient passengerServiceClient;
     private final RideServiceClient rideServiceClient;
-    @Value("${rating.average.default}")
-    private double defaultAverageRating;
+    private final double defaultAverageRating = 5.00;
 
     @Override
     public RatingResponse createRating(RatingRequest request) {
