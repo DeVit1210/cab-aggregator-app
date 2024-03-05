@@ -52,14 +52,14 @@ public class PassengerStepDefinitions {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Given("{int} drivers in the database")
-    public void driversInTheDatabase(Integer passengersQuantity) {
+    @Given("{int} passengers in the database")
+    public void passengersInTheDatabase(Integer passengersQuantity) {
         when(passengerRepository.findAll())
                 .thenReturn(Collections.nCopies(passengersQuantity, TestUtils.defaultPassenger()));
     }
 
-    @When("The business logic to get all drivers is invoked")
-    public void theBusinessLogicToGetAllDriversIsInvoked() {
+    @When("The business logic to get all passengers is invoked")
+    public void theBusinessLogicToGetAllPassengersIsInvoked() {
         when(ratingServiceClient.findAllAverageRatings(any()))
                 .thenReturn(AverageRatingListResponse.empty());
         when(passengerMapper.toPassengerListResponse(anyList(), anyList()))
@@ -68,8 +68,8 @@ public class PassengerStepDefinitions {
         passengerListResponse = passengerService.findAllPassengers();
     }
 
-    @Then("The response should contain {int} drivers")
-    public void theResponseShouldContainDrivers(Integer passengersQuantity) {
+    @Then("The response should contain {int} passengers")
+    public void theResponseShouldContainPassengers(Integer passengersQuantity) {
         assertThat(passengerListResponse.getPassengers())
                 .hasSize(passengersQuantity);
         verify(passengerRepository).findAll();
@@ -95,8 +95,8 @@ public class PassengerStepDefinitions {
         passengerResponse = passengerService.findPassengerById(passengerId);
     }
 
-    @Then("The response should be present and contain found driver")
-    public void theResponseShouldBePresentAndContainDriver() {
+    @Then("The response should be present and contain found passenger")
+    public void theResponseShouldBePresentAndContainPassenger() {
         assertThat(passengerResponse)
                 .isNotNull()
                 .extracting(PassengerResponse::id)
@@ -131,8 +131,8 @@ public class PassengerStepDefinitions {
         passengerResponse = passengerService.savePassenger(passengerRequest);
     }
 
-    @Then("The response should be present and contain created driver")
-    public void theResponseShouldBePresentAndContainCreatedDriver() {
+    @Then("The response should be present and contain created passenger")
+    public void theResponseShouldBePresentAndContainCreatedPassenger() {
         assertThat(passengerResponse)
                 .isNotNull()
                 .extracting(PassengerResponse::id)
@@ -165,8 +165,8 @@ public class PassengerStepDefinitions {
         passengerResponse = passengerService.updatePassenger(passengerId, passengerRequest);
     }
 
-    @Then("The response should be present and contain updated driver")
-    public void theResponseShouldBePresentAndContainUpdatedDriver() {
+    @Then("The response should be present and contain updated passenger")
+    public void theResponseShouldBePresentAndContainUpdatedPassenger() {
         assertThat(passengerResponse)
                 .isNotNull()
                 .extracting(PassengerResponse::email)
