@@ -1,6 +1,7 @@
 package com.modsen.driver.utils;
 
 import com.modsen.driver.constants.TestConstants;
+import com.modsen.driver.dto.request.ChangeDriverStatusRequest;
 import com.modsen.driver.dto.request.DriverRequest;
 import com.modsen.driver.dto.response.AverageRatingListResponse;
 import com.modsen.driver.dto.response.AverageRatingResponse;
@@ -52,5 +53,12 @@ public class TestUtils {
 
     public static AverageRatingListResponse emptyAverageRatingListResponse(List<AverageRatingResponse> averageRatingResponses) {
         return new AverageRatingListResponse(averageRatingResponses, Role.DRIVER, averageRatingResponses.size());
+    }
+
+    public static ChangeDriverStatusRequest changeDriverStatusRequestWithStatus(DriverStatus driverStatus) {
+        return ChangeDriverStatusRequest.builder()
+                .driverId(TestConstants.DRIVER_ID)
+                .driverStatus(driverStatus)
+                .build();
     }
 }

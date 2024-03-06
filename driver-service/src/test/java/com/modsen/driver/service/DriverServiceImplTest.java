@@ -453,9 +453,7 @@ class DriverServiceImplTest {
     @Test
     void changeDriverStatus_InvalidNewStatus_ThrowDriverStatusChangeNotAllowedException() {
         Driver driver = TestUtils.defaultDriver();
-        ChangeDriverStatusRequest request = ChangeDriverStatusRequest.builder()
-                .driverStatus(DriverStatus.HAS_UNCONFIRMED_RIDE)
-                .build();
+        ChangeDriverStatusRequest request = TestUtils.changeDriverStatusRequestWithStatus(DriverStatus.HAS_UNCONFIRMED_RIDE);
         String exceptionMessage =
                 String.format(MessageTemplates.STATUS_CHANGE_NOT_ALLOWED.getValue(), request.getDriverStatus());
 
@@ -470,9 +468,7 @@ class DriverServiceImplTest {
     @Test
     void changeDriverStatus_DriverAlreadyOnline_ThrowDriverAlreadyOnlineException() {
         Driver driver = TestUtils.driverWithStatus(DriverStatus.AVAILABLE);
-        ChangeDriverStatusRequest request = ChangeDriverStatusRequest.builder()
-                .driverStatus(DriverStatus.AVAILABLE)
-                .build();
+        ChangeDriverStatusRequest request = TestUtils.changeDriverStatusRequestWithStatus(DriverStatus.AVAILABLE);
         String exceptionMessage = String.format(MessageTemplates.DRIVER_ALREADY_ONLINE.getValue(), driverId);
 
         when(driverRepository.findById(anyLong()))
@@ -486,9 +482,7 @@ class DriverServiceImplTest {
     @Test
     void changeDriverStatus_NewStatusIsOfflineButDriverNotAvailable_ThrowDriverNotAvailableException() {
         Driver driver = TestUtils.driverWithStatus(DriverStatus.ON_TRIP);
-        ChangeDriverStatusRequest request = ChangeDriverStatusRequest.builder()
-                .driverStatus(DriverStatus.OFFLINE)
-                .build();
+        ChangeDriverStatusRequest request = TestUtils.changeDriverStatusRequestWithStatus(DriverStatus.OFFLINE);
         String exceptionMessage = String.format(MessageTemplates.DRIVER_NOT_AVAILABLE.getValue(), driverId);
 
         when(driverRepository.findById(anyLong()))

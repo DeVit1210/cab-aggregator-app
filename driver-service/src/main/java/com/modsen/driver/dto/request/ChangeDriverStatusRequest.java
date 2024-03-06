@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ChangeDriverStatusRequest {
     @NotNull(message = ValidationConstants.ID_NOT_NULL)
-    private long driverId;
+    private Long driverId;
     private DriverStatus driverStatus;
 }

@@ -1,0 +1,12 @@
+insert into drivers (id, first_name, last_name, email, phone_number, licence_number, driver_status)
+values (1, 'firstName', 'secondName', 'driver@gmail.com', '+375 (25) 100-00-00', '1234567890', 'OFFLINE');
+insert into drivers (id, first_name, last_name, email, phone_number, licence_number, driver_status)
+values (2, 'second', 'driver', 'second@gmail.com', '+375 (25) 200-00-00', '2234567890', 'AVAILABLE');
+insert into drivers (id, first_name, last_name, email, phone_number, licence_number, driver_status)
+values (3, 'third', 'driver', 'third@gmail.com', '+375 (25) 300-00-00', '3234567890', 'ON_TRIP');
+insert into drivers (id, first_name, last_name, email, phone_number, licence_number, driver_status)
+values (4, 'fourth', 'driver', 'fourth@gmail.com', '+375 (25) 400-00-00', '4234567890', 'OFFLINE');
+insert into drivers (id, first_name, last_name, email, phone_number, licence_number, driver_status)
+values (5, 'fifth', 'driver', 'fifth@gmail.com', '+375 (25) 500-00-00', '5234567890', 'OFFLINE');
+insert into drivers (id, first_name, last_name, email, phone_number, licence_number, driver_status)
+values (6, 'sixth', 'driver', 'sixth@gmail.com', '+375 (25) 600-00-00', '6234567890', 'AVAILABLE');
