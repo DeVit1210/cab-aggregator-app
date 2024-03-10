@@ -68,6 +68,13 @@ public class AppliedPromocodeServiceImpl implements AppliedPromocodeService {
         return appliedPromocodeMapper.toAppliedPromocodeResponse(promocode, appliedPromocode);
     }
 
+    @Override
+    public AppliedPromocodeResponse findAppliedPromocodeById(Long appliedPromocodeId) {
+        AppliedPromocode appliedPromocode = appliedPromocodeRepository.findById(appliedPromocodeId)
+                .orElseThrow(() -> new PromocodeNotFoundException(appliedPromocodeId));
+        return appliedPromocodeMapper.toAppliedPromocodeResponse(appliedPromocode.getPromocode(), appliedPromocode);
+    }
+
     private boolean isPromocodeStillValid(Promocode promocode) {
         LocalDate endDate = promocode.getEndDate();
         int maxUsageCount = promocode.getMaxUsageCount();

@@ -1,6 +1,6 @@
-package com.modsen.promocode.dto.response;
+package com.modsen.e2e.dto.response;
 
-import com.modsen.promocode.enums.ApplianceStatus;
+import com.modsen.e2e.enums.ApplianceStatus;
 import lombok.Builder;
 
 import java.time.LocalDateTime;

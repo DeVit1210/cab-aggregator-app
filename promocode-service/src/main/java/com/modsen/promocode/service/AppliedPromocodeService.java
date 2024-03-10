@@ -9,4 +9,6 @@ public interface AppliedPromocodeService {
     AppliedPromocodeResponse findNotConfirmedAppliedPromocode(Long passengerId);
 
     AppliedPromocodeResponse confirmAppliedPromocode(Long appliedPromocodeId);
+
+    AppliedPromocodeResponse findAppliedPromocodeById(Long appliedPromocodeId);
 }

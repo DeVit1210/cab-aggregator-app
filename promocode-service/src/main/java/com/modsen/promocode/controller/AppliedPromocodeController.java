@@ -37,4 +37,9 @@ public class AppliedPromocodeController {
     public AppliedPromocodeResponse findNotConfirmedPromocode(@PathVariable Long passengerId) {
         return appliedPromocodeService.findNotConfirmedAppliedPromocode(passengerId);
     }
+
+    @GetMapping("/{appliedPromocodeId}")
+    public AppliedPromocodeResponse findAppliedPromocodeById(@PathVariable Long appliedPromocodeId) {
+        return appliedPromocodeService.findAppliedPromocodeById(appliedPromocodeId);
+    }
 }
