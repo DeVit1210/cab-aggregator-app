@@ -63,7 +63,7 @@ public class DriverServiceStepDefinitions {
                 .thenReturn(availableCount);
     }
 
-    @When("The business logic for retrieving driver availability is invoked")
+    @When("Driver availability requested to calculate total ride cost")
     public void theBusinessLogicForRetrievingDriverAvailabilityIsInvoked() {
         availabilityResponse = driverService.getDriverAvailability();
     }
@@ -85,7 +85,7 @@ public class DriverServiceStepDefinitions {
                 .build();
     }
 
-    @When("The business logic for changing driver status from {string} is invoked")
+    @When("Driver changes his status from {string}")
     public void theBusinessLogicForChangingDriverStatusFromIsInvoked(String oldDriverStatusName) {
         driver = TestUtils.driverWithStatus(DriverStatus.valueOf(oldDriverStatusName));
         when(driverRepository.findById(anyLong()))
@@ -110,7 +110,7 @@ public class DriverServiceStepDefinitions {
                 .build();
     }
 
-    @When("The business logic for finding a driver for a ride is invoked")
+    @When("Service searching for a driver")
     public void theBusinessLogicForFindingADriverForARideIsInvoked() {
         FindDriverRequest findDriverRequest = new FindDriverRequest(TestConstants.RIDE_ID);
         driver = TestUtils.defaultDriver();
@@ -129,7 +129,7 @@ public class DriverServiceStepDefinitions {
         driverService.handleFindDriverRequest(findDriverRequest);
     }
 
-    @When("The business logic for unsuccessful finding a driver for a ride is invoked")
+    @When("Service unsuccessfully searching for a driver")
     public void theBusinessLogicForUnsuccessfulFindingADriverForARideIsInvoked() {
         FindDriverRequest findDriverRequest = new FindDriverRequest(TestConstants.RIDE_ID);
         driver = TestUtils.defaultDriver();

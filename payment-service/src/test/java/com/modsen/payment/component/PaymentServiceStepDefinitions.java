@@ -72,7 +72,7 @@ public class PaymentServiceStepDefinitions {
         );
     }
 
-    @When("Business logic to create payment is invoked")
+    @When("Passenger pays for the ride")
     public void businessLogicToCreatePaymentIsInvoked() {
         CreditCard creditCard = TestUtils.defaultCreditCard();
 
@@ -122,7 +122,7 @@ public class PaymentServiceStepDefinitions {
                 .thenReturn(Optional.of(payment));
     }
 
-    @When("Business logic to retrieve payment for a ride with id {long} is invoked")
+    @When("Passenger search for a payment for a ride with id {long}")
     public void businessLogicToRetrievePaymentForARideIsInvoked(long rideId) {
         when(paymentMapper.toPaymentResponse(any(Payment.class)))
                 .thenCallRealMethod();
@@ -152,7 +152,7 @@ public class PaymentServiceStepDefinitions {
                 .thenReturn(paymentList);
     }
 
-    @When("Business logic to retrieve all payments for a passenger is invoked")
+    @When("Passenger search for all his payments")
     public void businessLogicToRetrieveAllPaymentsForAPassengerIsInvoked() {
         when(paymentMapper.toPaymentResponseList(anyList()))
                 .thenCallRealMethod();

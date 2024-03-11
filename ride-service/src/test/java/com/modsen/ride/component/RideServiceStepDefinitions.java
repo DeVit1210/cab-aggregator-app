@@ -75,7 +75,7 @@ public class RideServiceStepDefinitions {
                 .thenReturn(rideListResponse);
     }
 
-    @When("Business logic to retrieve all rides for {string} is invoked")
+    @When("{string} search for his ride history")
     public void businessLogicToRetrieveAllRidesForPersonIsInvoked(String roleName) {
         rideListResponse = rideService.findAllRidesForPerson(TestConstants.DRIVER_ID, Role.valueOf(roleName));
     }
@@ -105,7 +105,7 @@ public class RideServiceStepDefinitions {
         ride = TestUtils.rideWithStatus(RideStatus.WAITING_FOR_DRIVER_CONFIRMATION);
     }
 
-    @When("Business logic to find available ride for driver is invoked")
+    @When("Driver search for any available ride")
     public void businessLogicToFindAvailableRideForDriverIsInvoked() {
         when(rideRepository.findFirstByDriverIdAndRideStatus(anyLong(), any(RideStatus.class)))
                 .thenReturn(Optional.of(ride));
@@ -138,7 +138,7 @@ public class RideServiceStepDefinitions {
         ride = TestUtils.rideWithStatus(RideStatus.ACTIVE);
     }
 
-    @When("Business logic to find confirmed ride for passenger exists")
+    @When("Passenger search for the confirmed ride")
     public void businessLogicToFindConfirmedRideForPassengerExists() {
         when(rideRepository.findFirstByPassengerIdAndRideStatusIn(anyLong(), anyList()))
                 .thenReturn(Optional.of(ride));
@@ -169,7 +169,7 @@ public class RideServiceStepDefinitions {
         rideRequest = TestUtils.defaultRideRequest();
     }
 
-    @When("Business logic for ride creating is invoked")
+    @When("Passenger creates ride")
     public void businessLogicForRideCreatingIsInvoked() {
         ride = TestUtils.rideWithStatus(RideStatus.WITHOUT_DRIVER);
 
@@ -206,7 +206,7 @@ public class RideServiceStepDefinitions {
         updateRideDriverRequest = TestUtils.updateRideDriverRequestWithDriver();
     }
 
-    @When("Business logic for updating driver for a ride is invoked")
+    @When("Service updating driver for a ride")
     public void businessLogicForUpdatingDriverForARideIsInvoked() {
         ride = TestUtils.rideWithStatus(RideStatus.WITHOUT_DRIVER);
 

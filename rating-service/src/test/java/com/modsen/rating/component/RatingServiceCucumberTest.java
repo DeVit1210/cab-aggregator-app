@@ -10,5 +10,5 @@ import org.junit.runner.RunWith;
         glue = "com.modsen.rating.component",
         snippets = CucumberOptions.SnippetType.CAMELCASE
 )
-public class PromocodeServiceCucumberTest {
+public class RatingServiceCucumberTest {
 }

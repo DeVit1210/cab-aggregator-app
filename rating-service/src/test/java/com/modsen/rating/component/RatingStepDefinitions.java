@@ -58,6 +58,7 @@ public class RatingStepDefinitions {
     private AverageRatingResponse averageRatingResponse;
     private RatingRequest ratingRequest;
     private Rating rating;
+
     public RatingStepDefinitions() {
         MockitoAnnotations.openMocks(this);
     }
@@ -99,7 +100,7 @@ public class RatingStepDefinitions {
                 .thenReturn(ratingList);
     }
 
-    @When("Business logic for retrieving ratings for person is invoked")
+    @When("App user search for all his ratings")
     public void businessLogicForRetrievingRatingsForPersonIsInvoked() {
         when(ratingMapper.toRatingListResponse(anyList()))
                 .thenCallRealMethod();
@@ -142,7 +143,7 @@ public class RatingStepDefinitions {
                 .thenReturn(ratingList);
     }
 
-    @When("Business logic for retrieving average rating is invoked")
+    @When("App user search for his average rating")
     public void businessLogicForRetrievingAverageRatingIsInvoked() {
         averageRatingResponse = ratingService.getAverageRating(TestConstants.RATED_PERSON_ID, Role.PASSENGER);
     }
@@ -158,7 +159,7 @@ public class RatingStepDefinitions {
         ratingRequest = TestUtils.ratingRequestForRole(Role.valueOf(roleName));
     }
 
-    @When("Business logic for creating a rating for {string} with rating value of {string} is invoked")
+    @When("App user creates a rating for {string} with rating value of {string}")
     public void businessLogicForCreatingARatingIsInvoked(String roleName, String ratingValueName) {
         rating = TestUtils.ratingForRoleAndRatingValue(
                 Role.valueOf(roleName),
@@ -208,7 +209,7 @@ public class RatingStepDefinitions {
                 .thenReturn(Optional.of(rating));
     }
 
-    @When("Business logic for updating rating with new rating value of {string} is invoked")
+    @When("App user updates one of his previous ratings with new rating value of {string}")
     public void businessLogicForUpdatingRatingWithNewRatingValueOfIsInvoked(String newRatingValue) {
         when(ratingRepository.save(any()))
                 .thenReturn(rating);

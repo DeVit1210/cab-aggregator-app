@@ -65,7 +65,7 @@ public class RideOperationsStepDefinitions {
         ride = TestUtils.rideWithStatus(RideStatus.valueOf(currentRideStatus));
     }
 
-    @When("Business logic for accepting ride is invoked")
+    @When("Driver accepts the ride")
     public void businessLogicForAcceptingRideIsInvoked() {
         changeDriverStatusRequest = TestUtils.changeDriverStatusRequestWithStatus(DriverStatus.ON_WAY_TO_PASSENGER);
         rideResponse = TestUtils.defaultRideResponse();
@@ -90,7 +90,7 @@ public class RideOperationsStepDefinitions {
         verify(driverStatusRequestProducer).changeDriverStatus(changeDriverStatusRequest);
     }
 
-    @When("Business logic for dismissing ride is invoked")
+    @When("Driver dismisses the ride")
     public void businessLogicForDismissingRideIsInvoked() {
         changeDriverStatusRequest = TestUtils.changeDriverStatusRequestWithStatus(DriverStatus.AVAILABLE);
         rideResponse = TestUtils.defaultRideResponse();
@@ -107,7 +107,7 @@ public class RideOperationsStepDefinitions {
         verify(rideRequestProducer).sendRequestForDriver(any());
     }
 
-    @When("Business logic for notifying passenger about driver waiting is invoked")
+    @When("Driver notifies passenger about waiting")
     public void businessLogicForNotifyingPassengerAboutDriverWaitingIsInvoked() {
         changeDriverStatusRequest = TestUtils.changeDriverStatusRequestWithStatus(DriverStatus.WAITING_FOR_PASSENGER);
         rideResponse = TestUtils.defaultRideResponse();
@@ -123,7 +123,7 @@ public class RideOperationsStepDefinitions {
         ride = TestUtils.rideWithStatus(rideStatus);
     }
 
-    @When("Business logic for canceling ride is invoked")
+    @When("Passenger cancel the ride")
     public void businessLogicForCancelingRideIsInvoked() {
         changeDriverStatusRequest = TestUtils.changeDriverStatusRequestWithStatus(DriverStatus.AVAILABLE);
         rideResponse = TestUtils.defaultRideResponse();
@@ -133,7 +133,7 @@ public class RideOperationsStepDefinitions {
         rideResponse = rideOperationsService.cancelRide(rideId);
     }
 
-    @When("Business logic for ride starting is invoked")
+    @When("Driver starts the ride")
     public void businessLogicForRideStartingIsInvoked() {
         changeDriverStatusRequest = TestUtils.changeDriverStatusRequestWithStatus(DriverStatus.ON_TRIP);
         rideResponse = TestUtils.defaultRideResponse();
@@ -148,7 +148,7 @@ public class RideOperationsStepDefinitions {
         finishRideRequest = TestUtils.defaultFinishRideRequest();
     }
 
-    @When("Business logic for ride finishing is invoked")
+    @When("Driver finishes the ride")
     public void businessLogicForRideFinishingIsInvoked() {
         changeDriverStatusRequest = TestUtils.changeDriverStatusRequestWithStatus(DriverStatus.AVAILABLE);
         rideResponse = TestUtils.defaultRideResponse();

@@ -62,7 +62,7 @@ public class CreditCardServiceStepDefinitions {
         creditCard = TestUtils.creditCardWithRoleAndIsDefault(Role.valueOf(roleName), true);
     }
 
-    @When("Business logic for credit card creating is invoked")
+    @When("App user add credit card")
     public void businessLogicForCreditCardCreatingIsInvoked() {
         String stripeCardId = TestConstants.Stripe.CREDIT_CARD_ID;
 
@@ -124,7 +124,7 @@ public class CreditCardServiceStepDefinitions {
                 .thenReturn(creditCardList);
     }
 
-    @When("Business logic to retrieve credit cards for person is invoked")
+    @When("App user search for all his credit cards")
     public void businessLogicToRetrieveCreditCardsForPersonIsInvoked() {
         Long cardHolderId = TestConstants.CARD_HOLDER_ID;
 
@@ -161,7 +161,7 @@ public class CreditCardServiceStepDefinitions {
                 .thenReturn(Collections.singletonList(currentDefaultCreditCard));
     }
 
-    @When("Business logic to set new default card with id {long} is invoked")
+    @When("Passenger set new default card with id {long}")
     public void businessLogicToSetNewDefaultCardWithIdIsInvoked(long newDefaultCardId) {
         String stripeCustomerId = TestConstants.Stripe.CUSTOMER_ID;
         creditCard = TestUtils.creditCardWithRoleAndIsDefault(Role.PASSENGER, false);
@@ -209,7 +209,7 @@ public class CreditCardServiceStepDefinitions {
                 .thenReturn(Collections.singletonList(creditCard));
     }
 
-    @When("Business logic to retrieve default credit card is invoked")
+    @When("Passenger search for default credit card")
     public void businessLogicToRetrieveDefaultCreditCardIsInvoked() {
         creditCard = creditCardService.getDefaultCreditCard(cardHolderId);
     }

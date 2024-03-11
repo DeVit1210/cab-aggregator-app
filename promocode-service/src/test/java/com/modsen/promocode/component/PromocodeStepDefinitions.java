@@ -57,7 +57,7 @@ public class PromocodeStepDefinitions {
         applyPromocodeRequest = TestUtils.defaultApplyPromocodeRequest();
     }
 
-    @When("Business logic for promocode appliance is invoked")
+    @When("Passenger applies promocode")
     public void businessLogicForPromocodeApplianceIsInvoked() {
         Promocode promocode = TestUtils.defaultPromocode();
         appliedPromocode = TestUtils.appliedPromocodeWithStatus(ApplianceStatus.NOT_CONFIRMED);
@@ -102,7 +102,7 @@ public class PromocodeStepDefinitions {
                 .thenReturn(Optional.of(appliedPromocode));
     }
 
-    @When("Business logic for not confirmed promocode retrieval is invoked")
+    @When("Passenger search for not confirmed applied promocode")
     public void businessLogicForNotConfirmedPromocodeRetrievalIsInvoked() {
         when(appliedPromocodeMapper.toAppliedPromocodeResponse(any(Promocode.class), any(AppliedPromocode.class)))
                 .thenCallRealMethod();
@@ -126,7 +126,7 @@ public class PromocodeStepDefinitions {
                 .thenReturn(Optional.of(appliedPromocode));
     }
 
-    @When("Business logic for promocode appliance confirming is invoked")
+    @When("Passenger confirms promocode appliance")
     public void businessLogicForPromocodeApplianceConfirmingIsInvoked() {
         when(appliedPromocodeRepository.save(any()))
                 .thenReturn(appliedPromocode);
