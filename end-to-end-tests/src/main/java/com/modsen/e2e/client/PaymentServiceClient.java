@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
         path = "${feign.client.payment.path}"
 )
 public interface PaymentServiceClient {
-    @GetMapping("/ride/{rideId}")
+    @GetMapping("charges/ride/{rideId}")
     PaymentResponse findPaymentByRid(@PathVariable Long rideId);
 
     @GetMapping("/driver/accounts/{accountId}")

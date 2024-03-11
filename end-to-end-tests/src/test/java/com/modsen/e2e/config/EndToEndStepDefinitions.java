@@ -35,6 +35,7 @@ import org.awaitility.Awaitility;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,6 +66,14 @@ public class EndToEndStepDefinitions {
     private BigDecimal driverBalance;
     private int driverRatesQuantity;
 
+    private static Callable<Boolean> rideStatusShouldChangeCondition(ShortRideResponse confirmedRideForPassenger) {
+        return () -> RideStatus.getConfirmedRideStatusList()
+                .stream()
+                .anyMatch(rideStatus -> confirmedRideForPassenger.rideStatus()
+                        .equals(rideStatus)
+                );
+    }
+
     @Given("Valid request to calculate ride cost")
     public void validRequestToCalculateRideCost() {
         rideCostRequest = TestUtils.defaultCalculateRideCostRequest();
@@ -73,12 +82,12 @@ public class EndToEndStepDefinitions {
     @And("Valid promocode is entered for passenger")
     public void validPromocodeIsEnteredForPassenger() {
         Long passengerId = TestConstants.PASSENGER_ID;
-        AppliedPromocodeResponse promocodeResponse = promocodeServiceClient.findNotConfirmedPromocode(passengerId);
+        AppliedPromocodeResponse promocode = promocodeServiceClient.findNotConfirmedPromocode(passengerId);
 
-        appliedPromocodeId = promocodeResponse.id();
+        appliedPromocodeId = promocode.id();
     }
 
-    @When("Passenger invokes a method to calculate ride cost")
+    @When("Passenger calculates ride cost")
     public void passengerInvokesAMethodToCalculateRideCost() {
         rideCostResponse = rideCostServiceClient.calculateRideCost(rideCostRequest);
     }
@@ -94,7 +103,7 @@ public class EndToEndStepDefinitions {
         rideRequest = TestUtils.defaultRideRequest();
     }
 
-    @When("Passenger invokes method to create a ride")
+    @When("Passenger creates ride")
     public void passengerInvokesMethodToCreateRide() {
         rideResponse = rideServiceClient.createRide(rideRequest);
     }
@@ -127,7 +136,7 @@ public class EndToEndStepDefinitions {
         currentRideDriverId = rideResponse.driverId();
     }
 
-    @When("Driver invokes method to dismiss the ride")
+    @When("Driver dismisses the ride")
     public void driverInvokesMethodToDismissTheRide() {
         previousRideDriverId = shortRideResponse.driverId();
         rideResponse = rideOperationsServiceClient.dismissRide(shortRideResponse.id());
@@ -153,7 +162,7 @@ public class EndToEndStepDefinitions {
                 .isNotEqualTo(previousRideDriverId);
     }
 
-    @When("Driver invokes method to accept the ride")
+    @When("Driver accepts the ride")
     public void driverInvokesMethodToAcceptTheRide() {
         rideResponse = rideOperationsServiceClient.acceptRide(rideResponse.id());
     }
@@ -163,23 +172,32 @@ public class EndToEndStepDefinitions {
         Long passengerId = TestConstants.PASSENGER_ID;
         ShortRideResponse confirmedRideForPassenger = rideServiceClient.findConfirmedRideForPassenger(passengerId);
 
-        assertThat(confirmedRideForPassenger.rideStatus())
-                .isIn(RideStatus.getConfirmedRideStatusList());
+        Awaitility.await()
+                .atMost(Duration.ofSeconds(3))
+                .until(rideStatusShouldChangeCondition(confirmedRideForPassenger));
     }
 
-    @When("Driver invokes method to start the ride")
+    @Given("Confirmed ride for passenger with id {long}")
+    public void confirmedRideForPassengerWithId(long passengerId) {
+        shortRideResponse = rideServiceClient.findConfirmedRideForPassenger(passengerId);
+        rideResponse = rideServiceClient.findRideById(shortRideResponse.id());
+        currentRideDriverId = rideResponse.driverId();
+    }
+
+    @When("Driver starts the ride")
     public void driverInvokesMethodToStartTheRide() {
         rideResponse = rideOperationsServiceClient.startRide(rideResponse.id());
     }
 
-    @Given("Valid request to finish the ride")
+    @And("Valid request to finish the ride")
     public void validRequestToFinishTheRide() {
         finishRideRequest = TestUtils.defaultFinishRideRequest();
-        DriverAccountResponse driverAccount = paymentServiceClient.findAccountById(rideResponse.driverId());
+        finishRideRequest.setId(rideResponse.id());
+        DriverAccountResponse driverAccount = paymentServiceClient.findAccountById(currentRideDriverId);
         driverBalance = driverAccount.amount();
     }
 
-    @When("Driver invokes method to finish the ride")
+    @When("Driver finishes the ride")
     public void driverInvokesMethodToFinishTheRide() {
         rideResponse = rideOperationsServiceClient.finishRide(finishRideRequest);
     }
@@ -211,18 +229,24 @@ public class EndToEndStepDefinitions {
                 .isGreaterThan(driverBalance);
     }
 
-    @Given("Valid request from passenger to rate driver")
+    @Given("Finished ride for passenger with id {long}")
+    public void finishedRideForPassengerWithId(long passengerId) {
+        List<RideResponse> allRidesForPerson = rideServiceClient.findAllRidesForPerson(passengerId, Role.PASSENGER.name())
+                .rides();
+        RideResponse lastFinishedRide = allRidesForPerson.get(allRidesForPerson.size() - 1);
+        rideResponse = rideServiceClient.findRideById(lastFinishedRide.id());
+        currentRideDriverId = rideResponse.driverId();
+    }
+
+    @And("Valid request from passenger to rate driver")
     public void validRequestFromPassengerToRateDriver() {
-        Long driverId = rideResponse.driverId();
-        ratingRequest = TestUtils.ratingRequestForDriverAndRide(
-                driverId,
-                rideResponse.id()
-        );
-        RatingListResponse allDriverRatings = ratingServiceClient.getAllRatingsForPerson(driverId, Role.DRIVER.name());
+        ratingRequest = TestUtils.ratingRequestForDriverAndRide(currentRideDriverId, rideResponse.id());
+        RatingListResponse allDriverRatings =
+                ratingServiceClient.getAllRatingsForPerson(currentRideDriverId, Role.DRIVER.name());
         driverRatesQuantity = allDriverRatings.ratingList().size();
     }
 
-    @When("Passenger invokes method to rate a driver")
+    @When("Passenger rates driver after ride")
     public void passengerInvokesMethodToRateADriver() {
         ratingResponse = ratingServiceClient.createRating(ratingRequest);
     }
@@ -256,4 +280,5 @@ public class EndToEndStepDefinitions {
                     .equals(DriverStatus.valueOf(expectedNewDriverStatus));
         };
     }
+
 }
