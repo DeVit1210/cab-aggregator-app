@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: end-to-end
+server:
+  port: 8090
+feign:
+  client:
+    ride:
+      name: ride-service
+      service:
+        path: /api/v1/rides
+      operations:
+        path: /api/v1/ride-operations
+      cost:
+        path: /api/v1/rides/cost
+    driver:
+      name: driver-service
+      path: /api/v1/drivers
+    payment:
+      name: payment-service
+      path: /api/v1/payments
+    promocode:
+      name: promocode-service
+      path: /api/v1/promocodes
+    rating:
+      name: rating-service
+      path: /api/v1/ratings

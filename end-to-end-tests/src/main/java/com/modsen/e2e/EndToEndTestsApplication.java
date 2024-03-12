@@ -1,4 +1,4 @@
-package com.modsen.ride;
+package com.modsen.e2e;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,8 +6,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients
-public class RideServiceApplication {
+public class EndToEndTestsApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(RideServiceApplication.class, args);
+        SpringApplication.run(EndToEndTestsApplication.class, args);
     }
+
 }
