@@ -14,7 +14,7 @@ import java.util.List;
 public class TestUtils {
     public static List<Rating> ratingForRoleAndRatingValues(Role role, List<RatingValue> ratingValues) {
         return ratingValues.stream()
-                .map(value -> buildForRoleAndRatingValue(role, value))
+                .map(value -> ratingForRoleAndRatingValue(role, value))
                 .toList();
     }
 
@@ -43,7 +43,7 @@ public class TestUtils {
                 .build();
     }
 
-    private static Rating buildForRoleAndRatingValue(Role role, RatingValue ratingValue) {
+    public static Rating ratingForRoleAndRatingValue(Role role, RatingValue ratingValue) {
         return Rating.builder()
                 .ratingValue(ratingValue)
                 .role(role)

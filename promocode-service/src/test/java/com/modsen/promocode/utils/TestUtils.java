@@ -71,9 +71,13 @@ public class TestUtils {
     }
 
     public static AppliedPromocode defaultAppliedPromocode() {
+        return appliedPromocodeWithStatus(ApplianceStatus.NOT_CONFIRMED);
+    }
+
+    public static AppliedPromocode appliedPromocodeWithStatus(ApplianceStatus applianceStatus) {
         return AppliedPromocode.builder()
                 .id(TestConstants.PROMOCODE_ID)
-                .applianceStatus(ApplianceStatus.NOT_CONFIRMED)
+                .applianceStatus(applianceStatus)
                 .promocode(defaultPromocode())
                 .passengerId(TestConstants.PASSENGER_ID)
                 .build();
