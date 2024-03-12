@@ -12,7 +12,7 @@ public record AppliedPromocodeResponse(
         Long promocodeId,
         String promocodeName,
         int discountPercent,
-        ApplianceStatus applianceStatus,
-        LocalDateTime appliedAt
+        LocalDateTime appliedAt,
+        ApplianceStatus applianceStatus
 ) {
 }

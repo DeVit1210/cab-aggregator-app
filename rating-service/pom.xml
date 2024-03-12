@@ -21,6 +21,7 @@
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
         <mapstruct.lombok.binding.version>0.2.0</mapstruct.lombok.binding.version>
+        <cucumber.version>7.15.0</cucumber.version>
     </properties>
     <dependencies>
         <dependency>
@@ -97,6 +98,22 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <version>${cucumber.version}</version>
         </dependency>
     </dependencies>
     <dependencyManagement>
