@@ -1,0 +1,2 @@
+DELETE
+from driver_with_suggested_ride

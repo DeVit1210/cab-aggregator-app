@@ -18,18 +18,13 @@ import com.modsen.ride.enums.RideStatus;
 import com.modsen.ride.model.Ride;
 import lombok.experimental.UtilityClass;
 
+import java.math.RoundingMode;
 import java.util.Collections;
 
 @UtilityClass
 public class TestUtils {
     public static Ride defaultRide() {
-        return Ride.builder()
-                .id(TestConstants.RIDE_ID)
-                .driverId(TestConstants.DRIVER_ID)
-                .passengerId(TestConstants.PASSENGER_ID)
-                .rideCost(TestConstants.RIDE_COST)
-                .rideStatus(RideStatus.FINISHED)
-                .build();
+        return rideWithStatus(RideStatus.FINISHED);
     }
 
     public static Ride rideWithStatus(RideStatus rideStatus) {
@@ -37,7 +32,9 @@ public class TestUtils {
                 .id(TestConstants.RIDE_ID)
                 .driverId(TestConstants.DRIVER_ID)
                 .passengerId(TestConstants.PASSENGER_ID)
-                .rideCost(TestConstants.RIDE_COST)
+                .rideCost(TestConstants.RIDE_COST.setScale(2, RoundingMode.HALF_UP))
+                .pickUpAddress(TestConstants.RIDE_PICKUP_ADDRESS)
+                .destinationAddress(TestConstants.RIDE_DESTINATION_ADDRESS)
                 .rideStatus(rideStatus)
                 .build();
     }
@@ -47,7 +44,9 @@ public class TestUtils {
                 .id(TestConstants.RIDE_ID)
                 .driverId(TestConstants.DRIVER_ID)
                 .passengerId(TestConstants.PASSENGER_ID)
-                .rideCost(TestConstants.RIDE_COST)
+                .rideCost(TestConstants.RIDE_COST.setScale(2, RoundingMode.HALF_UP))
+                .pickUpAddress(TestConstants.RIDE_PICKUP_ADDRESS)
+                .destinationAddress(TestConstants.RIDE_DESTINATION_ADDRESS)
                 .rideStatus(RideStatus.FINISHED)
                 .build();
     }
@@ -57,7 +56,7 @@ public class TestUtils {
                 .id(TestConstants.RIDE_ID)
                 .driverId(TestConstants.DRIVER_ID)
                 .passengerId(TestConstants.PASSENGER_ID)
-                .rideCost(TestConstants.RIDE_COST)
+                .rideCost(TestConstants.RIDE_COST.setScale(2, RoundingMode.HALF_UP))
                 .rideStatus(RideStatus.FINISHED)
                 .build();
     }
@@ -69,7 +68,9 @@ public class TestUtils {
     public static RideRequest defaultRideRequest() {
         return RideRequest.builder()
                 .passengerId(TestConstants.PASSENGER_ID)
-                .rideCost(TestConstants.RIDE_COST)
+                .rideCost(TestConstants.RIDE_COST.setScale(2, RoundingMode.HALF_UP))
+                .pickUpAddress(TestConstants.RIDE_PICKUP_ADDRESS)
+                .destinationAddress(TestConstants.RIDE_DESTINATION_ADDRESS)
                 .build();
     }
 
@@ -100,8 +101,12 @@ public class TestUtils {
     }
 
     public static FinishRideRequest defaultFinishRideRequest() {
+        return finishRideRequestWithId(TestConstants.RIDE_ID);
+    }
+
+    public static FinishRideRequest finishRideRequestWithId(Long rideId) {
         return FinishRideRequest.builder()
-                .id(TestConstants.RIDE_ID)
+                .id(rideId)
                 .paymentType(PaymentType.BY_CARD.name())
                 .build();
     }

@@ -14,4 +14,18 @@ public class TestConstants {
     public static final long AVAILABLE_DRIVERS_COUNT = 1L;
     public static final long TOTAL_DRIVERS_COUNT = 2L;
     public static final Long RIDE_ID = 1L;
+
+    public static class FieldNames {
+        public static final String DRIVERS_FIELD = "drivers";
+        public static final String QUANTITY_FIELD = "quantity";
+        public static final String ID_FIELD = "id";
+        public static final String EMAIL_FIELD = "email";
+        public static final String DRIVER_STATUS_FIELD = "driverStatus";
+    }
+
+    public static class KafkaConstants {
+        public static final String AUTO_COMMIT_RESET = "latest";
+        public static final String TRUSTED_PACKAGES_KEY = "spring.json.trusted.packages";
+        public static final String TRUSTED_PACKAGES_VALUE = "*";
+    }
 }

@@ -17,7 +17,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -38,10 +37,8 @@ class RideCostServiceImplTest {
     private DistanceCalculator distanceCalculator;
     @InjectMocks
     private RideCostServiceImpl rideCostService;
-    @Value("${ride.cost.start}")
-    private BigDecimal startCost = BigDecimal.valueOf(3.00);
-    @Value("${ride.cost.per-kilometer}")
-    private BigDecimal kilometerCost = BigDecimal.valueOf(1.50);
+    private final BigDecimal startCost = BigDecimal.valueOf(3.00);
+    private final BigDecimal kilometerCost = BigDecimal.valueOf(1.50);
 
     static Stream<Arguments> calculateCostArgumentProvider() {
         return Stream.of(
