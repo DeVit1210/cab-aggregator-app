@@ -25,3 +25,44 @@ spring:
 rating:
   average:
     default: 5.00
+
+resilience4j:
+  retry:
+    configs:
+      default:
+        max-attempts: 5
+        wait-duration:
+          nanos: 200
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - feign.FeignException.ServiceUnavailable
+    instances:
+      ride-retry:
+        base-config: default
+      driver-retry:
+        base-config: default
+      passenger-retry:
+        base-config: default
+
+
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-type: count_based
+        sliding-window-size: 10
+        failure-rate-threshold: 75
+        slow-call-duration-threshold: 3s
+        slow-call-rate-threshold: 75
+        minimum-number-of-calls: 10
+        wait-duration-in-open-state: 10s
+        max-wait-duration-in-half-open-state: 10s
+        automatic-transition-from-open-to-half-open-enabled: true
+        permitted-number-of-calls-in-half-open-state: 5
+    instances:
+      ride-circuit-breaker:
+        base-config: default
+      driver-circuit-breaker:
+        base-config: default
+      passenger-circuit-breaker:
+        base-config: default

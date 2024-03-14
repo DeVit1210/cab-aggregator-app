@@ -62,3 +62,45 @@ feign:
     promocode:
       name: promocode-service
       url: /api/v1/promocodes
+
+resilience4j:
+  retry:
+    instances:
+      passenger-retry:
+        max-attempts: 5
+        wait-duration:
+          nanos: 200
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        base-config: default
+        retry-exceptions:
+          - feign.FeignException.ServiceUnavailable
+      payment-retry:
+        base-config: default
+        max-attempts: 2
+        wait-duration: 3s
+
+  circuitbreaker:
+    instances:
+      payment-circuit-breaker:
+        sliding-window-type: count_based
+        sliding-window-size: 5
+        failure-rate-threshold: 75
+        slow-call-duration-threshold: 3s
+        slow-call-rate-threshold: 75
+        minimum-number-of-calls: 5
+        wait-duration-in-open-state: 30s
+        max-wait-duration-in-half-open-state: 30s
+        automatic-transition-from-open-to-half-open-enabled: true
+        permitted-number-of-calls-in-half-open-state: 2
+      passenger-circuit-breaker:
+        sliding-window-type: count_based
+        sliding-window-size: 10
+        failure-rate-threshold: 75
+        slow-call-duration-threshold: 3s
+        slow-call-rate-threshold: 75
+        minimum-number-of-calls: 10
+        wait-duration-in-open-state: 10s
+        max-wait-duration-in-half-open-state: 10s
+        automatic-transition-from-open-to-half-open-enabled: true
+        permitted-number-of-calls-in-half-open-state: 5

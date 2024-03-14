@@ -6,6 +6,8 @@ import com.modsen.ride.dto.request.PaymentRequest;
 import com.modsen.ride.dto.response.CreditCardResponse;
 import com.modsen.ride.dto.response.PaymentResponse;
 import com.modsen.ride.dto.response.StripeCustomerResponse;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
         configuration = FeignConfig.class,
         path = "${feign.client.payment.url}"
 )
+@CircuitBreaker(name = "payment-circuit-breaker")
+@Retry(name = "payment-retry")
 public interface PaymentServiceClient {
     @GetMapping(ServiceMappings.Url.STRIPE_CUSTOMER_BY_ID_URL)
     StripeCustomerResponse findStripeCustomerById(@PathVariable Long customerId);

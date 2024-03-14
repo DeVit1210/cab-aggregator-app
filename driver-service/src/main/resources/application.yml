@@ -46,3 +46,22 @@ spring:
             read-timeout: 1000
       circuitbreaker:
         enabled: true
+resilience4j:
+  retry:
+    instances:
+      payment-retry:
+        max-attempts: 2
+        wait-duration: 3s
+  circuitbreaker:
+    instances:
+      payment-circuit-breaker:
+        sliding-window-type: count_based
+        sliding-window-size: 5
+        failure-rate-threshold: 75
+        slow-call-duration-threshold: 10s
+        slow-call-rate-threshold: 75
+        minimum-number-of-calls: 5
+        wait-duration-in-open-state: 30s
+        max-wait-duration-in-half-open-state: 30s
+        automatic-transition-from-open-to-half-open-enabled: true
+        permitted-number-of-calls-in-half-open-state: 2
