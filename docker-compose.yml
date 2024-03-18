@@ -1,0 +1,142 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.2.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: FLRPVcp41NC7mwD2TtX5
+    networks:
+      - cab_aggregator
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - cab_aggregator
+
+  broker:
+    image: confluentinc/cp-kafka
+    container_name: broker
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    networks:
+      - cab_aggregator
+
+  eureka-server:
+    image: cab-aggregator/eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    expose:
+      - "8761"
+    networks:
+      - cab_aggregator
+    depends_on:
+      - mysql
+
+  passenger-service:
+    image: cab-aggregator/passenger-service
+    container_name: passenger-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - '8081:8081'
+    restart: on-failure
+    networks:
+      - cab_aggregator
+    depends_on:
+      - mysql
+      - eureka-server
+
+  driver-service:
+    image: cab-aggregator/driver-service
+    container_name: driver-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8082:8082"
+    networks:
+      - cab_aggregator
+    depends_on:
+      - mysql
+      - eureka-server
+
+  payment-service:
+    image: cab-aggregator/payment-service
+    container_name: payment-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8083:8083"
+    env_file:
+      - .env
+    networks:
+      - cab_aggregator
+    depends_on:
+      - mysql
+      - eureka-server
+
+  rating-service:
+    image: cab-aggregator/rating-service
+    container_name: rating-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8084:8084"
+    networks:
+      - cab_aggregator
+    depends_on:
+      - mysql
+      - eureka-server
+
+  ride-service:
+    image: cab-aggregator/ride-service
+    container_name: ride-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8086:8086"
+    networks:
+      - cab_aggregator
+    depends_on:
+      - mysql
+      - eureka-server
+
+  promocode-service:
+    image: cab-aggregator/promocode-service
+    container_name: promocode-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8085:8085"
+    networks:
+      - cab_aggregator
+    depends_on:
+      - mysql
+      - eureka-server
+
+networks:
+  cab_aggregator:
+    external: true
+
+volumes:
+  mysql-data:
