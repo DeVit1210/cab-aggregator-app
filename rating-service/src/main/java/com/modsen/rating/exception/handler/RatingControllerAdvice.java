@@ -6,6 +6,8 @@ import com.modsen.rating.exception.PageException;
 import com.modsen.rating.exception.base.BadRequestException;
 import com.modsen.rating.exception.base.ConflictException;
 import com.modsen.rating.exception.base.NotFoundException;
+import feign.FeignException;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +48,24 @@ public class RatingControllerAdvice {
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ApiExceptionInfo> handleConflictException(ConflictException e) {
         return generateApiExceptionResponse(e, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(FeignException.ServiceUnavailable.class)
+    public ResponseEntity<ApiExceptionInfo> handleServiceUnavailableException(FeignException.ServiceUnavailable e) {
+        String exceptionMessage = "Some external service is unavailable!";
+        return generateServiceUnavailableResponse(exceptionMessage);
+    }
+
+    @ExceptionHandler(CallNotPermittedException.class)
+    public ResponseEntity<ApiExceptionInfo> handleCallNotPermittedException(CallNotPermittedException e) {
+        String unavailableServiceName = e.getCausingCircuitBreakerName().split("-")[0];
+        String exceptionMessage = String.format("calls to %s-service are forbidden for now!", unavailableServiceName);
+        return generateServiceUnavailableResponse(exceptionMessage);
+    }
+
+    private ResponseEntity<ApiExceptionInfo> generateServiceUnavailableResponse(String exceptionMessage) {
+        ApiExceptionInfo apiException = ApiExceptionInfo.of(exceptionMessage, HttpStatus.SERVICE_UNAVAILABLE);
+        return new ResponseEntity<>(apiException, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     private ResponseEntity<ApiExceptionInfo> generateApiExceptionResponse(Throwable e, HttpStatus status) {
