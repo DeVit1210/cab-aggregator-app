@@ -24,3 +24,8 @@ spring:
           default:
             connect-timeout: 1000
             read-timeout: 1000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

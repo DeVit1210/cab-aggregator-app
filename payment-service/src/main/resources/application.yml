@@ -18,3 +18,8 @@ spring:
 stripe:
   currency:
     code: BYN
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
