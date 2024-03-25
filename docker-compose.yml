@@ -60,6 +60,7 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin-server:9411/api/v2/spans
     networks:
       - cab_aggregator
     depends_on:
@@ -71,6 +72,7 @@ services:
     container_name: passenger-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin-server:9411/api/v2/spans
     ports:
       - '8081:8081'
     restart: on-failure
@@ -85,6 +87,7 @@ services:
     container_name: driver-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin-server:9411/api/v2/spans
     ports:
       - "8082:8082"
     networks:
@@ -98,6 +101,7 @@ services:
     container_name: payment-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin-server:9411/api/v2/spans
     ports:
       - "8083:8083"
     env_file:
@@ -113,6 +117,7 @@ services:
     container_name: rating-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin-server:9411/api/v2/spans
     ports:
       - "8084:8084"
     networks:
@@ -126,6 +131,7 @@ services:
     container_name: ride-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin-server:9411/api/v2/spans
     ports:
       - "8086:8086"
     networks:
@@ -139,6 +145,7 @@ services:
     container_name: promocode-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin-server:9411/api/v2/spans
     ports:
       - "8085:8085"
     networks:
@@ -153,8 +160,6 @@ services:
     restart: unless-stopped
     ports:
       - "9090:9090"
-#    volumes:
-#      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     depends_on:
       - eureka-server
       - driver-service
@@ -179,6 +184,18 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=password
     networks:
       - cab_aggregator
+
+  zipkin-server:
+    image: openzipkin/zipkin
+    container_name: zipkin-server
+    ports:
+      - "9411:9411"
+    networks:
+      - cab_aggregator
+    depends_on:
+      - api-gateway
+
+
 
 networks:
   cab_aggregator:
