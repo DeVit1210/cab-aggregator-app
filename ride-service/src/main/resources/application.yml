@@ -71,11 +71,9 @@ resilience4j:
           nanos: 200
         enable-exponential-backoff: true
         exponential-backoff-multiplier: 2
-        base-config: default
         retry-exceptions:
           - feign.FeignException.ServiceUnavailable
       payment-retry:
-        base-config: default
         max-attempts: 2
         wait-duration: 3s
 
@@ -103,3 +101,11 @@ resilience4j:
         max-wait-duration-in-half-open-state: 10s
         automatic-transition-from-open-to-half-open-enabled: true
         permitted-number-of-calls-in-half-open-state: 5
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  tracing:
+    sampling:
+      probability: 1.0
